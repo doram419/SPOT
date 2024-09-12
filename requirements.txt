@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+requests
+transformers
+torch
+numpy
+jinja2
+python-dotenv
+googlemaps
