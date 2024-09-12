@@ -1,0 +1,81 @@
+/* 배경색을 더 깔끔한 하늘색으로 설정 */
+body {
+    background-color: #d3f0f7;  /* 밝고 차분한 하늘색 배경 */
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+/* 검색창과 버튼 스타일링 */
+#searchForm {
+    margin-top: 20px;
+    background-color: #ffffff;  /* 하얀색 배경 */
+    padding: 20px;
+    border-radius: 10px;
+    display: inline-block;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#searchInput, #regionInput {
+    padding: 10px;
+    width: 200px;
+    margin: 10px;
+    border: 1px solid #b0bec5;
+    border-radius: 5px;
+}
+
+button {
+    background-color: #0288d1;  /* 파란색 버튼 */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+button:hover {
+    background-color: #0277bd;  /* 호버 시 버튼 색상 변경 */
+}
+
+/* 검색 결과 스타일링 */
+#results {
+    margin-top: 20px;
+    padding: 20px;
+}
+
+h2 {
+    color: #01579b;  /* 진한 파란색 텍스트 */
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+li {
+    margin: 20px 0;
+    padding: 15px;
+    background-color: #f9f9f9;  /* 부드러운 흰색 배경 */
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: left;
+}
+
+li h3 {
+    color: #0288d1;
+}
+
+li p {
+    color: #37474f;  /* 다크 그레이 텍스트 */
+}
+
+a {
+    color: #0288d1;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
