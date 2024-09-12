@@ -249,10 +249,3 @@ async def search_restaurant(request: Request, query: str = Form(...), region: st
         # 오류 발생 시 로그 출력 및 500 오류 반환
         print(f"오류 발생: {str(e)}")
         raise HTTPException(status_code=500, detail=f"오류가 발생했습니다: {str(e)}")
-
-if __name__ == "__main__":
-    import uvicorn
-
-    uvicorn.run("main:app", host="127.0.0.1",
-                port=8000, reload=True)
-    
