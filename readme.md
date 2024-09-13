@@ -8,8 +8,9 @@
   - pip install -r requirements.txt
 
 - 실행시 터미널 입력
-  - conda activate {가상환경이름}
-uvicorn app.main:app --reload 입력
+ - conda activate {가상환경이름}
+ - uvicorn app.main:app --reload 입력
+
     ======================================
 # 주요 기능 설명: 
 ### fetch_google_places 함수:
