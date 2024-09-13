@@ -8,3 +8,4 @@ torch
 requests
 python-dotenv
 uvicorn
+
