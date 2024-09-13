@@ -11,11 +11,11 @@ pip install -r requirements.txt
 conda activate {가상환경이름}
 uvicorn app.main:app --reload
 ======================================================================
-### 주요 기능 설명: ###
-fetch_google_places 함수:
-
+<h2> 주요 기능 설명: </h2>
+### fetch_google_places 함수:
 Google Places API를 사용하여 지역을 위도/경도로 변환한 후, 리뷰가 많고 평점이 좋은 순서대로 상위 5개의 장소를 검색합니다.
-fetch_naver_blog_data 함수:
+
+### fetch_naver_blog_data 함수:
 
 네이버 블로그 API를 사용하여 검색어와 지역에 맞는 블로그 게시글을 조회수 순으로 정렬하고 상위 5개의 결과를 반환합니다.
 extract_keywords 함수:
