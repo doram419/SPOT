@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException, Request, Form
 from pydantic import BaseModel
 from fastapi.responses import HTMLResponse
-from fastapi.staticfiles import StaticFiles
+# from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from fastapi.middleware.cors import CORSMiddleware
 import re
@@ -11,6 +11,7 @@ from dotenv import load_dotenv
 from typing import List
 import requests
 import urllib.parse
+import uvicorn
 
 # .env 파일에서 환경 변수 로드 (API 키, 클라이언트 ID 등 환경 변수 사용)
 load_dotenv()
@@ -30,7 +31,7 @@ app = FastAPI()
 
 # 정적 파일 및 템플릿 설정
 # '/static' 경로에서 정적 파일 (CSS, JS)을 제공
-app.mount("/static", StaticFiles(directory="app/static"), name="static")
+# app.mount("/static", StaticFiles(directory="app/static"), name="static")
 # Jinja2 템플릿을 사용할 디렉토리 설정
 templates = Jinja2Templates(directory="templates")
 
@@ -249,3 +250,6 @@ async def search_restaurant(request: Request, query: str = Form(...), region: st
         # 오류 발생 시 로그 출력 및 500 오류 반환
         print(f"오류 발생: {str(e)}")
         raise HTTPException(status_code=500, detail=f"오류가 발생했습니다: {str(e)}")
+
+if __name__ == "__main__":
+    uvicorn.run("app.main:app", host="127.0.0.1", port=8000, reload=True)
