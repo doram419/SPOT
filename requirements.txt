@@ -8,3 +8,5 @@ jinja2
 python-dotenv
 googlemaps
 python-multipart
+langchain
+openai

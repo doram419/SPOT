@@ -32,6 +32,7 @@ app = FastAPI()
 # 정적 파일 및 템플릿 설정
 # '/static' 경로에서 정적 파일 (CSS, JS)을 제공
 # app.mount("/static", StaticFiles(directory="app/static"), name="static")
+
 # Jinja2 템플릿을 사용할 디렉토리 설정
 templates = Jinja2Templates(directory="templates")
 
