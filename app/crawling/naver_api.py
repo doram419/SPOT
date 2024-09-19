@@ -9,7 +9,10 @@ import re
 # 네이버 블로그 데이터 조회수 높은 순으로 5개 가져오기
 def fetch_naver_blog_data(query: str, region: str, keywords: List[str]) -> List[SearchResult]:
     try:
-        enc_text = parse.quote(query)
+        # 지역과 검색어를 섞어서 검색
+        # TODO : 검색어라는 단어로밖에 검색이 안돼나? quote에 대해 알아보자
+        combined_query = f"{region} {query}"
+        enc_text = parse.quote(combined_query)
         url = f"https://openapi.naver.com/v1/search/blog?query={enc_text}"
 
         headers = {
