@@ -17,7 +17,7 @@ async def search_restaurant(request: Request, query: str = Form(...), region: st
         keywords = extract_keywords(query)
 
         # 네이버 블로그 데이터 조회수 순으로 5개 가져오기
-        naver_results = fetch_naver_blog_data(query, region, keywords.split())
+        naver_results = fetch_naver_blog_data(query, region, keywords)
 
         # Google Places 데이터 리뷰 많고 평점 좋은 순으로 5개 가져오기
         google_results = fetch_google_places(query, region)
