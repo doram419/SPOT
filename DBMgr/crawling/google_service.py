@@ -1,7 +1,7 @@
 import googlemaps
 from typing import List
-from app.models import SearchResult
-from app.config import GOOGLE_API_KEY
+from models import SearchResult
+from config import GOOGLE_API_KEY
 
 # Google Maps 클라이언트 초기화
 gmaps = googlemaps.Client(key=GOOGLE_API_KEY)
@@ -15,7 +15,8 @@ def get_location_from_region(region: str):
     return None, None
 
 # 반경 1km 내에서 상위 5개의 맛집 검색 
-def fetch_top_restaurants_nearby(search_term: str = "검색어", region: str = "지역") -> List[SearchResult]:
+def fetch_top_restaurants_nearby(search_term: str = "검색어", region: str = "지역", 
+                                 number : int = "가져올 개수") -> List[SearchResult]:
     # 입력한 검색어를 기반으로 좌표를 가져옴
     # 위도, 경도
     lat, lng = get_location_from_region(region)
@@ -46,4 +47,4 @@ def fetch_top_restaurants_nearby(search_term: str = "검색어", region: str = "
             ))
 
     # 평점과 리뷰 수를 기준으로 정렬 후 상위 5개 반환
-    return sorted(results, key=lambda x: (x.rating, x.views), reverse=True)[:5]
+    return sorted(results, key=lambda x: (x.rating, x.views), reverse=True)[:number]
