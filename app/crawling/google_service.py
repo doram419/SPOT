@@ -15,9 +15,9 @@ def get_location_from_region(region: str):
     return None, None
 
 # 반경 1km 내에서 상위 5개의 맛집 검색
-def fetch_top_restaurants_nearby(search_term: str = "맛집", region: str = "지역") -> List[SearchResult]:
+def fetch_top_restaurants_nearby(search_term: str = "검색어", region: str = "지역") -> List[SearchResult]:
     # 입력한 검색어를 기반으로 좌표를 가져옴
-    print(f"search_term:{search_term}, region:{region}")
+    # 위도, 경도
     lat, lng = get_location_from_region(region)
     print(lat, lng)
     if lat is None or lng is None:
