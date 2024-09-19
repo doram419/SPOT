@@ -25,4 +25,3 @@ def clean_html(raw_html):
     cleantext = re.sub(cleanr, '', raw_html)
     return cleantext
 
-
