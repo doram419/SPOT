@@ -27,9 +27,9 @@ app.include_router(router)
 
 # FastAPI 엔드포인트 추가
 @app.get("/restaurants")
-async def get_top_restaurants(query: str = Query(..., description="검색할 지역"), search_term: str = "맛집"):
+async def get_top_restaurants(query: str = "맛집", region: str = Query(..., description="검색할 지역")):
     """사용자가 입력한 지역에서 상위 5개의 맛집 검색"""
-    top_restaurants = fetch_top_restaurants_nearby(query, search_term)
+    top_restaurants = fetch_top_restaurants_nearby(query, region)
     return {"restaurants": top_restaurants}
 
 @app.get("/naver_blogs")
