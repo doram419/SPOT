@@ -2,20 +2,18 @@
 function search(event) {
     event.preventDefault();  // 페이지 새로고침 방지
 
-    // 입력된 검색어와 지역을 가져옴
-    const searchTerm = document.getElementById('searchInput').value;
-    const regionTerm = document.getElementById('regionInput').value;
+    // 입력된 통합 검색어를 가져옴
+    const searchInput = document.getElementById('searchInput').value;
 
-    // 검색어와 지역이 입력되지 않았을 때 경고창 표시
-    if (!searchTerm || !regionTerm) {
-        alert("검색어와 지역을 입력해주세요!");
+    // 검색어가 입력되지 않았을 때 경고창 표시
+    if (!searchInput) {
+        alert("검색어와 지역을 입력하세요!");
         return;
     }
 
     // FormData 객체 생성
     const formData = new FormData();
-    formData.append('query', searchTerm);
-    formData.append('region', regionTerm);
+    formData.append('search_input', searchInput);
 
     // 검색 요청을 서버에 전송
     fetch('/search/', {

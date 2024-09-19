@@ -9,8 +9,8 @@
 <body>
     <h1>맛집 문장 검색</h1>
     <form id="searchForm" method="post" action="/search/" onsubmit="search(event)">
-        <input type="text" id="searchInput" name="query" placeholder="검색어를 입력하세요">
-        <input type="text" id="regionInput" name="region" placeholder="지역을 입력하세요">
+        <!-- 하나의 검색창으로 변경 -->
+        <input type="text" id="searchInput" name="search_input" placeholder="검색어와 지역을 입력하세요 (예: 서울 맛집)">
         <button type="submit">검색</button>
     </form>
 
