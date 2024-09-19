@@ -17,9 +17,7 @@ def get_location_from_region(region: str):
 # 반경 1km 내에서 상위 5개의 맛집 검색
 def fetch_top_restaurants_nearby(search_term: str = "맛집", region: str = "지역") -> List[SearchResult]:
     # 입력한 검색어를 기반으로 좌표를 가져옴
-    print(f"search_term:{search_term}, region:{region}")
     lat, lng = get_location_from_region(region)
-    print(lat, lng)
     if lat is None or lng is None:
         print(f"입력한 지역 '{region}'에 대한 좌표를 찾을 수 없습니다.")
         return []
