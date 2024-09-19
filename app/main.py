@@ -2,8 +2,8 @@ from fastapi import FastAPI, Query
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from app.routers import router
-from app.google_service import fetch_top_restaurants_nearby
-from app.naver_service import fetch_naver_blog_data
+from app.crawling.google_service import fetch_top_restaurants_nearby
+from app.crawling.naver_service import fetch_naver_blog_data
 from app.bert_service import get_embedding
 from app.gpt_service import extract_keywords
 
@@ -27,11 +27,10 @@ app.include_router(router)
 
 # FastAPI 엔드포인트 추가
 @app.get("/restaurants")
-async def get_top_restaurants(query: str = Query(..., description="검색할 지역"), search_term: str = "맛집"):
+async def get_top_restaurants(query: str = "맛집", region: str = Query(..., description="검색할 지역")):
     """사용자가 입력한 지역에서 상위 5개의 맛집 검색"""
-    top_restaurants = fetch_top_restaurants_nearby(query, search_term)
+    top_restaurants = fetch_top_restaurants_nearby(query, region)
     return {"restaurants": top_restaurants}
-
 
 @app.get("/naver_blogs")
 async def get_naver_blogs(query: str, keywords: str):

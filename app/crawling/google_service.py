@@ -7,20 +7,21 @@ from app.config import GOOGLE_API_KEY
 gmaps = googlemaps.Client(key=GOOGLE_API_KEY)
 
 # 입력한 지역(동/역)을 기반으로 좌표(위도, 경도)를 가져오는 함수
-def get_location_from_query(query: str):
-    geocode_result = gmaps.geocode(query)
+def get_location_from_region(region: str):
+    geocode_result = gmaps.geocode(region)
     if geocode_result:
         location = geocode_result[0]['geometry']['location']
         return location['lat'], location['lng']
     return None, None
 
 # 반경 1km 내에서 상위 5개의 맛집 검색
-def fetch_top_restaurants_nearby(query: str, search_term: str = "맛집") -> List[SearchResult]:
+def fetch_top_restaurants_nearby(search_term: str = "맛집", region: str = "지역") -> List[SearchResult]:
     # 입력한 검색어를 기반으로 좌표를 가져옴
-    print(f"query:{query}, search_term:{search_term}")
-    lat, lng = get_location_from_query(query)
+    print(f"search_term:{search_term}, region:{region}")
+    lat, lng = get_location_from_region(region)
+    print(lat, lng)
     if lat is None or lng is None:
-        print(f"입력한 지역 '{query}'에 대한 좌표를 찾을 수 없습니다.")
+        print(f"입력한 지역 '{region}'에 대한 좌표를 찾을 수 없습니다.")
         return []
 
     # 위도와 경도를 기반으로 반경 1km 내에서 맛집 검색
