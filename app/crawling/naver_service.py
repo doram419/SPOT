@@ -1,10 +1,10 @@
-from typing import List
-from app.config import NAVER_CLIENT_ID, NAVER_CLIENT_SECRET
-from app.models import SearchResult
-from urllib import parse
 import requests
-from app.utils import clean_html
+from urllib import parse
 import re
+from typing import List
+from app.models import SearchResult
+from app.utils import clean_html
+from app.config import NAVER_CLIENT_ID, NAVER_CLIENT_SECRET
 
 # 네이버 블로그 데이터 조회수 높은 순으로 5개 가져오기
 def fetch_naver_blog_data(query: str, region: str, keywords: List[str]) -> List[SearchResult]:
