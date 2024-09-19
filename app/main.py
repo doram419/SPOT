@@ -32,11 +32,6 @@ async def get_top_restaurants(query: str = Query(..., description="검색할 지
     top_restaurants = fetch_top_restaurants_nearby(query, search_term)
     return {"restaurants": top_restaurants}
 
-@app.get("/google_places")
-async def get_google_places(query: str, region: str):
-    """Google Places API에서 데이터 가져오기"""
-    places = fetch_google_places(query, region)
-    return {"places": places}
 
 @app.get("/naver_blogs")
 async def get_naver_blogs(query: str, keywords: str):
