@@ -41,31 +41,30 @@ def saveToVDB(data : SearchResult = "저장할 데이터",
     vector_store.add_to_index(embedding, metadata)
 
 def searchVDB(query : str = "검색할 문장",
-              search_amount : int = "결과를 몇 개 가져올지"):
+              search_amount : int = "결과를 몇 개 가져올지"): 
     """
     vector DB에서 검색해오는 함수
+
+    반환 값 
+    - list<dict>
     """
     query_embedding = get_openai_embedding(query)
     D, I = vector_store.index.search(np.array([query_embedding], dtype=np.float32), search_amount)
-
     results = []
+
     for idx, i in enumerate(I[0]):
+        # vector_store.metadata는 리스트 타입
         if i < len(vector_store.metadata):
-            metadata = vector_store.metadata[i]  # 리스트에서 직접 접근
-            if isinstance(metadata, dict):  # metadata가 딕셔너리인 경우
-                results.append({
-                    "title": metadata.get("name", "Unknown"),
-                    "similarity": float(D[0][idx]),
-                    "pk": metadata.get("pk", "Unknown")
-                })
-            elif isinstance(metadata, list) and len(metadata) > 0:  # metadata가 리스트인 경우
-                metadata_dict = metadata[0] if isinstance(metadata[0], dict) else {}
-                results.append({
-                    "title": metadata_dict.get("name", "Unknown"),
-                    "similarity": float(D[0][idx]),
-                    "pk": metadata_dict.get("pk", "Unknown")
-                })
+            # 리스트에서 직접 접근, meta는 dict 타입
+            meta = vector_store.metadata[i]         
+            # 찾아온 데이터를 result에 붙히기
+            results.append({
+                "title": meta.get("name", "Unknown"),
+                "similarity": float(D[0][idx]),
+                "pk": meta.get("pk", "Unknown")
+            })
     
+    # 유사도 순으로 정렬
     results.sort(key=lambda x: x["similarity"])
     return results
 
@@ -96,6 +95,6 @@ if __name__ == "__main__":
     # TODO:description chunking
     # saveToVDB(sample_data3, 3)
 
-    result = searchVDB("해산물", 1)
+    result = searchVDB("이탈리안", 2)
     print(result[0]['title'])
     # print(result)
