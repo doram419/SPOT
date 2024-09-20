@@ -40,6 +40,7 @@ class FaissVectorStore:
     def add_to_index(self, vector, metadata):
         if self.index is None:
             self.index = faiss.IndexFlatL2(len(vector))
+            
         self.index.add(np.array([vector], dtype=np.float32))
         self.metadata.append(metadata)
         self.save_index()

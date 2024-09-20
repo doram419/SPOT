@@ -1,4 +1,4 @@
-from DBMgr.model.models import SearchResult
+from models import SearchResult
 
 temp_pk = 0
 

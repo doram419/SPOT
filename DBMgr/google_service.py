@@ -1,6 +1,6 @@
 import googlemaps
 from typing import List
-from DBMgr.model.models import SearchResult
+from models import SearchResult
 from config import GOOGLE_API_KEY
 
 # Google Maps 클라이언트 초기화

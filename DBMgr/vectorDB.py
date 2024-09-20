@@ -2,7 +2,7 @@ import os
 from FaissVectorStore import FaissVectorStore
 import numpy as np
 from dotenv import load_dotenv
-from DBMgr.model.models import SearchResult
+from models import SearchResult
 from langchain_openai import OpenAIEmbeddings
 
 # .env 파일에서 API 키 로드 (환경 변수 설정)
@@ -40,7 +40,7 @@ def saveToVDB(data : SearchResult = "저장할 데이터",
         "name": data.title,
         "pk": fk
     }
-    # vector_store.add_to_index(embedding, metadata)
+    vector_store.add_to_index(embedding, metadata)
 
 def searchVDB(query : str = "검색할 문장",
               search_amount : int = "결과를 몇 개 가져올지"): 
@@ -69,16 +69,3 @@ def searchVDB(query : str = "검색할 문장",
     # 유사도 순으로 정렬
     results.sort(key=lambda x: x["similarity"])
     return results
-
-if __name__ == "__main__":
-    sample_data1 = SearchResult(
-        title="A 레스토랑",
-        link="https://A.com",
-        description="해산물 요리, 회, 수산물, 파티하기 좋은 시끌벅적한 단체 장소",
-        rating=0.0,
-        views=10000
-    )
-
-    result = searchVDB("회", 2)
-    print(result[0]['title'])
-    print(result[1]['title'])

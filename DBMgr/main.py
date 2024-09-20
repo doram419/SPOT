@@ -3,11 +3,9 @@
 """
 # API 키를 환경변수로 관리하기 위한 설정 파일
 from dotenv import load_dotenv
-from crawling.google_service import fetch_top_restaurants_nearby
-from crud.vectorDB import saveToVDB
-from crud.rDB import saveToRDB
-
-import faiss
+from google_service import fetch_top_restaurants_nearby
+from vectorDB import saveToVDB, searchVDB
+from rDB import saveToRDB
 
 # API 키 정보 로드
 load_dotenv()
@@ -35,8 +33,15 @@ def save(datas : list = "SearchResult list를 주면 DB에 저장하는 함수")
         pk = saveToRDB(data=data)
         saveToVDB(data=data, fk=pk)
 
-def delete():
+def show():
     pass
 
 if __name__ == "__main__":
-    create("서초동", "맛집", 0, 3)
+    # 서초동에 있는 맛집 데이터를 google api를 통해서 찾아오고 vdb로 저장하는 코드
+    # TODO: 인터페이스 만들기
+    # create(region="서초동", keyword="맛집", naverSize=0, googleSize=3)
+
+    # 지금 테스트 중
+    result = searchVDB("회", 2)
+    print(result[0])
+    print(result[1])
