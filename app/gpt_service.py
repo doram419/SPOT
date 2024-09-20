@@ -12,13 +12,17 @@ def extract_keywords(text: str):
 
     # 각 청크에 대해 GPT 모델을 사용하여 키워드 추출
     for chunk in chunks:
-        response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
-            messages=[
-                {"role": "system", "content": "You are a helpful assistant that extracts keywords."},
-                {"role": "user", "content": f"Extract keywords from the following text: {chunk}"}
-            ]
-        )
-        keywords.append(response['choices'][0]['message']['content'].strip())
+        try:
+            response = openai.ChatCompletion.create(
+                model="gpt-3.5-turbo",
+                messages=[
+                    {"role": "system", "content": "You are a helpful assistant that extracts keywords."},
+                    {"role": "user", "content": f"Extract keywords from the following text: {chunk}"}
+                ]
+            )
+            keywords.append(response['choices'][0]['message']['content'].strip())
+        except Exception as e:
+            print(f"Error occurred while extracting keywords: {e}")
+            keywords.append("Error extracting keywords")
 
     return ' '.join(keywords)
