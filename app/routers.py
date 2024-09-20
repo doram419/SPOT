@@ -1,14 +1,16 @@
-from fastapi import FastAPI, APIRouter, Request, Form, HTTPException
-from fastapi.responses import HTMLResponse
-from fastapi.templating import Jinja2Templates
-from app.crawling.google_service import fetch_top_restaurants_nearby
-from app.crawling.naver_service import fetch_naver_blog_data
-from app.bert_service import get_embedding
-import faiss
-import numpy as np
-from transformers import pipeline, AutoTokenizer, AutoModelForTokenClassification
-import re
+from fastapi import FastAPI, APIRouter, Request, Form, HTTPException # FastAPI에서 APIRouter, Request, Form 및 예외처리 기능을 가져옴
+from fastapi.responses import HTMLResponse # HTML 응답을 처리하는 HTMLResponse를 가져옴
+from fastapi.templating import Jinja2Templates # Jinja2 템플릿을 사용하여 HTML 파일을 렌더링하기 위해 가져옴
+from app.crawling.google_service import fetch_top_restaurants_nearby # 구글 맛집 데이터 가져오는 함수
+from app.crawling.naver_service import fetch_naver_blog_data # 네이버 블로그 데이터 가져오는 함수
+from app.bert_service import get_embedding # 텍스트 임베딩을 생성하는 함수
+import faiss # 벡터 검색 및 임베딩을 위한 라이브러리 FAISS
+import numpy as np # Numpy는 벡터 및 배열 계산을 위한 라이브러리
+from transformers import pipeline, AutoTokenizer, AutoModelForTokenClassification # Hugging Face의 Transformers 모델을 위한 파이프라인
+import re  # 정규식을 사용하여 텍스트 패턴을 추출하는 라이브러리
 import logging
+
+from transformers import AutoTokenizer, AutoModelForTokenClassification  # KoELECTRA 모델을 위한 토크나이저 및 분류 모델 가져옴
 
 app = FastAPI()
 router = APIRouter()
@@ -17,7 +19,9 @@ templates = Jinja2Templates(directory="app/templates")
 # KoELECTRA NER 모델 설정
 tokenizer = AutoTokenizer.from_pretrained("monologg/koelectra-base-v3-discriminator")
 model = AutoModelForTokenClassification.from_pretrained("monologg/koelectra-base-v3-discriminator")
-ner_model = pipeline("ner", model=model, tokenizer=tokenizer)
+
+# NER 파이프라인 생성
+ner_model = pipeline("ner", model=model, tokenizer=tokenizer) # NER 태스크를 위한 파이프라인 생성
 
 # FAISS 인덱스 초기화
 dimension = 768
