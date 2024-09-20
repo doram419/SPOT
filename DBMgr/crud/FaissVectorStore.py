@@ -1,20 +1,29 @@
-# 되는지 확인하고 옮깁시다
 import pickle
 import numpy as np
 import faiss
 import os
 
 class FaissVectorStore:
-    def __init__(self, index_file="faiss_index.bin", metadata_file="faiss_metadata.pkl"):
+    """
+    벡터DB 클라이언트 객체
+    """
+    def __init__(self, index_file="spot_index.bin", 
+                 metadata_file="spot_metadata.pkl"):
+        """
+        클래스를 초기화 하는 함수
+        """
         self.index_file = index_file
         self.metadata_file = metadata_file
         self.index = None
-        self.metadata = []
+        self.metadata = list()
 
         # 이미 존재하는 인덱스와 메타데이터 로드
         self.load_index()
 
     def load_index(self):
+        """
+        내부에 파일이 있으면 그 파일을 읽어들이는 함수
+        """
         if os.path.exists(self.index_file) and os.path.exists(self.metadata_file):
             self.index = faiss.read_index(self.index_file)
             with open(self.metadata_file, 'rb') as f:

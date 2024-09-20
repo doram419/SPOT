@@ -1,8 +1,8 @@
 import requests
 import re
-import sys
 from urllib import parse
 from typing import List
+import sys
 sys.path.append('c:/Users/201-17/Documents/GitHub/SPOT/DBMgr/crawling')
 from models import SearchResult
 from utils import clean_html
@@ -39,7 +39,7 @@ def fetch_naver_blog_data(query: str = "검색 할 단어 ",
 
         # 네이버 블로그 API 호출
         response = requests.get(url, headers=headers)
-        response.raise_for_status()
+        response.raise_for_status() 
 
         items = response.json().get("items", [])
 
