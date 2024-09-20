@@ -24,6 +24,7 @@ def create(region : str = "데이터 크롤링 할 지역",
     # 네이버 API 검색 -> 저장
     # TODO: rating 있는 항목은 값이 들어가지는지 확인해보기
     naverList = fetch_naver_blog_data(query=keyword, region=region, number=naverSize)
+    # print(naverList)
 
     # 구글 API 검색 -> 저장
     # TODO: 나중에 description에 "google Places 리뷰"만 저장되는 걸 개선하기
