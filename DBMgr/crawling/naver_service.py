@@ -2,9 +2,7 @@ import requests
 import re
 from urllib import parse
 from typing import List
-import sys
-sys.path.append('c:/Users/201-17/Documents/GitHub/SPOT/DBMgr/crawling')
-from models import SearchResult
+from DBMgr.model.models import SearchResult
 from utils import clean_html
 from config import NAVER_CLIENT_ID, NAVER_CLIENT_SECRET
 

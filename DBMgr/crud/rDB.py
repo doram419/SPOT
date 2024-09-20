@@ -1,4 +1,6 @@
-from crawling.models import SearchResult
+from DBMgr.model.models import SearchResult
+
+temp_pk = 0
 
 def saveToRDB(data : SearchResult = "저장할 데이터"):
     """
@@ -10,5 +12,6 @@ def saveToRDB(data : SearchResult = "저장할 데이터"):
     - pk : int
     """
     # TODO:MySQL에 데이터 생성해서 넣기, 예외처리
-    pk = 1
-    return pk
+    global temp_pk
+    temp_pk += 1
+    return temp_pk
