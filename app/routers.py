@@ -60,7 +60,6 @@ def extract_location_with_regex(text: str):
 
 
 # NER과 정규식을 병행하여 지역과 키워드 추출
-# NER과 정규식을 병행하여 지역과 키워드 추출
 def extract_entities(text: str):
     # NER 추출
     entities = ner_model(text)
