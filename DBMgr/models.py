@@ -32,7 +32,6 @@ class SearchResult(BaseModel):
     serves_vegetarian_food: Optional[bool] = None
     takeout: Optional[bool] = None
 
-
 # TODO: rdb에 적재
 # class Restaurant(Base):
 #     __tablename__ = 'restaurants'
@@ -44,4 +43,4 @@ class SearchResult(BaseModel):
 #     rating = Column(Float, nullable=True) 
 
 # class instanceData():
-# TODO: 갱신이 자주 필요한 데이터 모음, 이름 검색으로 바로 가져오기? or google_id로 가져오기
+# TODO: 갱신이 자주 필요한 데이터 모음, google_id로 가져오기

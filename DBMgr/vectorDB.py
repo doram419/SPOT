@@ -33,7 +33,6 @@ def saveToVDB(data : SearchResult = "저장할 데이터",
     - 설명
     - rdb의 pk : 파라미터 fk
     """
-    print(fk)
     # TODO:description chunking
     embedding = get_openai_embedding(data.description)
     metadata = {

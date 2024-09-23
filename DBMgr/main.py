@@ -42,6 +42,6 @@ if __name__ == "__main__":
     create(region="서초동", keyword="맛집", naverSize=0, googleSize=1)
 
     # 지금 테스트 중
-    result = searchVDB(query="회", search_amount=2)
+    result = searchVDB(query="맥주", search_amount=2)
     print(result[0]['title'])
     print(result[1]['title'])
