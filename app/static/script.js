@@ -63,7 +63,7 @@ recognition.interimResults = false;  // 중간 결과는 무시
 recognition.onresult = function(event) {
     const transcript = event.results[0][0].transcript;
     searchInput.value = transcript;  // 음성으로 인식한 텍스트를 검색창에 입력
-    searchForm.submit();  // 자동으로 검색 폼 제출
+    alert(`음성 인식 결과: ${transcript}`);  // 인식된 텍스트를 알림으로 표시
 };
 
 // 음성 검색 버튼 클릭 시 음성 인식 시작
