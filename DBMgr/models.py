@@ -15,6 +15,7 @@ class SearchResult(BaseModel):
     rating: Optional[float] = None  # 평점 
     views: Optional[int] = None     # 조회수
     price_level: Optional[int] = None   # 가격대, 구글이 제공하는대로 0~4로 구분
+    google_id : Optional[str] = None
     """
     0 Free
     1 Inexpensive
