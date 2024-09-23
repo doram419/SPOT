@@ -39,9 +39,10 @@ def show():
 if __name__ == "__main__":
     # 서초동에 있는 맛집 데이터를 google api를 통해서 찾아오고 vdb로 저장하는 코드
     # TODO: 인터페이스 만들기
-    create(region="서초동", keyword="맛집", naverSize=0, googleSize=1)
+    create(region="서초동", keyword="맛집", naverSize=0, googleSize=20)
 
     # 지금 테스트 중
-    result = searchVDB(query="회", search_amount=2)
-    # print(result[0]['title'])
+    result = searchVDB(query="회", search_amount=3)
+    for r in result:
+        print(f"{r['title']} : {r['link']}")
 
