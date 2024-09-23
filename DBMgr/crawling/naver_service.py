@@ -3,7 +3,7 @@ import re
 import sys
 from urllib import parse
 from typing import List
-sys.path.append('c:/Users/201-17/Documents/GitHub/SPOT/DBMgr/crawling')
+sys.path.append('C:/Users/shw26/Desktop/웤슾/SPOT/DBMgr/crawling')
 from models import SearchResult
 from utils import clean_html
 from config import NAVER_CLIENT_ID, NAVER_CLIENT_SECRET

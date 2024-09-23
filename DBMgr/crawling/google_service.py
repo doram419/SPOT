@@ -2,6 +2,10 @@ import googlemaps
 from typing import List
 from models import SearchResult
 from config import GOOGLE_API_KEY
+import pprint
+
+# API 응답 디버깅을 위한 코드
+
 
 # Google Maps 클라이언트 초기화
 gmaps = googlemaps.Client(key=GOOGLE_API_KEY)
@@ -13,6 +17,8 @@ def get_location_from_region(region: str):
         location = geocode_result[0]['geometry']['location']
         return location['lat'], location['lng']
     return None, None
+
+
 
 # 반경 1km 내에서 상위 5개의 맛집 검색 
 def fetch_top_restaurants_nearby(search_term: str = "검색어", region: str = "지역", 
@@ -30,21 +36,67 @@ def fetch_top_restaurants_nearby(search_term: str = "검색어", region: str = "
     results = []
     for place in places_result.get('results', []):
         place_id = place.get('place_id')
-        place_details = gmaps.place(place_id=place_id, fields=['name', 'rating', 'user_ratings_total', 'url'])
+
+        # 해당 장소의 상세 정보를 가져옴
+        place_details = gmaps.place(place_id=place_id,
+                                    fields=['name', 'rating', 'user_ratings_total', 'url', 'price_level', 'serves_beer',
+                                            'serves_wine', 'serves_breakfast', 'serves_brunch', 'serves_lunch',
+                                            'serves_dinner', 'serves_vegetarian_food', 'takeout', 'opening_hours'])  # 영업상태 : business_status 추후 추가
 
         if place_details:
+            opening_hours = place_details['result'].get('opening_hours', {})
+            open_now = opening_hours.get('open_now', False)
             place_name = place_details['result'].get('name', 'N/A')
             place_url = place_details['result'].get('url', '#')
             place_rating = place_details['result'].get('rating', 0)
             reviews_total = place_details['result'].get('user_ratings_total', 0)
+            price_level = place_details['result'].get('price_level', None)
+            serves_beer = place_details['result'].get('serves_beer', False)
+            serves_wine = place_details['result'].get('serves_wine', False)
+            serves_breakfast = place_details['result'].get('serves_breakfast', False)
+            serves_brunch = place_details['result'].get('serves_brunch', False)
+            serves_lunch = place_details['result'].get('serves_lunch', False)
+            serves_dinner = place_details['result'].get('serves_dinner', False)
+            serves_vegetarian_food = place_details['result'].get('serves_vegetarian_food', False)
+            takeout = place_details['result'].get('takeout', False)
 
+            # 검색 결과를 SearchResult로 구조화하여 리스트에 추가
             results.append(SearchResult(
                 title=place_name,
                 link=place_url,
                 description="Google Places 리뷰",
                 rating=place_rating,
-                views=reviews_total
+                views=reviews_total,
+                price_level=price_level,
+                serves_beer=serves_beer,
+                serves_wine=serves_wine,
+                serves_breakfast=serves_breakfast,
+                serves_brunch=serves_brunch,
+                serves_lunch=serves_lunch,
+                serves_dinner=serves_dinner,
+                serves_vegetarian_food=serves_vegetarian_food,
+                takeout=takeout,
+                status=open_now
             ))
-
+            pprint.pprint(place_details)
+    print(results)
     # 평점과 리뷰 수를 기준으로 정렬 후 상위 5개 반환
     return sorted(results, key=lambda x: (x.rating, x.views), reverse=True)[:number]
+
+# 장소 상태에 따른 영업 여부를 가져오는 함수 ** 이건 추후에 추가해도 됨 **
+def get_place_details(restaurant_name: str):
+    places_result = gmaps.places(restaurant_name)
+    if places_result['status'] == 'OK':
+        place_id = places_result['results'][0]['place_id']
+        place_details = gmaps.place(place_id=place_id)
+        return place_details
+    return None
+
+def get_restaurant_status(restaurant_name: str) -> str:
+    place_details = get_place_details(restaurant_name)
+    if place_details:
+        opening_hours = place_details['result'].get('opening_hours', {})
+        status = opening_hours.get('open_now', '상태 불명')
+        return status
+    return '상태를 찾을 수 없음'
+

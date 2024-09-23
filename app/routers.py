@@ -52,6 +52,7 @@ async def search_restaurant(request: Request, search_input: str = Form(...)):
 
     print(f"네이버 검색 결과: {len(naver_results)}개")
     print(f"구글 검색 결과: {len(google_results)}개")
+    print(f"Google Places API 검색 결과: {google_results}")
 
     combined_results = naver_results + google_results
 

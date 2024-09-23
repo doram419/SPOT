@@ -23,7 +23,7 @@ def create(region : str = "데이터 크롤링 할 지역",
     """ 
     # 네이버 API 검색 -> 저장
     # TODO: rating 있는 항목은 값이 들어가지는지 확인해보기
-    naverList = fetch_naver_blog_data(query=keyword, region=region, number=naverSize)
+    #naverList = fetch_naver_blog_data(query=keyword, region=region, number=naverSize)
     # print(naverList)
 
     # 구글 API 검색 -> 저장
@@ -35,20 +35,6 @@ def create(region : str = "데이터 크롤링 할 지역",
     # TODO: description을 파싱하면 좋겠는데 구글은 없기도해
     # vector db 적재
 
-    # 임베딩
-    # client = OpenAI()
-
-    # def get_embedding(text, model="text-embedding-3-small"):
-    # text = text.replace("\n", " ")
-    # return client.embeddings.create(input = [text], model="text-embedding-3-small").data[0].embedding
-
-    # df['ada_embedding'] = df.combined.apply(lambda x: get_embedding(x, model='text-embedding-3-small'))
-    # df.to_csv('output/embedded_1k_reviews.csv', index=False)
-
-    # 임베딩 차원 크기를 계산
-    # dimension_size = len(embeddings.embed_query("hello world"))
-    # print(dimension_size)
-
     # vector db 저장
     pass
 
@@ -56,4 +42,4 @@ def delete():
     pass
 
 if __name__ == "__main__":
-    create("서초동", "맛집", 10, 10)
+    create("서초동", "피자집", 10, 10)
