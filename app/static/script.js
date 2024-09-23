@@ -1,7 +1,5 @@
 // 검색 요청을 처리하는 함수
-function search(event) {
-    event.preventDefault();  // 페이지 새로고침 방지
-
+function search() {
     // 입력된 통합 검색어를 가져옴
     const searchInput = document.getElementById('searchInput').value;
 
@@ -57,7 +55,7 @@ const searchInput = document.getElementById('searchInput');
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 const recognition = new SpeechRecognition();
 recognition.lang = 'ko-KR';  // 한국어 설정
-recognition.interimResults = false;  // 중간 결과는 무시
+//recognition.interimResults = false;  // 중간 결과는 무시
 
 // 음성 인식이 성공적으로 완료되었을 때
 recognition.onresult = function(event) {
@@ -66,7 +64,20 @@ recognition.onresult = function(event) {
     alert(`음성 인식 결과: ${transcript}`);  // 인식된 텍스트를 알림으로 표시
 };
 
+// 음성 인식 종료 시 호출되는 핸들러
+recognition.onend = function() {
+    // 음성 인식이 끝난 후 다시 인식할 수 있도록 초기화
+    console.log('음성 인식이 종료되었습니다.');
+};
+
 // 음성 검색 버튼 클릭 시 음성 인식 시작
 voiceSearchButton.addEventListener('click', () => {
-    recognition.start();
+    // 음성 인식 중이면 중단
+    if (recognition.recognizing) {
+        recognition.abort();  // 현재 인식 중인 경우 중단
+        return;
+    }
+
+    recognition.start();  // 음성 인식 시작
+    console.log('음성 인식이 시작되었습니다.');
 });
