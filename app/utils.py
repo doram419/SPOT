@@ -1,6 +1,4 @@
-import googlemaps
-from fastapi import HTTPException
-from app.config import GOOGLE_API_KEY
+
 import re
 import googlemaps
 from fastapi import HTTPException
