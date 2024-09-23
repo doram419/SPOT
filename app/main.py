@@ -39,11 +39,11 @@ async def get_naver_blogs(query: str, keywords: str):
     blogs = fetch_naver_blog_data(query, keywords_list)
     return {"blogs": blogs}
 
-@app.post("/embedding")
-async def get_bert_embedding(text: str):
-    """BERT 임베딩 생성"""
-    embedding = get_embedding(text)
-    return {"embedding": embedding.tolist()}  # numpy 배열은 리스트로 변환해야 JSON으로 반환 가능
+# @app.post("/embedding")
+# async def get_bert_embedding(text: str):
+#     """BERT 임베딩 생성"""
+#     embedding = get_embedding(text)
+#     return {"embedding": embedding.tolist()}  # numpy 배열은 리스트로 변환해야 JSON으로 반환 가능
 
 @app.post("/keywords")
 async def extract_gpt_keywords(text: str):

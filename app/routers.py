@@ -110,6 +110,7 @@ async def search_restaurant(request: Request, search_input: str = Form(...)):  #
 
     combined_results = naver_results + google_results  # 네이버와 구글 결과를 합침
 
+    print("combined_results : ", combined_results )
     # 임베딩 벡터 생성 (결과에 대한 임베딩 처리)
     embeddings = np.array([get_embedding(result.title + " " + result.description) for result in combined_results],
                           dtype='float32')  # 검색 결과에 대해 임베딩 생성
