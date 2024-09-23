@@ -7,7 +7,7 @@ from app.crawling.naver_service import fetch_naver_blog_data
 from app.bert_service import get_embedding
 import faiss
 import numpy as np
-from transformers import pipeline
+
 import re
 
 from transformers import AutoTokenizer, AutoModelForTokenClassification, pipeline
