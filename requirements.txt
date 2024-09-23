@@ -8,4 +8,6 @@ torch
 requests
 python-dotenv
 uvicorn
-
+faiss
+numpy
+typing_extensions
