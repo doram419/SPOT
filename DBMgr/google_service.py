@@ -56,6 +56,6 @@ def fetch_top_restaurants_nearby(search_term: str = "검색어", region: str = "
             serves_vegetarian_food=place_details.get('serves_vegetarian_food', None),
             takeout=place_details.get('takeout', None),
         ))
-    # print(results[0])
+
     # 평점과 리뷰 수를 기준으로 정렬 후 상위 5개 반환
     return sorted(results, key=lambda x: (x.rating, x.views), reverse=True)[:number]
