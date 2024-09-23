@@ -13,16 +13,24 @@ import logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-from transformers import pipeline, AutoTokenizer, AutoModelForTokenClassification  # KoELECTRA 모델을 위한 토크나이저 및 분류 모델 가져옴
+from transformers import pipeline, ElectraForTokenClassification, ElectraTokenizer  # KoELECTRA 모델을 위한 토크나이저 및 분류 모델 가져옴
+from konlpy.tag import Okt  # KoNLPy의 Okt 형태소 분석기 가져오기
 
 app = FastAPI()
 router = APIRouter()
 templates = Jinja2Templates(directory="app/templates")
 
+# 형태소 분석기 초기화
+okt = Okt()
+
+# 불용어 리스트 정의
+stopwords = ['을', '를', '이', '가', '은', '는', '에', '에서', '으로', '로', '와', '과', '도',
+             '하다', '있다', '되다', '이다', '의', '그리고', '또한', '하면서', '면서', '같다', '좋다']
+
 # 미세 조정된 NER 모델 설정
 try:
-    tokenizer = AutoTokenizer.from_pretrained("monologg/koelectra-base-v3-discriminator")
-    model = AutoModelForTokenClassification.from_pretrained("monologg/koelectra-base-v3-discriminator")
+    tokenizer = ElectraTokenizer.from_pretrained("monologg/koelectra-base-v3-discriminator")
+    model = ElectraForTokenClassification.from_pretrained("monologg/koelectra-base-v3-discriminator")
 except Exception as e:
     logger.error(f"모델 로딩 중 오류 발생: {e}")
     raise HTTPException(status_code=500, detail="서버에서 오류가 발생했습니다.")
@@ -35,6 +43,14 @@ ner_model = pipeline(
     aggregation_strategy="simple",
     #tokenizer_kwargs={"clean_up_tokenization_spaces": True}
 ) # NER 태스크를 위한 파이프라인 생성
+
+# 엔티티 매핑 테이블
+entity_mapping = {
+    'LOC': 'location',
+    'ORGANIZATION': 'organization',
+    'PERSON': 'person',
+    'O': 'others'
+}
 
 # FAISS 인덱스 초기화
 embedding_dimension = 768
@@ -52,26 +68,39 @@ def extract_location_with_regex(text: str):
             loc_patterns.append(location)
     return loc_patterns
 
+# 형태소 분석을 통한 키워드 추출 함수
+def extract_keywords_with_morph(text):
+    tokens = okt.pos(text, stem=True)
+    keywords = [word for word, pos in tokens if pos in ['Noun', 'Verb', 'Adjective']]
+    keywords = [word for word in keywords if word not in stopwords]
+    return keywords
 
 # NER과 정규식을 사용한 지역 및 키워드 추출
-def extract_entities(text: str):
+def extract_entities_and_keywords(text: str):
     entities = ner_model(text)
-    locations, keywords = [], []
-
-    # 정규식으로 지역명 추출
-    regex_locations = extract_location_with_regex(text)
-    locations.extend(regex_locations)
+    locations = extract_location_with_regex(text)
+    keywords = []
 
     # NER 결과 처리
     for entity in entities:
         word = entity.get('word', entity.get('text', '')).replace('##', '')
         entity_label = entity.get('entity_group', entity.get('entity', ''))
 
-        # 엔티티 레이블에서 접두사 처리
-        if entity_label in ['LOC', 'B-LOC', 'I-LOC']:
+        # 엔티티 레이블 매핑
+        category = entity_mapping.get(entity_label, 'keyword')
+
+        if category == 'location':
             locations.append(word)
         else:
             keywords.append(word)
+
+    # 형태소 분석을 통한 추가 키워드 추출
+    morph_keywords = extract_keywords_with_morph(text)
+    keywords.extend(morph_keywords)
+
+    # 불용어 제거 및 중복 제거
+    keywords = list(set(keywords))
+    locations = list(set(locations))
 
     return locations, keywords
 
@@ -93,7 +122,7 @@ async def search_restaurant(request: Request, search_input: str = Form(...)):
     logger.info(f"입력된 검색어: {search_input}")  # 검색어 로그 출력
 
     # 지역 및 키워드 추출
-    locations, keywords = extract_entities(search_input)
+    locations, keywords = extract_entities_and_keywords(search_input)
     logger.info(f"추출된 지역: {locations}, 추출된 키워드: {keywords}")  # 추출된 NER 결과 로그 출력
 
     if not locations:
