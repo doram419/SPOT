@@ -55,7 +55,7 @@ const searchInput = document.getElementById('searchInput');
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 const recognition = new SpeechRecognition();
 recognition.lang = 'ko-KR';  // 한국어 설정
-//recognition.interimResults = false;  // 중간 결과는 무시
+recognition.interimResults = false;  // 중간 결과는 무시
 
 // 음성 인식이 성공적으로 완료되었을 때
 recognition.onresult = function(event) {
