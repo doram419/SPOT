@@ -4,7 +4,6 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.routers import router
 from app.crawling.google_service import fetch_top_restaurants_nearby
 from app.crawling.naver_service import fetch_naver_blog_data
-from app.bert_service import get_embedding
 from app.gpt_service import extract_keywords
 
 # FastAPI 애플리케이션 인스턴스 생성
