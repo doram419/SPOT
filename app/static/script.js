@@ -40,6 +40,8 @@ function search() {
             console.log('JSON 응답:', data);
             // 필요한 경우 JSON 데이터를 사용한 추가 로직
         }
+        // 검색이 성공적으로 완료된 후 추천 문장 카드 숨기기
+        document.getElementById('cardContainer').style.display = 'none';
     })
     .catch(error => {
         console.error('Error during fetch:', error);

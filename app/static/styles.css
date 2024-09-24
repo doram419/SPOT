@@ -64,6 +64,47 @@ button:hover {
     box-shadow: 0 6px 14px rgba(0, 0, 0, 0.2);
 }
 
+/* 추천 문장 카드 스타일 */
+#cardContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+    gap: 10px;
+    margin-top: 20px;
+    max-width: 100%;
+    padding: 0 15px; /* 좌우 여백 추가 */
+    overflow-x: auto;
+}
+
+#cardContainer .card {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 200px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+#cardContainer .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+#cardContainer .icon {
+    font-size: 2.0rem;
+    margin-bottom: 15px;
+    color: #37474f; /* 아이콘 색상 추가 */
+}
+
+#cardContainer .card p {
+    color: #37474f;
+    font-size: 1.0rem;
+    font-weight: bold;
+    margin: 0;
+}
+
 #results {
     margin-top: 40px;
     padding: 20px;
