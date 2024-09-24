@@ -1,8 +1,9 @@
 /* Google Fonts - Nanum Gothic 폰트 추가 */
 @import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&display=swap');
+
 /* 기본 스타일 */
 body {
-    background-color: #d3f0f7;  /* 하늘색 배경 */
+   /* background-color: #d3f0f7;  하늘색 배경 */
     font-family: 'Nanum Gothic', Arial, sans-serif;
     margin: 0;
     padding: 0;
@@ -146,4 +147,10 @@ a:hover {
     li p {
         font-size: 0.9rem;
     }
+}
+
+/* 로고 이미지 정렬 */
+.logo-image {
+    vertical-align: middle; /* 이미지를 텍스트 중간에 맞춤 */
+    margin-right: 10px; /* 이미지와 텍스트 사이에 여백 추가 */
 }
