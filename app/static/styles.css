@@ -1,10 +1,9 @@
-/* Google Fonts - Poppins 폰트 추가 */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
-
+/* Google Fonts - Nanum Gothic 폰트 추가 */
+@import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&display=swap');
 /* 기본 스타일 */
 body {
     background-color: #d3f0f7;  /* 하늘색 배경 */
-    font-family: 'Poppins', Arial, sans-serif;  /* Poppins 폰트 */
+    font-family: 'Nanum Gothic', Arial, sans-serif;
     margin: 0;
     padding: 0;
     text-align: center;
@@ -17,19 +16,21 @@ body {
 
 h1 {
     color: #01579b;
-    margin-top: 20px;
+    margin-top: 30px;
     font-size: 2.5rem;
+    font-weight: 700;
 }
 
+/* 검색 폼 */
 #searchForm {
     background-color: #ffffff;
     padding: 20px;
-    border-radius: 10px;
+    border-radius: 12px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    max-width: 400px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    max-width: 450px;
     width: 100%;
 }
 
@@ -38,8 +39,8 @@ h1 {
     width: 100%;
     margin: 10px 0;
     border: 1px solid #b0bec5;
-    border-radius: 5px;
-    font-size: 1rem;
+    border-radius: 6px;
+    font-size: 1.1rem;
     color: #37474f;
 }
 
@@ -47,53 +48,66 @@ button {
     background-color: #0288d1;
     color: white;
     border: none;
-    padding: 12px 20px;
-    border-radius: 5px;
+    padding: 14px 25px;
+    border-radius: 8px;
     cursor: pointer;
-    font-size: 1rem;
+    font-size: 1.2rem;
+    font-weight: bold;
     width: 100%;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 button:hover {
     background-color: #0277bd;
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.2);
 }
 
 #results {
-    margin-top: 30px;
+    margin-top: 40px;
     padding: 20px;
     width: 100%;
-    max-width: 600px;
+    max-width: 650px;
     text-align: left;
 }
 
 h2 {
     color: #01579b;
-    font-size: 1.5rem;
-    margin-bottom: 20px;
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 25px;
 }
 
+/* 검색 결과 카드 */
 ul {
     list-style-type: none;
     padding: 0;
 }
 
 li {
-    margin: 20px 0;
-    padding: 15px;
-    background-color: #f9f9f9;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 25px 0;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
     text-align: left;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+li:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
 }
 
 li h3 {
     color: #0288d1;
-    font-size: 1.2rem;
+    font-size: 1.5rem;
+    font-weight: 700;
 }
 
 li p {
     color: #37474f;
+    font-size: 1rem;
     margin: 10px 0;
 }
 
@@ -118,15 +132,15 @@ a:hover {
     }
 
     button {
-        font-size: 0.9rem;
+        font-size: 1rem;
     }
 
     h2 {
-        font-size: 1.3rem;
+        font-size: 1.4rem;
     }
 
     li h3 {
-        font-size: 1.1rem;
+        font-size: 1.3rem;
     }
 
     li p {
