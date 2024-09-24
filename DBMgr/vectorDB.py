@@ -17,7 +17,7 @@ embeddings = OpenAIEmbeddings(openai_api_key=openai_api_key, model="text-embeddi
 vector_store = FaissVectorStore()
 
 # 텍스트 임베딩 함수
-def get_openai_embedding(text : str = "임베딩 할 자연어"): 
+def get_openai_embedding(text): 
     """
     openai를 통해서 자연어 임베딩을 해서 돌려주는 함수
     """
@@ -34,12 +34,34 @@ def saveToVDB(data : SearchResult = "저장할 데이터",
     - 설명
     - rdb의 pk : 파라미터 fk
     """
-    print(fk)
-    # TODO:description chunking
-    embedding = get_openai_embedding(data.description)
+
+    review_text = str()
+    for text in data.reviews:
+        review_text = review_text + text['text']
+    
+    # 숫자로 전환 되지 않은 것들만 벡터화
+    embedding = {"name":get_openai_embedding(data.title),
+         "address":get_openai_embedding(data.address),
+         "reviews":get_openai_embedding(review_text),
+         "description":get_openai_embedding(data.description),
+         "rating":data.rating,
+         "views":data.views,
+         "price_level":data.price_level,
+         "serves_beer":data.serves_beer,
+         "serves_wine":data.serves_wine,
+         "serves_breakfast":data.serves_breakfast,
+         "serves_brunch":data.serves_brunch,
+         "serves_lunch":data.serves_lunch,
+         "serves_dinner":data.serves_dinner,
+         "serves_vegetarian_food":data.serves_vegetarian_food,
+         "takeout":data.takeout
+         }
+    
     metadata = {
         "name": data.title,
-        "pk": fk
+        "pk": fk,
+        "link":data.link,
+        "google_id":data.google_id
     }
     vector_store.add_to_index(embedding, metadata)
     vector_store.save_index()
@@ -58,7 +80,9 @@ def searchVDB(query: str = "검색할 문장", search_amount: int = "결과를 �
             results.append({
                 "title": meta.get("name", "Unknown"),
                 "similarity": float(D[0][idx]),
-                "pk": meta.get("pk", "Unknown")
+                "pk": meta.get("pk", "Unknown"),
+                "link": meta.get("link", "Unknown"),
+                "google_id": meta.get("google_id", "Unknown")
             })
 
     # 유사도 순으로 정렬

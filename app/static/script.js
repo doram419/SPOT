@@ -16,18 +16,32 @@ function search(event) {
     formData.append('search_input', searchInput);
 
     // 검색 요청을 서버에 전송
-    fetch('/search/', {
+    fetch('http://127.0.0.1:8000/search/', {  // 서버의 URL 명확화
         method: 'POST',  // POST 메서드 명시
         body: formData  // FormData 전송
     })
     .then(response => {
         if (!response.ok) {
-            throw new Error('Network response was not ok');
+            throw new Error('Network response was not ok. Status: ' + response.status);
         }
-        return response.text();  // 텍스트 응답을 받음
+
+        // 서버가 JSON을 반환하는 경우
+        const contentType = response.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+            return response.json();
+        }
+
+        // 서버가 HTML을 반환하는 경우
+        return response.text();
     })
-    .then(html => {
-        document.body.innerHTML = html;
+    .then(data => {
+        // JSON과 HTML 모두 처리 가능하도록 조건 분기
+        if (typeof data === 'string') {
+            document.body.innerHTML = data;  // HTML을 페이지에 적용
+        } else {
+            console.log('JSON 응답:', data);
+            // 필요한 경우 JSON 데이터를 사용한 추가 로직
+        }
     })
     .catch(error => {
         console.error('Error during fetch:', error);

@@ -35,7 +35,7 @@ def save(datas : list = "SearchResult list를 주면 DB에 저장하는 함수")
 
     for data in datas:
         pk = saveToRDB(data=data)
-        saveToVDB(data=data, fk=pk)
+        # saveToVDB(data=data, fk=pk)
 
 def show():
     pass
@@ -43,9 +43,11 @@ def show():
 if __name__ == "__main__":
     # 서초동에 있는 맛집 데이터를 google api를 통해서 찾아오고 vdb로 저장하는 코드
     # TODO: 인터페이스 만들기
+
     create(region="서초동", keyword="횟집", naverSize=0, googleSize=100)
 
     # 지금 테스트 중
     result = searchVDB(query="파스타", search_amount=5)
     print(result)
+
 
