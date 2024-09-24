@@ -3,13 +3,9 @@
 """
 # API 키를 환경변수로 관리하기 위한 설정 파일
 from dotenv import load_dotenv
-# Langchain 
-from langchain_community.document_loaders import TextLoader
-from langchain.text_splitter import RecursiveCharacterTextSplitter
-from crawling.naver_service import fetch_naver_blog_data
-from crawling.google_service import fetch_top_restaurants_nearby
-# from openai import OpenAI
-import faiss
+from google_service import fetch_top_restaurants_nearby
+from vectorDB import saveToVDB, searchVDB
+from rDB import saveToRDB
 
 # API 키 정보 로드
 load_dotenv()
@@ -22,24 +18,34 @@ def create(region : str = "데이터 크롤링 할 지역",
     필요한 데이터를 크롤링 한 다음, Faiss 파일로 만들어주는 함수
     """ 
     # 네이버 API 검색 -> 저장
-    # TODO: rating 있는 항목은 값이 들어가지는지 확인해보기
-    #naverList = fetch_naver_blog_data(query=keyword, region=region, number=naverSize)
-    # print(naverList)
+
+    # naverList = fetch_naver_blog_data(query=keyword, region=region, number=naverSize)
+
+
 
     # 구글 API 검색 -> 저장
-    # TODO: 나중에 description에 "google Places 리뷰"만 저장되는 걸 개선하기
     googleList = fetch_top_restaurants_nearby(search_term=keyword,region=region,number=googleSize)
+    save(googleList)
 
-    print(googleList[0])
-    # 파싱
-    # TODO: description을 파싱하면 좋겠는데 구글은 없기도해
-    # vector db 적재
+def save(datas : list = "SearchResult list를 주면 DB에 저장하는 함수"):
+    """
+    크롤링한 데이터를 저장하는 함수
+    """
 
-    # vector db 저장
-    pass
 
-def delete():
+    for data in datas:
+        pk = saveToRDB(data=data)
+        saveToVDB(data=data, fk=pk)
+
+def show():
     pass
 
 if __name__ == "__main__":
-    create("서초동", "피자집", 10, 10)
+    # 서초동에 있는 맛집 데이터를 google api를 통해서 찾아오고 vdb로 저장하는 코드
+    # TODO: 인터페이스 만들기
+    create(region="서초동", keyword="횟집", naverSize=0, googleSize=100)
+
+    # 지금 테스트 중
+    result = searchVDB(query="파스타", search_amount=5)
+    print(result)
+

@@ -15,8 +15,10 @@ def extract_keywords(text: str):
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
             messages=[
-                {"role": "system", "content": "You are a helpful assistant that extracts keywords."},
-                {"role": "user", "content": f"Extract keywords from the following text: {chunk}"}
+                {"role": "system",
+                 "content": "You are an assistant that extracts restaurant search keywords and helps with sentence-based searches, prioritizing location and cuisine."},
+                {"role": "user",
+                 "content": f"From the following text, extract keywords focusing on two main priorities: 1) the location (such as city, district, or neighborhood) and 2) the type of cuisine (such as food or restaurant type). The goal is to find relevant restaurants in the specified area and for the specified type of food: {chunk}"}
             ]
         )
         keywords.append(response['choices'][0]['message']['content'].strip())
