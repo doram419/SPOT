@@ -15,7 +15,7 @@
     </form>
 
     <div id="results">
-        {% if search_results %}
+        {% if search_results is defined and search_results %}
             <h2>검색 결과</h2>
             <ul>
                 {% for result in search_results %}

@@ -4,7 +4,6 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.routers import router
 from app.crawling.google_service import fetch_top_restaurants_nearby
 from app.crawling.naver_service import fetch_naver_blog_data
-from app.bert_service import get_embedding
 from app.gpt_service import extract_keywords
 
 # FastAPI 애플리케이션 인스턴스 생성
@@ -39,11 +38,11 @@ async def get_naver_blogs(query: str, keywords: str):
     blogs = fetch_naver_blog_data(query, keywords_list)
     return {"blogs": blogs}
 
-@app.post("/embedding")
-async def get_bert_embedding(text: str):
-    """BERT 임베딩 생성"""
-    embedding = get_embedding(text)
-    return {"embedding": embedding.tolist()}  # numpy 배열은 리스트로 변환해야 JSON으로 반환 가능
+# @app.post("/embedding")
+# async def get_bert_embedding(text: str):
+#     """BERT 임베딩 생성"""
+#     embedding = get_embedding(text)
+#     return {"embedding": embedding.tolist()}  # numpy 배열은 리스트로 변환해야 JSON으로 반환 가능
 
 @app.post("/keywords")
 async def extract_gpt_keywords(text: str):
