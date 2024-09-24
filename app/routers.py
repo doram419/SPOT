@@ -29,8 +29,8 @@ stopwords = ['을', '를', '이', '가', '은', '는', '에', '에서', '으로'
 
 # 미세 조정된 NER 모델 설정
 try:
-    tokenizer = ElectraTokenizer.from_pretrained("monologg/koelectra-base-v3-discriminator")
-    model = ElectraForTokenClassification.from_pretrained("monologg/koelectra-base-v3-discriminator")
+    tokenizer = ElectraTokenizer.from_pretrained("kykim/bert-kor-base")
+    model = ElectraForTokenClassification.from_pretrained("kykim/bert-kor-base")
 except Exception as e:
     logger.error(f"모델 로딩 중 오류 발생: {e}")
     raise HTTPException(status_code=500, detail="서버에서 오류가 발생했습니다.")
@@ -136,12 +136,14 @@ async def search_restaurant(request: Request, search_input: str = Form(...)):
     # 네이버 및 구글 검색 결과
     try:
         naver_results = fetch_naver_blog_data(query, region, keywords)
+        logger.info(f"네이버 결과 가져오기 완료")
     except Exception as e:
         logger.error(f"네이버 블로그 데이터 가져오는 중 오류 발생: {e}")
         naver_results = []
 
     try:
         google_results = fetch_top_restaurants_nearby(query, region)
+        logger.info(f"구글 결과 가져오기 완료")
     except Exception as e:
         logger.error(f"구글 맛집 데이터 가져오는 중 오류 발생: {e}")
         google_results = []
@@ -161,6 +163,7 @@ async def search_restaurant(request: Request, search_input: str = Form(...)):
     try:
         embeddings = np.array([get_embedding(result.title + " " + result.description) for result in combined_results],
                               dtype='float32')
+        logger.info(f"임베딩 생성 완료, shape: {embeddings.shape}")
         if embeddings.size == 0:
             logger.error("임베딩 생성 결과가 없습니다.")
             raise HTTPException(status_code=500, detail="임베딩 생성 결과가 없습니다.")
@@ -172,6 +175,7 @@ async def search_restaurant(request: Request, search_input: str = Form(...)):
         embeddings = embeddings.reshape(-1, embeddings.shape[-1])
 
     index.add(embeddings)
+    logger.info(f"FAISS 인덱스에 벡터 추가 완료, 총 벡터 수: {index.ntotal}")
 
     # 검색어 임베딩 생성 및 FAISS 검색
     try:
@@ -183,7 +187,7 @@ async def search_restaurant(request: Request, search_input: str = Form(...)):
         logger.error(f"검색어 임베딩 생성 중 오류 발생: {e}")
         raise HTTPException(status_code=500, detail="검색어 임베딩 생성 중 오류가 발생했습니다.")
 
-    print("query_embedding shape:", query_embedding.shape)
+    logger.info(f"query_embedding shape: {query_embedding.shape}")
 
     # 차원 조정
     if len(query_embedding.shape) > 2:
@@ -193,6 +197,7 @@ async def search_restaurant(request: Request, search_input: str = Form(...)):
 
     try:
         distances, indices = index.search(query_embedding, k=5)
+        logger.info(f"FAISS 검색 완료, distances: {distances}, indices: {indices}")
     except Exception as e:
         logger.error(f"FAISS 검색 중 오류 발생: {e}")
         raise HTTPException(status_code=500, detail="검색 중 오류가 발생했습니다.")
@@ -201,8 +206,7 @@ async def search_restaurant(request: Request, search_input: str = Form(...)):
     search_results = [combined_results[idx] for idx in indices[0]]
     logger.info(f"검색된 결과: {search_results}")  # FAISS 검색 결과 로그 출력
 
-    return templates.TemplateResponse("index.html", {"request": request, "search_results": search_results})
-
+    return templates.TemplateResponse("index.html", {"request": request, "search_results": search_results, "naver_results": naver_results, "google_results": google_results})
 
 # 메인 페이지 엔드포인트
 @router.get("/", response_class=HTMLResponse)
