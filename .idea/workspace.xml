@@ -5,27 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6377c7f6-a7c3-4ce4-a2b2-951a7b19679c" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DBMgr/FaissVectorStore.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DBMgr/rDB.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DBMgr/vectorDB.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DBMgr/crawling/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/DBMgr/config.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DBMgr/crawling/database.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DBMgr/crawling/google_service.py" beforeDir="false" afterPath="$PROJECT_DIR$/DBMgr/google_service.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DBMgr/crawling/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/DBMgr/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DBMgr/crawling/naver_service.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DBMgr/crawling/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/DBMgr/utils.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DBMgr/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/DBMgr/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DBMgr/naver_service.py" beforeDir="false" afterPath="$PROJECT_DIR$/DBMgr/naver_service.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/bert_service.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/bert_service.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/crawling/google_service.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/crawling/google_service.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/gpt_service.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/gpt_service.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/routers.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/routers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/static/script.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/static/script.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/templates/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/utils.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -35,9 +15,9 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 2
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 2
+}</component>
   <component name="ProjectId" id="2mVImmjiHVIGr6GQzNeifRImMEn" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
@@ -49,7 +29,7 @@
     "Python.main (1).executor": "Run",
     "Python.main.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "Merging hyohyo"
+    "git-widget-placeholder": "hyohyo"
   }
 }]]></component>
   <component name="RunManager" selected="Python.main">
