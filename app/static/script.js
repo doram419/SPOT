@@ -1,5 +1,19 @@
+// 추천 문장을 검색 창에 입력하고 검색을 트리거하는 함수
+function autoSearch(query) {
+    // 검색어를 검색 입력창에 설정
+    const searchInput = document.getElementById('searchInput');
+    searchInput.value = query;
+
+    // 검색 요청 자동 전송
+    search();
+}
+
 // 검색 요청을 처리하는 함수
-function search() {
+function search(event) {
+    // 폼 제출을 막기 위해 이벤트를 취소 (자동 검색에서만 사용)
+    if (event) {
+       event.preventDefault();
+    }
     // 입력된 통합 검색어를 가져옴
     const searchInput = document.getElementById('searchInput').value;
 
