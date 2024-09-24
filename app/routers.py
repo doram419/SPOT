@@ -7,15 +7,16 @@ from app.crawling.naver_service import fetch_naver_blog_data
 from app.bert_service import get_embedding
 import faiss
 import numpy as np
-
 import re
 
 from transformers import AutoTokenizer, AutoModelForTokenClassification, pipeline
+from konlpy.tag import Okt  # KoNLPy의 Okt(Open Korean Text) 형태소 분석기 추가
 
 tokenizer = AutoTokenizer.from_pretrained("kykim/bert-kor-base")
 model = AutoModelForTokenClassification.from_pretrained("kykim/bert-kor-base")
 
 ner_model = pipeline("ner", model=model, tokenizer=tokenizer, aggregation_strategy="simple")
+okt = Okt()  # 형태소 분석기 초기화
 
 # 임의의 임베딩 벡터 생성
 dimension = 768
@@ -83,6 +84,12 @@ def extract_entities(text: str):
             locations.append(word)
         else:
             keywords.append(word)
+    # 형태소 분석 수행
+    morphs = okt.pos(text)
+    for word, pos in morphs:
+        if pos.startswith('N'):  # 명사인 경우
+            if word not in locations and word not in keywords:
+                keywords.append(word)
 
     # 만약 NER에서 지역을 추출하지 못했으면 정규식 결과를 우선 사용
     if not locations and regex_locations:
