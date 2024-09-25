@@ -28,23 +28,35 @@ def fetch_top_restaurants_nearby(search_term: str = "검색어", region: str = "
     places_result = gmaps.places_nearby(location=(lat, lng), radius=1000, keyword=search_term)
 
     results = []
-    for place in places_result.get('results', []):
-        place_id = place.get('place_id')
-        place_details = gmaps.place(place_id=place_id, fields=['name', 'rating', 'user_ratings_total', 'url'])
-
-        if place_details:
-            place_name = place_details['result'].get('name', 'N/A')
-            place_url = place_details['result'].get('url', '#')
-            place_rating = place_details['result'].get('rating', 0)
-            reviews_total = place_details['result'].get('user_ratings_total', 0)
-
-            results.append(SearchResult(
-                title=place_name,
-                link=place_url,
-                description="Google Places 리뷰",
-                rating=place_rating,
-                views=reviews_total
-            ))
+    for place in places_result['results']:
+        # 주변 검색 결과로 가져올 수 없는 항목은 id를 통해 장소 검색으로 가져오기
+        place_id = place.get('place_id', 'None')
+        place_details = gmaps.place(place_id=place_id, language='ko',
+                                    fields=['name', 'url', 'vicinity', 'rating',
+                   'user_ratings_total', 'price_level', 'reviews', 'serves_beer',
+                   'serves_wine', 'serves_breakfast', 'serves_brunch', 'serves_lunch',
+                   'serves_dinner', 'serves_vegetarian_food', 'takeout'])['result']
+        
+        # api 효율화를 위해서 필요한 필드만 가져와서 결과에 append
+        results.append(SearchResult(
+            title=place_details.get('name', '이름 없음'),
+            link=place_details.get('url', 'url 없음'), 
+            description=place_details.get('editorial_summary', '간략 설명 없음'),
+            address=place_details.get('vicinity', '주소 찾지 못함'),
+            rating=place_details.get('rating', 0.0),
+            views=place_details.get('user_ratings_total', 0),
+            price_level=place_details.get('price_level', 0),
+            reviews=place_details.get('reviews', '이름 없음'),
+            serves_beer=place_details.get('serves_beer', False),
+            serves_wine=place_details.get('serves_wine', False),
+            serves_breakfast=place_details.get('serves_breakfast', False),
+            serves_brunch=place_details.get('serves_brunch', False),
+            serves_lunch=place_details.get('serves_lunch', False),
+            serves_dinner=place_details.get('serves_dinner', False),
+            serves_vegetarian_food=place_details.get('serves_vegetarian_food', False),
+            takeout=place_details.get('takeout', False),
+        ))
+    print(results[0].reviews[0])
 
     # 평점과 리뷰 수를 기준으로 정렬 후 상위 5개 반환
     return sorted(results, key=lambda x: (x.rating, x.views), reverse=True)[:number]
