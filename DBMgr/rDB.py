@@ -24,7 +24,7 @@ def create_connection():
     return pymysql.connect(
         host='localhost',
         user='root',
-        password='manager#0912',
+        password='himedia',
         database='spot',
         charset='utf8mb4',
         cursorclass=pymysql.cursors.DictCursor

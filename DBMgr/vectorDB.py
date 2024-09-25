@@ -18,43 +18,45 @@ vector_store = FaissVectorStore()
 # 텍스트 임베딩 함수
 def get_openai_embedding(text): 
     """
-    openai를 통해서 자연어 임베딩을 해서 돌려주는 함수
+    OpenAI를 통해 자연어 임베딩을 생성하는 함수
+    :param text: 임베딩할 텍스트
+    :return: 임베딩 벡터
     """
-    return embeddings.embed_query(text)
+    embedding = embeddings.embed_query(text)
+    return np.array(embedding, dtype=np.float32)
 
-def saveToVDB(data : SearchResult = "저장할 데이터",
-              fk : int = "rdb에 저장된 키 값"):
+def saveToVDB(data : SearchResult,
+              fk : int):
     """
-    SearchResult를 주면 vectorDB에 크롤링한 데이터를 저장하는 함수
-    rdb와 연동을 위해 fk 필수
+    SearchResult를 VectorDB에 저장하는 함수
+    :param data: 저장할 SearchResult 객체
+    :param fk: RDB에 저장된 키 값
 
     저장하는 데이터
     - 가게명 
     - 설명
     - rdb의 pk : 파라미터 fk
     """
-
-    review_text = str()
-    for text in data.reviews:
-        review_text = review_text + text['text']
+    review_text = ' '.join([review['text'] for review in data.reviews])
     
     # 숫자로 전환 되지 않은 것들만 벡터화
-    embedding = {"name":get_openai_embedding(data.title),
-         "address":get_openai_embedding(data.address),
-         "reviews":get_openai_embedding(review_text),
-         "description":get_openai_embedding(data.description),
-         "rating":data.rating,
-         "views":data.views,
-         "price_level":data.price_level,
-         "serves_beer":data.serves_beer,
-         "serves_wine":data.serves_wine,
-         "serves_breakfast":data.serves_breakfast,
-         "serves_brunch":data.serves_brunch,
-         "serves_lunch":data.serves_lunch,
-         "serves_dinner":data.serves_dinner,
-         "serves_vegetarian_food":data.serves_vegetarian_food,
-         "takeout":data.takeout
-         }
+    embedding = {
+        "name": get_openai_embedding(data.title),
+        "address": get_openai_embedding(data.address),
+        "reviews": get_openai_embedding(review_text),
+        "description": get_openai_embedding(data.description),
+        "rating": np.array([data.rating], dtype=np.float32),
+        "views": np.array([data.views], dtype=np.float32),
+        "price_level": np.array([data.price_level], dtype=np.float32),
+        "serves_beer": np.array([float(data.serves_beer)], dtype=np.float32),
+        "serves_wine": np.array([float(data.serves_wine)], dtype=np.float32),
+        "serves_breakfast": np.array([float(data.serves_breakfast)], dtype=np.float32),
+        "serves_brunch": np.array([float(data.serves_brunch)], dtype=np.float32),
+        "serves_lunch": np.array([float(data.serves_lunch)], dtype=np.float32),
+        "serves_dinner": np.array([float(data.serves_dinner)], dtype=np.float32),
+        "serves_vegetarian_food": np.array([float(data.serves_vegetarian_food)], dtype=np.float32),
+        "takeout": np.array([float(data.takeout)], dtype=np.float32)
+    }
     
     metadata = {
         "name": data.title,
@@ -65,15 +67,21 @@ def saveToVDB(data : SearchResult = "저장할 데이터",
     vector_store.add_to_index(embedding, metadata)
 
 def searchVDB(query : str = "검색할 문장",
-              search_amount : int = "결과를 몇 개 가져올지"): 
+              search_amount : int = 5): 
     """
-    vector DB에서 검색해오는 함수
-
-    반환 값 
-    - list<dict>
+    VectorDB에서 검색하는 함수
+    :param query: 검색할 쿼리 문장
+    :param search_amount: 반환할 결과의 개수
+    :return: 검색 결과 리스트 list<dict>
     """
     query_embedding = get_openai_embedding(query)
-    D, I = vector_store.index.search(np.array([query_embedding], dtype=np.float32), search_amount)
+    
+    if vector_store.dim is None:
+        print("경고: 벡터 저장소가 비어 있습니다. 먼저 데이터를 추가해주세요.")
+        return []
+    padding = np.zeros(vector_store.dim - len(query_embedding), dtype=np.float32)
+    query_embedding = np.concatenate([query_embedding, padding])
+    D, I = vector_store.search(query_embedding, k=search_amount)
     results = []
 
     for idx, i in enumerate(I[0]):

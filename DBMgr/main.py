@@ -31,7 +31,7 @@ def save(datas : list = "SearchResult list를 주면 DB에 저장하는 함수")
 
     for data in datas:
         pk = saveToRDB(data=data)
-        # saveToVDB(data=data, fk=pk)
+        saveToVDB(data=data, fk=pk)
 
 def show():
     pass
@@ -42,7 +42,13 @@ if __name__ == "__main__":
     create(region="서초동", keyword="맛집", naverSize=0, googleSize=20)
 
     # 지금 테스트 중
-    # result = searchVDB(query="회", search_amount=3)
-    # for r in result:
-    #     print(f"{r['title']} : {r['link']}")
+    result = searchVDB(query="회", search_amount=3)
+    print(f"vdb 검색 쿼리 : 회")
+    if result:
+        for r in result:
+            print(f"{r['title']} : {r['link']}")
+    else:
+        print("검색 결과가 없습니다.")
+    
+
 
