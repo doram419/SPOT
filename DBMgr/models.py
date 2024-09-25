@@ -33,7 +33,7 @@ class SearchResult(BaseModel):
     serves_dinner: Optional[bool] = None
     serves_vegetarian_food: Optional[bool] = None
     takeout: Optional[bool] = None
-    international_phone_number: Optional[bool] = None
+    international_phone_number: Optional[str] = None
 
 # TODO: rdb에 적재
 # class Restaurant(Base):

@@ -35,7 +35,7 @@ def fetch_top_restaurants_nearby(search_term: str = "검색어", region: str = "
                                     fields=['name', 'url', 'vicinity', 'rating',
                    'user_ratings_total', 'price_level', 'reviews', 'serves_beer',
                    'serves_wine', 'serves_breakfast', 'serves_brunch', 'serves_lunch',
-                   'serves_dinner', 'serves_vegetarian_food', 'takeout'])['result']
+                   'serves_dinner', 'serves_vegetarian_food', 'takeout', 'international_phone_number'])['result']
         
         # api 효율화를 위해서 필요한 필드만 가져와서 결과에 append
         results.append(SearchResult(
@@ -43,11 +43,11 @@ def fetch_top_restaurants_nearby(search_term: str = "검색어", region: str = "
             link=place_details.get('url', None), 
             address=place_details.get('vicinity', None),
             reviews=place_details.get('reviews', None),
-            description=place_details.get('editorial_summary', None),
-            google_id=place_id,
+            description=place_details.get('editorial_summary', '설명 없음'),
             rating=place_details.get('rating', 0.0),
             views=place_details.get('user_ratings_total', 0),
             price_level=place_details.get('price_level', 0),
+            google_id=place_id,
             serves_beer=place_details.get('serves_beer', False),
             serves_wine=place_details.get('serves_wine', False),
             serves_breakfast=place_details.get('serves_breakfast', False),

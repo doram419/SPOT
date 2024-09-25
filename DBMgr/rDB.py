@@ -39,12 +39,17 @@ def saveToRDB(data: SearchResult):
         with connection.cursor() as cursor:
             # 데이터 삽입 SQL 쿼리 추가할거있으면 추가하기 *************
             sql = """
-            INSERT INTO restaurant_search_results 
-            (title, review, description TEXT, adr_address, international_phone_number)
-            VALUES (%s, %s, %s, %s, %s)
+            INSERT INTO restaurant
+            (title, description , adr_address, international_phone_number)
+            VALUES (%s, %s, %s, %s)
             """
+            description = data.description
+
+            if description == None:
+                description = '설명 없음'
+
             cursor.execute(sql, (
-                data.title, data.reviews[0]['text'], data.description, data.address, data.international_phone_number
+                data.title, description, data.address, data.international_phone_number
             ))
             connection.commit()
             return cursor.lastrowid  # 삽입된 데이터의 기본 키(PK) 반환

@@ -37,7 +37,12 @@ def saveToVDB(data : SearchResult,
     - 설명
     - rdb의 pk : 파라미터 fk
     """
-    review_text = ' '.join([review['text'] for review in data.reviews])
+    review_text = str()
+    for review in data.reviews:
+        if type(review) == dict :
+            review_text = ' '.join(review['text'])
+
+    # review_text = ' '.join([review['text'] for review in data.reviews])
     
     # 숫자로 전환 되지 않은 것들만 벡터화
     embedding = {
