@@ -15,13 +15,14 @@ document.addEventListener("DOMContentLoaded", function() {
     // 로그인 상태를 확인하는 함수
     function checkLoginStatus() {
         const token = localStorage.getItem('access_token');
-        if (token) {
+        const username = localStorage.getItem('username'); // username 저장된 값 불러오기
+        if (token && username) {
             // 로그인 상태 유지 - 리뷰 기능 사용 가능
             loginForm.style.display = 'none';
             signupForm.style.display = 'none';
             authButtons.style.display = 'none';
             loggedInStatus.style.display = 'block';
-            welcomeMessage.textContent = "로그인 상태입니다. 리뷰를 남길 수 있습니다.";
+            welcomeMessage.textContent = `${username}님, 리뷰를 남길 수 있습니다.`; // username과 함께 메시지 표시
         } else {
             // 로그인되지 않은 상태 - 리뷰 기능 사용 불가, 검색 가능
             loginForm.style.display = 'none';
@@ -54,6 +55,7 @@ document.addEventListener("DOMContentLoaded", function() {
     if (logoutButton) {
         logoutButton.addEventListener('click', () => {
             localStorage.removeItem('access_token');
+            localStorage.removeItem('username');  // 로그아웃 시 username도 삭제
             loggedInStatus.style.display = 'none';
             authButtons.style.display = 'block';
             alert('로그아웃되었습니다. 리뷰 기능을 사용할 수 없습니다.');
@@ -111,6 +113,7 @@ document.addEventListener("DOMContentLoaded", function() {
             if (data.access_token) {
                 alert('로그인 성공!');
                 localStorage.setItem('access_token', data.access_token);  // JWT 토큰 저장
+                localStorage.setItem('username', username);  // username 저장
                 
                 // 로그인 후 상태 변경
                 loginForm.style.display = 'none';
