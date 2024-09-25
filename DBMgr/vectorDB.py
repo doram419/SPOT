@@ -42,7 +42,7 @@ def saveToVDB(data : SearchResult,
         if type(review) == dict :
             review_text = ' '.join(review['text'])
 
-    # review_text = ' '.join([review['text'] for review in data.reviews])
+    review_text = ' '.join([review['text'] for review in data.reviews])
     
     # 숫자로 전환 되지 않은 것들만 벡터화
     embedding = {
