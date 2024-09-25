@@ -5,20 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6377c7f6-a7c3-4ce4-a2b2-951a7b19679c" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/DBMgr/connetion.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DBMgr/spot_index.bin" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DBMgr/spot_metadata.pkl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DBMgr/summarizer.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/SPOT.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/SPOT.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DBMgr/google_service.py" beforeDir="false" afterPath="$PROJECT_DIR$/DBMgr/google_service.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DBMgr/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/DBMgr/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DBMgr/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/DBMgr/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DBMgr/rDB.py" beforeDir="false" afterPath="$PROJECT_DIR$/DBMgr/rDB.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DBMgr/vectorDB.py" beforeDir="false" afterPath="$PROJECT_DIR$/DBMgr/vectorDB.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/crawling/google_service.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/crawling/google_service.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/templates/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DBMgr/connetion.py" beforeDir="false" afterPath="$PROJECT_DIR$/DBMgr/connetion.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -46,10 +36,11 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Python.main (1).executor": "Run",
     "Python.main.executor": "Run",
     "Python.routers.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "YeaEun 병합 중",
+    "git-widget-placeholder": "YeaEun",
     "last_opened_file_path": "C:/Users/201-18/Documents/GitHub/deeplearning/SPOT/app/static",
     "settings.editor.selected.configurable": "reference.settingsdialog.IDE.editor.colors.언어 디폴트 값"
   },
@@ -79,7 +70,7 @@
   }
 }
   </component>
-  <component name="RunManager" selected="Python.main (1)">
+  <component name="RunManager" selected="Python.main">
     <configuration name="main (1)" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="SPOT" />
       <option name="ENV_FILES" value="" />
@@ -148,8 +139,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.main (1)" />
         <item itemvalue="Python.main" />
+        <item itemvalue="Python.main (1)" />
         <item itemvalue="Python.summarizer" />
       </list>
     </recent_temporary>
