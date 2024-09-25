@@ -8,7 +8,7 @@ def create_spot():
     connection = pymysql.connect(
         host='localhost',
         user='root',
-        password='@himedia',
+        password='himedia',
         charset='utf8mb4',
         cursorclass=pymysql.cursors.DictCursor
     )
@@ -50,7 +50,7 @@ def create_connection():
     connection = pymysql.connect(
         host='localhost',
         user='root',
-        password='@himedia',
+        password='himedia',
         database='spot',
         charset='utf8mb4',
         cursorclass=pymysql.cursors.DictCursor
