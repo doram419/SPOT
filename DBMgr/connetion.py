@@ -1,6 +1,6 @@
 import pymysql
 
-
+#   여기서 rdb 연결 관리합니다.
 def create_spot():
     """
     MySQL 데이터베이스가 없을 경우 생성하는 함수
@@ -17,7 +17,7 @@ def create_spot():
         with connection.cursor() as cursor:
             cursor.execute("CREATE DATABASE IF NOT EXISTS spot")
             connection.commit()
-            print("Database 'spot'가 성공적으로 생성되었거나 이미 존재합니다.")
+            print("Db생성 완료")
     except Exception as e:
         print(f"데이터베이스 생성 중 오류 발생: {e}")
     finally:
@@ -46,14 +46,7 @@ def create_table(connection):
 
 
 def create_connection():
-    """
-    MySQL 데이터베이스 연결을 생성하는 함수.
-    데이터베이스 및 테이블이 없을 경우 자동으로 생성.
-    """
-    # 데이터베이스 생성
     create_spot()
-
-    # 데이터베이스 연결
     connection = pymysql.connect(
         host='localhost',
         user='root',
