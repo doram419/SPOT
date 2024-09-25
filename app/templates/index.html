@@ -5,13 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>맛집 문장 검색</title>
     <link rel="stylesheet" href="/static/styles.css">
+    <link rel="icon" href="/static/favicon.ico">
+
 </head>
 <body>
+    <img src="/static/logo.png" alt="사이트 로고" width="80" height="80">
     <h1>맛집 문장 검색</h1>
     <form id="searchForm" method="post" action="/search/" onsubmit="search(event)">
         <!-- 하나의 검색창으로 변경 -->
         <input type="text" id="searchInput" name="search_input" placeholder="검색어와 지역을 입력하세요 (예: 서울 맛집)">
-        <button type="submit">검색</button>
+        <button type="submit">검색</button><br/>
+        <button type="button" id="voiceSearchButton">🎤 음성 검색</button> <!-- 음성 검색 버튼 추가 -->
     </form>
 
     <div id="results">
