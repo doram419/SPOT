@@ -5,10 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6377c7f6-a7c3-4ce4-a2b2-951a7b19679c" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/DBMgr/summarizer.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DBMgr/google_service.py" beforeDir="false" afterPath="$PROJECT_DIR$/DBMgr/google_service.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DBMgr/rDB.py" beforeDir="false" afterPath="$PROJECT_DIR$/DBMgr/rDB.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DBMgr/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/DBMgr/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DBMgr/summarizer.py" beforeDir="false" afterPath="$PROJECT_DIR$/DBMgr/summarizer.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
