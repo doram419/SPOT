@@ -43,6 +43,8 @@ def fetch_top_restaurants_nearby(search_term: str = "검색어", region: str = "
                    'user_ratings_total', 'price_level', 'reviews', 'serves_beer',
                    'serves_wine', 'serves_breakfast', 'serves_brunch', 'serves_lunch',
                    'serves_dinner', 'serves_vegetarian_food', 'takeout'])['result']
+
+
         
         # api 효율화를 위해서 필요한 필드만 가져와서 결과에 append
         results.append(SearchResult(
@@ -53,7 +55,7 @@ def fetch_top_restaurants_nearby(search_term: str = "검색어", region: str = "
             rating=place_details.get('rating', 0.0),
             views=place_details.get('user_ratings_total', 0),
             price_level=place_details.get('price_level', 0),
-            reviews=place_details.get('reviews', '이름 없음'),
+            reviews=place_details.get('reviews', []),
             serves_beer=place_details.get('serves_beer', None),
             serves_wine=place_details.get('serves_wine', None),
             serves_breakfast=place_details.get('serves_breakfast', None),
@@ -68,6 +70,12 @@ def fetch_top_restaurants_nearby(search_term: str = "검색어", region: str = "
 
     # 평점과 리뷰 수를 기준으로 정렬 후 상위 5개 반환
     return sorted(results, key=lambda x: (x.rating, x.views), reverse=True)[:number]
+
+
+
+
+
+
 
 # 장소 상태에 따른 영업 여부를 가져오는 함수 ** 이건 추후에 추가해도 됨 **
 def get_place_details(restaurant_name: str):
