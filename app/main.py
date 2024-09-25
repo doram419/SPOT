@@ -16,7 +16,6 @@ app = FastAPI()
 init_db()
 
 
-
 # FastAPI 애플리케이션 인스턴스 생성
 app = FastAPI()
 
