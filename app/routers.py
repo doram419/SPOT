@@ -7,7 +7,6 @@ from app.crawling.naver_service import fetch_naver_blog_data
 from app.bert_service import get_embedding
 import faiss
 import numpy as np
-
 import re
 
 from transformers import AutoTokenizer, AutoModelForTokenClassification, pipeline
@@ -25,7 +24,6 @@ vectors = np.random.rand(100, dimension).astype('float32')
 index = faiss.IndexFlatL2(dimension)
 index.add(vectors)
 
-
 # 벡터 저장 함수
 def store_vectors_in_faiss(vectors: np.ndarray):
     if vectors.size == 0:
@@ -39,14 +37,12 @@ def store_vectors_in_faiss(vectors: np.ndarray):
 
     index.add(vectors)  # FAISS 인덱스에 벡터 추가
 
-
 # 한국 주요 지역명 리스트 (필요시 확장 가능)
 korean_locations = [
     "서울", "부산", "대구", "인천", "광주", "대전", "울산",
     "경기", "강원", "충북", "충남", "전북", "전남", "경북", "경남", "제주",
     "속초", "춘천", "양양", "횡성", "양평","전주","남양주","강릉"
 ]
-
 
 # 정규식을 사용한 지역 추출 함수
 def extract_location_with_regex(text: str):
@@ -58,7 +54,6 @@ def extract_location_with_regex(text: str):
             loc_patterns.append(location)
 
     return loc_patterns
-
 
 # NER과 정규식을 병행하여 지역과 키워드 추출
 def extract_entities(text: str):
@@ -94,18 +89,14 @@ def extract_entities(text: str):
 
     return locations, keywords
 
-
-
 # FastAPI의 APIRouter 인스턴스 생성
 router = APIRouter()
 templates = Jinja2Templates(directory="app/templates")
-
 
 # GET 요청 처리, 메인 페이지 렌더링
 @router.get("/", response_class=HTMLResponse)
 async def root(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
-
 
 # POST 요청을 통해 검색을 처리하는 엔드포인트
 @router.post("/search/", response_class=HTMLResponse)
