@@ -47,15 +47,16 @@ def fetch_top_restaurants_nearby(search_term: str = "검색어", region: str = "
             views=place_details.get('user_ratings_total', 0),
             price_level=place_details.get('price_level', 0),
             reviews=place_details.get('reviews', '이름 없음'),
-            serves_beer=place_details.get('serves_beer', None),
-            serves_wine=place_details.get('serves_wine', None),
-            serves_breakfast=place_details.get('serves_breakfast', None),
-            serves_brunch=place_details.get('serves_brunch', None),
-            serves_lunch=place_details.get('serves_lunch', None),
-            serves_dinner=place_details.get('serves_dinner', None),
-            serves_vegetarian_food=place_details.get('serves_vegetarian_food', None),
-            takeout=place_details.get('takeout', None),
+            serves_beer=place_details.get('serves_beer', False),
+            serves_wine=place_details.get('serves_wine', False),
+            serves_breakfast=place_details.get('serves_breakfast', False),
+            serves_brunch=place_details.get('serves_brunch', False),
+            serves_lunch=place_details.get('serves_lunch', False),
+            serves_dinner=place_details.get('serves_dinner', False),
+            serves_vegetarian_food=place_details.get('serves_vegetarian_food', False),
+            takeout=place_details.get('takeout', False),
         ))
+    print(results[0].reviews[0])
 
     # 평점과 리뷰 수를 기준으로 정렬 후 상위 5개 반환
     return sorted(results, key=lambda x: (x.rating, x.views), reverse=True)[:number]
