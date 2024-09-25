@@ -1,4 +1,3 @@
-import pymysql
 from DBMgr.connetion import create_connection
 from DBMgr.summarizer import summarize_reviews
 from models import SearchResult
