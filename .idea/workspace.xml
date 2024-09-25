@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6377c7f6-a7c3-4ce4-a2b2-951a7b19679c" name="Changes" comment="">
+    <list default="true" id="66b01bdf-1e45-47a5-bbfd-35f2eb03fbeb" name="변경" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/SPOT.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/SPOT.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
@@ -40,18 +40,8 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    "Python.main (1).executor": "Run",
-    "Python.main.executor": "Run",
-    "Python.routers.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "Merging YeaEun",
-    "last_opened_file_path": "C:/Users/201-18/Documents/GitHub/deeplearning/SPOT/app/static",
-    "settings.editor.selected.configurable": "reference.settingsdialog.IDE.editor.colors.언어 디폴트 값"
-  },
-  "keyToStringList": {
-    "com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File": [
-      "CSS"
-    ]
+    "git-widget-placeholder": "Merging YeaEun"
   }
 }]]></component>
   <component name="RecentsManager">
