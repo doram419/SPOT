@@ -10,13 +10,11 @@ import numpy as np
 import re
 
 from transformers import AutoTokenizer, AutoModelForTokenClassification, pipeline
-from konlpy.tag import Okt  # KoNLPy의 Okt(Open Korean Text) 형태소 분석기 추가
 
 tokenizer = AutoTokenizer.from_pretrained("kykim/bert-kor-base")
 model = AutoModelForTokenClassification.from_pretrained("kykim/bert-kor-base")
 
 ner_model = pipeline("ner", model=model, tokenizer=tokenizer, aggregation_strategy="simple")
-okt = Okt()  # 형태소 분석기 초기화
 
 # 임의의 임베딩 벡터 생성
 dimension = 768
@@ -25,7 +23,6 @@ vectors = np.random.rand(100, dimension).astype('float32')
 # faiss 인덱스 생성 및 벡터 추가
 index = faiss.IndexFlatL2(dimension)
 index.add(vectors)
-
 
 # 벡터 저장 함수
 def store_vectors_in_faiss(vectors: np.ndarray):
@@ -40,14 +37,12 @@ def store_vectors_in_faiss(vectors: np.ndarray):
 
     index.add(vectors)  # FAISS 인덱스에 벡터 추가
 
-
 # 한국 주요 지역명 리스트 (필요시 확장 가능)
 korean_locations = [
     "서울", "부산", "대구", "인천", "광주", "대전", "울산",
     "경기", "강원", "충북", "충남", "전북", "전남", "경북", "경남", "제주",
     "속초", "춘천", "양양", "횡성", "양평","전주","남양주","강릉"
 ]
-
 
 # 정규식을 사용한 지역 추출 함수
 def extract_location_with_regex(text: str):
@@ -59,7 +54,6 @@ def extract_location_with_regex(text: str):
             loc_patterns.append(location)
 
     return loc_patterns
-
 
 # NER과 정규식을 병행하여 지역과 키워드 추출
 def extract_entities(text: str):
@@ -84,12 +78,6 @@ def extract_entities(text: str):
             locations.append(word)
         else:
             keywords.append(word)
-    # 형태소 분석 수행
-    morphs = okt.pos(text)
-    for word, pos in morphs:
-        if pos.startswith('N'):  # 명사인 경우
-            if word not in locations and word not in keywords:
-                keywords.append(word)
 
     # 만약 NER에서 지역을 추출하지 못했으면 정규식 결과를 우선 사용
     if not locations and regex_locations:
@@ -101,18 +89,14 @@ def extract_entities(text: str):
 
     return locations, keywords
 
-
-
 # FastAPI의 APIRouter 인스턴스 생성
 router = APIRouter()
 templates = Jinja2Templates(directory="app/templates")
-
 
 # GET 요청 처리, 메인 페이지 렌더링
 @router.get("/", response_class=HTMLResponse)
 async def root(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
-
 
 # POST 요청을 통해 검색을 처리하는 엔드포인트
 @router.post("/search/", response_class=HTMLResponse)

@@ -60,6 +60,12 @@ function search(event) {
     .catch(error => {
         console.error('Error during fetch:', error);
         alert('Error: ' + error.message);
+
+        // 추가적으로 응답 상태를 확인
+        fetch('http://127.0.0.1:8000/search/', {
+            method: 'POST',
+            body: formData
+        }).then(response => console.log('응답 상태 코드:', response.status));
     });
 }
 
