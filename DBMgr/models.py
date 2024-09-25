@@ -5,13 +5,13 @@ from sqlalchemy import Column, String, Integer, Boolean, Float
 
 class SearchResult(BaseModel):
     """
-    검색 결과 저장되는 클래스, VO
+    검색 결과가 저장되는 클래스, VO
     """
     title: str
     link: str
     address: str
     reviews : Optional[list] = None # 리뷰들, 구글 api는 list(dict)
-    description: Optional[str] = None # 간략 설명
+    description: str = None # 간략 설명
     menus : Optional[list] = None
     category: Optional[str] = None
     rating: Optional[float] = None  # 평점 

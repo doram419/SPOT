@@ -4,6 +4,7 @@
 # API 키를 환경변수로 관리하기 위한 설정 파일
 from dotenv import load_dotenv
 from google_service import fetch_top_restaurants_nearby
+from naver_service import fetch_naver_local_data
 from vectorDB import saveToVDB, searchVDB
 from rDB import saveToRDB
 
@@ -18,11 +19,14 @@ def create(region : str = "데이터 크롤링 할 지역",
     필요한 데이터를 크롤링 한 다음, Faiss 파일로 만들어주는 함수
     """ 
     # 네이버 API 검색 -> 저장
-    # naverList = fetch_naver_blog_data(query=keyword, region=region, number=naverSize)
+    naverList = fetch_naver_local_data(query=keyword, region=region, number=naverSize)
 
     # 구글 API 검색 -> 저장
     googleList = fetch_top_restaurants_nearby(search_term=keyword,region=region,number=googleSize)
-    save(googleList)
+
+    combine_list = naverList + googleList
+    
+    save(combine_list)
 
 def save(datas : list = "SearchResult list를 주면 DB에 저장하는 함수"):
     """
@@ -39,7 +43,7 @@ def show():
 if __name__ == "__main__":
     # 서초동에 있는 맛집 데이터를 google api를 통해서 찾아오고 vdb로 저장하는 코드
     # TODO: 인터페이스 만들기
-    create(region="서초동", keyword="맛집", naverSize=0, googleSize=20)
+    create(region="서초동", keyword="맛집", naverSize=5, googleSize=5)
 
     # 지금 테스트 중
     result = searchVDB(query="회", search_amount=3)
