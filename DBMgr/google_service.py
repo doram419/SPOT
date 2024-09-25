@@ -64,6 +64,7 @@ def fetch_top_restaurants_nearby(search_term: str = "검색어", region: str = "
             serves_dinner=place_details.get('serves_dinner', None),
             serves_vegetarian_food=place_details.get('serves_vegetarian_food', None),
             takeout=place_details.get('takeout', None),
+
         ))
     print(results[0].reviews[0])
 

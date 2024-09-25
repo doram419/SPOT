@@ -35,7 +35,7 @@ def save(datas : list = "SearchResult list를 주면 DB에 저장하는 함수")
 
     for data in datas:
         pk = saveToRDB(data=data)
-        # saveToVDB(data=data, fk=pk)
+        saveToVDB(data=data, fk=pk)
 
 def show():
     pass
@@ -47,7 +47,14 @@ if __name__ == "__main__":
     create(region="서울", keyword="분위기가 완전 좋은 곳을 찾아줘. 난 내 대화소리가 유출되는 걸 싫어하기 때문에 매장이 좀 넓었으면 좋겠어. 하지만 너무 시끄러운 술집은 싫어. 조명이 노란빛이어서 얼굴이 예뻐보일 수 있는 술집이라면 더 좋겠어. 메뉴는 칵테일이나 위스키를 다뤘으면 좋겠어. 두 명이서 6만원이면 충분히 술과 안주를 즐길 수 있는 곳이었으면 좋겠어. 어떤 남자든 꼬실 수 있는 최고의 분위기 술집을 찾아줘. 서울 내에 있는 술집이어야해.", naverSize=0, googleSize=100)
 
     # 지금 테스트 중
-    result = searchVDB(query="파스타", search_amount=5)
-    print(result)
+
+    result = searchVDB(query="회", search_amount=3)
+    print(f"vdb 검색 쿼리 : 회")
+    if result:
+        for r in result:
+            print(f"{r['title']} : {r['link']}")
+    else:
+        print("검색 결과가 없습니다.")
+
 
 
