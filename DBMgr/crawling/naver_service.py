@@ -92,30 +92,12 @@ def crawling_naver_local_data(query: str = "검색 할 단어 ",
 
         url = f"{base_url}?query={enc_text}&display={display}&start={start}&sort={sort}"
 
-        while len(results) < number:
-            # 네이버 블로그 API 호출
-            response = requests.get(url, headers=headers)
-            response.raise_for_status()
-            items = response.json().get("items", [])
+        # 네이버 블로그 API 호출
+        response = requests.get(url, headers=headers)
+        response.raise_for_status()
+        items = response.json().get("items", [])
 
-            if not items:
-                break
-
-            for item in items:
-                results.append(SearchResult(
-                    title=clean_html(item.get('title', None)),
-                    link=item.get('link', None),
-                    description=item.get('description', None),
-                    category=clean_word(item.get('category', None)),
-                    address=item.get('roadAddress', None)
-                ))
-
-            start += display
-
-            if len(results) >= number or len(items) < display:
-                break
-
-        return results[:number]
+        return items
 
     except requests.exceptions.RequestException as e:
         print(f"Naver API 요청 실패: {str(e)}")
@@ -123,3 +105,4 @@ def crawling_naver_local_data(query: str = "검색 할 단어 ",
     except Exception as e:
         print(f"네이버 블로그 데이터를 처리하는 중 오류가 발생했습니다: {str(e)}")
         return []
+
