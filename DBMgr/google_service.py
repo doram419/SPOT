@@ -2,6 +2,10 @@ import googlemaps
 from typing import List
 from models import SearchResult
 from config import GOOGLE_API_KEY
+import pprint
+
+# API 응답 디버깅을 위한 코드
+
 
 # Google Maps 클라이언트 초기화
 gmaps = googlemaps.Client(key=GOOGLE_API_KEY)
@@ -13,6 +17,8 @@ def get_location_from_region(region: str):
         location = geocode_result[0]['geometry']['location']
         return location['lat'], location['lng']
     return None, None
+
+
 
 # 반경 1km 내에서 상위 5개의 맛집 검색 
 def fetch_top_restaurants_nearby(search_term: str = "검색어", region: str = "지역", 
@@ -28,6 +34,7 @@ def fetch_top_restaurants_nearby(search_term: str = "검색어", region: str = "
     places_result = gmaps.places_nearby(location=(lat, lng), radius=1000, keyword=search_term)
 
     results = []
+
     for place in places_result['results']:
         # 주변 검색 결과로 가져올 수 없는 항목은 id를 통해 장소 검색으로 가져오기
         place_id = place.get('place_id', 'None')
@@ -36,6 +43,8 @@ def fetch_top_restaurants_nearby(search_term: str = "검색어", region: str = "
                    'user_ratings_total', 'price_level', 'reviews', 'serves_beer',
                    'serves_wine', 'serves_breakfast', 'serves_brunch', 'serves_lunch',
                    'serves_dinner', 'serves_vegetarian_food', 'takeout'])['result']
+
+
         
         # api 효율화를 위해서 필요한 필드만 가져와서 결과에 append
         results.append(SearchResult(
@@ -46,17 +55,43 @@ def fetch_top_restaurants_nearby(search_term: str = "검색어", region: str = "
             rating=place_details.get('rating', 0.0),
             views=place_details.get('user_ratings_total', 0),
             price_level=place_details.get('price_level', 0),
-            reviews=place_details.get('reviews', '이름 없음'),
-            serves_beer=place_details.get('serves_beer', False),
-            serves_wine=place_details.get('serves_wine', False),
-            serves_breakfast=place_details.get('serves_breakfast', False),
-            serves_brunch=place_details.get('serves_brunch', False),
-            serves_lunch=place_details.get('serves_lunch', False),
-            serves_dinner=place_details.get('serves_dinner', False),
-            serves_vegetarian_food=place_details.get('serves_vegetarian_food', False),
-            takeout=place_details.get('takeout', False),
+            reviews=place_details.get('reviews', []),
+            serves_beer=place_details.get('serves_beer', None),
+            serves_wine=place_details.get('serves_wine', None),
+            serves_breakfast=place_details.get('serves_breakfast', None),
+            serves_brunch=place_details.get('serves_brunch', None),
+            serves_lunch=place_details.get('serves_lunch', None),
+            serves_dinner=place_details.get('serves_dinner', None),
+            serves_vegetarian_food=place_details.get('serves_vegetarian_food', None),
+            takeout=place_details.get('takeout', None),
+
         ))
     print(results[0].reviews[0])
 
+
     # 평점과 리뷰 수를 기준으로 정렬 후 상위 5개 반환
     return sorted(results, key=lambda x: (x.rating, x.views), reverse=True)[:number]
+
+
+
+
+
+
+
+# 장소 상태에 따른 영업 여부를 가져오는 함수 ** 이건 추후에 추가해도 됨 **
+def get_place_details(restaurant_name: str):
+    places_result = gmaps.places(restaurant_name)
+    if places_result['status'] == 'OK':
+        place_id = places_result['results'][0]['place_id']
+        place_details = gmaps.place(place_id=place_id)
+        return place_details
+    return None
+
+def get_restaurant_status(restaurant_name: str) -> str:
+    place_details = get_place_details(restaurant_name)
+    if place_details:
+        opening_hours = place_details['result'].get('opening_hours', {})
+        status = opening_hours.get('open_now', '상태 불명')
+        return status
+    return '상태를 찾을 수 없음'
+
