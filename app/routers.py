@@ -93,4 +93,6 @@ async def search_restaurant(request: Request, search_input: str = Form(...)):
 
     except Exception as e:
         print(f"검색 중 오류 발생: {str(e)}")
+
         raise HTTPException(status_code=500, detail="검색 중 오류가 발생했습니다.")
+

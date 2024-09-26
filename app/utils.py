@@ -44,7 +44,6 @@ def verify_token(token: str):
         raise JWTError("유효하지 않은 토큰입니다.")
 
 
-
 # HTML 태그를 정규식으로 제거하는 함수
 def clean_html(raw_html):
     cleanr = re.compile('<.*?>')

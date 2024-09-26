@@ -10,6 +10,11 @@ from app.database import init_db
 from app.models import User
 
 
+app = FastAPI()
+
+# DB 초기화
+init_db()
+
 # FastAPI 애플리케이션 인스턴스 생성
 app = FastAPI()
 
@@ -35,8 +40,6 @@ app.include_router(router)
 # 라우터 추가
 app.include_router(auth_router)
 
-
-
 # FastAPI 엔드포인트 추가
 
 @app.get("/naver_blogs")
@@ -45,7 +48,6 @@ async def get_naver_blogs(query: str, keywords: str):
     keywords_list = keywords.split(',')
     blogs = fetch_naver_blog_data(query, keywords_list)
     return {"blogs": blogs}
-
 
 @app.post("/keywords")
 async def extract_gpt_keywords(text: str):
