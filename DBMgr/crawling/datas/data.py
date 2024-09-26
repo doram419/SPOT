@@ -7,3 +7,6 @@ class Data():
         self.title = title
         self.desc = chunked_desc
         self.summary = summary
+
+    def print_data(self):
+        return "Data { title:" + self.title + "desc:" + str(self.desc[0]) + "summary:" + str(self.summary[0]) 

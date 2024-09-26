@@ -46,15 +46,21 @@ class FaissVectorStore:
         :param vector_dict: 추가할 벡터 데이터가 포함된 딕셔너리
         :param metadata: 벡터와 연관된 메타데이터
         """
+        combined_vectors = []
 
-        # 딕셔너리의 값들을 하나의 리스트로 연결합니다
-        combined_vector = np.concatenate([v.flatten() for v in vector_dict.values()])
+        for v in vector_dict.values():
+            combined_vectors.append(v.flatten())
+
+        combined_vector = np.vstack(combined_vectors)
 
         if self.index is None:
-            self.dim = combined_vector.shape[0]
+            self.dim = combined_vector.shape[1]  # 벡터의 차원으로 설정
             self.index = faiss.IndexFlatL2(self.dim)
 
-        combined_vector = combined_vector.reshape(1, -1)
+        # 임베딩 차원 확인
+        if combined_vector.shape[1] != self.dim:
+            raise ValueError(f"입력 벡터의 차원({combined_vector.shape[1]})이 인덱스의 차원({self.dim})과 일치하지 않습니다.")
+
         self.index.add(combined_vector)
         self.metadata.append(metadata)
         self.save_index()

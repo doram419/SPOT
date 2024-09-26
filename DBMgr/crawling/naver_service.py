@@ -57,49 +57,12 @@ def crawling_naver_blog_data(query: str = "검색 할 단어 ",
         # 지역 필터링 적용
         filtered_items = filter_by_region(items, region)
 
-        print(filtered_items[0])
         return filtered_items
     
     except requests.exceptions.RequestException as e:
         print(f"Naver API 요청 실패: {str(e)}")
         return []
     
-    except Exception as e:
-        print(f"네이버 블로그 데이터를 처리하는 중 오류가 발생했습니다: {str(e)}")
-        return []
-
-def crawling_naver_local_data(query: str = "검색 할 단어 ", 
-                          region: str = "지역") -> list:
-    """
-    네이버 지도 데이터 가져오기
-    현재 최대 수는 5까지만
-    """
-    try:
-        # 지역과 검색어를 결합하여 검색
-        combined_query = f"{region} {query}"
-        enc_text = parse.quote(combined_query)
-        base_url = "https://openapi.naver.com/v1/search/local"
-        headers = {
-            "X-Naver-Client-Id": NAVER_CLIENT_ID,
-            "X-Naver-Client-Secret": NAVER_CLIENT_SECRET
-        }
-
-        start = 1
-        display = 5 
-        sort = "comment"
-
-        url = f"{base_url}?query={enc_text}&display={display}&start={start}&sort={sort}"
-
-        # 네이버 블로그 API 호출
-        response = requests.get(url, headers=headers)
-        response.raise_for_status()
-        items = response.json().get("items", [])
-
-        return items
-
-    except requests.exceptions.RequestException as e:
-        print(f"Naver API 요청 실패: {str(e)}")
-        return []
     except Exception as e:
         print(f"네이버 블로그 데이터를 처리하는 중 오류가 발생했습니다: {str(e)}")
         return []

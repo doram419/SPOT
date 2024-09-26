@@ -3,7 +3,7 @@ from naver_service import crawling_naver_blog_data
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from utils import clean_html
 from datas.data import Data
-from summarizer import summarize_desc
+from summarizer import do_summarize
 from langchain.schema import Document  # 문서 객체가 필요하다면 임포트
 
 def start_crawling(keyword : str, region : str):
@@ -21,18 +21,19 @@ def make_datas(datas : list):
     result = []
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=200, chunk_overlap=50)
     for d in datas:
-        title=clean_html(d['title'])
-        doc=Document(page_content=d['description']) 
-        first = d['description'][0]
+        clean_title=clean_html(d['title'])
+        clean_desc=clean_html(d['description'])
+
+        # 청킹하기 위해 네이버 blog의 설명만 떼서 컨텐츠로 전달
+        doc=Document(page_content=clean_desc) 
+        
+        # document 타입을 청킹
+        chunked_list=text_splitter.split_documents([doc])
 
         result.append(Data(
-            title=title, 
-            chunked_desc=text_splitter.split_documents([doc]), 
-            summary=summarize_desc(restaurant_name=title, descs=first)))
+            title=clean_title, 
+            chunked_desc=chunked_list, 
+            summary=do_summarize(name=clean_title, descs=chunked_list))
+        )
 
     return result
-
-if __name__ == "__main__":
-    infos = start_crawling(keyword="갈비", region="서초동")
-    infos = make_datas(infos)
-    print(infos)
