@@ -36,6 +36,7 @@ app.include_router(router)
 app.include_router(auth_router)
 
 # FastAPI 엔드포인트 추가
+
 @app.get("/naver_blogs")
 async def get_naver_blogs(query: str, keywords: str):
     """네이버 블로그 검색"""

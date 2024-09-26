@@ -1,7 +1,6 @@
 fastapi
 jinja2
 pydantic
-googlemaps
 openai
 transformers
 torch
