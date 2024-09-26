@@ -138,7 +138,7 @@ document.addEventListener("DOMContentLoaded", function() {
         const searchInput = document.getElementById('searchInput').value;
 
         if (!searchInput) {
-            alert("검색어와 지역을 입력하세요!");
+            alert("검색어를 입력하세요!");
             return;
         }
 
