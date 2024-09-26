@@ -2,9 +2,8 @@ import requests
 import re
 from urllib import parse
 from typing import List
-# from models import SearchResult
-from utils import clean_html, clean_word
-from config import NAVER_CLIENT_ID, NAVER_CLIENT_SECRET
+from utils import clean_html
+from datas.config import NAVER_CLIENT_ID, NAVER_CLIENT_SECRET
 
 # 지역 필터링 함수: 지역명이 제목 또는 설명에 포함된 블로그만 반환
 def filter_by_region(items: List[dict], region: str) -> List[dict]:
@@ -95,7 +94,7 @@ def crawling_naver_local_data(query: str = "검색 할 단어 ",
         response = requests.get(url, headers=headers)
         response.raise_for_status()
         items = response.json().get("items", [])
-    
+
         return items
 
     except requests.exceptions.RequestException as e:

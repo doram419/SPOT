@@ -1,10 +1,10 @@
 import googlemaps
 from fastapi import HTTPException
-from config import GOOGLE_API_KEY
+from DBMgr.crawling.datas.config import GOOGLE_API_KEY
 import re
 import googlemaps
 from fastapi import HTTPException
-from config import GOOGLE_API_KEY
+from DBMgr.crawling.datas.config import GOOGLE_API_KEY
 
 # Google Maps 클라이언트 초기화
 gmaps = googlemaps.Client(key=GOOGLE_API_KEY)

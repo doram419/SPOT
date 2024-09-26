@@ -46,11 +46,6 @@ class FaissVectorStore:
         :param vector_dict: 추가할 벡터 데이터가 포함된 딕셔너리
         :param metadata: 벡터와 연관된 메타데이터
         """
-    
-        # if self.index is None:
-        #     # 첫 번째 벡터의 총 차원 수를 계산합니다
-        #     total_dim = sum(len(v) for v in vector_dict.values() if isinstance(v, (list, np.ndarray)))
-        #     self.index = faiss.IndexFlatL2(total_dim)
 
         # 딕셔너리의 값들을 하나의 리스트로 연결합니다
         combined_vector = np.concatenate([v.flatten() for v in vector_dict.values()])

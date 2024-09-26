@@ -3,11 +3,7 @@
 """
 # API 키를 환경변수로 관리하기 위한 설정 파일
 from dotenv import load_dotenv
-from google_service import fetch_top_restaurants_nearby
-from naver_service import fetch_naver_local_data
 from vectorDB import saveToVDB, searchVDB
-from rDB import saveToRDB
-from dataProcess import process
 
 # API 키 정보 로드
 load_dotenv()
@@ -23,8 +19,8 @@ def create(region : str = "데이터 크롤링 할 지역",
 
     naverList = fetch_naver_local_data(query=keyword, region=region, number=naverSize)
 
-    save(    naverList = fetch_naver_local_data(query=keyword, region=region, number=naverSize)
-)
+    save(naverList)
+
 
 def save(datas : list = "SearchResult list를 주면 DB에 저장하는 함수"):
     """
@@ -33,8 +29,6 @@ def save(datas : list = "SearchResult list를 주면 DB에 저장하는 함수")
 
 
     for data in datas:
-        process(data)
-        pk = saveToRDB(data=data)
         saveToVDB(data=data, fk=pk)
 
 def show():

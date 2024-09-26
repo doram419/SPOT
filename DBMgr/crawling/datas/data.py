@@ -2,4 +2,8 @@ class Data():
     title : str
     desc : list
     summary : str = "생성되지 않음"
-    # TODO: 생성해서 넣는 모듈 가져오기
+
+    def __init__(self, title, chunked_desc, summary) -> None:
+        self.title = title
+        self.desc = chunked_desc
+        self.summary = summary
