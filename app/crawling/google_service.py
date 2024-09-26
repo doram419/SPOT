@@ -17,6 +17,7 @@ def get_location_from_region(region: str):
 # 반경 1km 내에서 상위 5개의 맛집 검색 
 def fetch_top_restaurants_nearby(search_term: str = "검색어", region: str = "지역") -> List[SearchResult]:
     # 입력한 검색어를 기반으로 좌표를 가져옴
+
     # 위도, 경도
     lat, lng = get_location_from_region(region)
     if lat is None or lng is None:
@@ -29,20 +30,40 @@ def fetch_top_restaurants_nearby(search_term: str = "검색어", region: str = "
     results = []
     for place in places_result.get('results', []):
         place_id = place.get('place_id')
-        place_details = gmaps.place(place_id=place_id, fields=['name', 'rating', 'user_ratings_total', 'url'])
+        place_details = gmaps.place(place_id=place_id, fields=['name', 'rating', 'user_ratings_total', 'url', 'price_level', 'serves_beer',
+                                            'serves_wine', 'serves_breakfast', 'serves_brunch', 'serves_lunch',
+                                            'serves_dinner', 'serves_vegetarian_food', 'takeout'])
 
         if place_details:
             place_name = place_details['result'].get('name', 'N/A')
             place_url = place_details['result'].get('url', '#')
             place_rating = place_details['result'].get('rating', 0)
             reviews_total = place_details['result'].get('user_ratings_total', 0)
+            price_level = place_details['result'].get('price_level', None)
+            serves_beer = place_details['result'].get('serves_beer', False)
+            serves_wine = place_details['result'].get('serves_wine', False)
+            serves_breakfast = place_details['result'].get('serves_breakfast', False)
+            serves_brunch = place_details['result'].get('serves_brunch', False)
+            serves_lunch = place_details['result'].get('serves_lunch', False)
+            serves_dinner = place_details['result'].get('serves_dinner', False)
+            serves_vegetarian_food = place_details['result'].get('serves_vegetarian_food', False)
+            takeout = place_details['result'].get('takeout', False)
 
             results.append(SearchResult(
                 title=place_name,
                 link=place_url,
                 description="Google Places 리뷰",
                 rating=place_rating,
-                views=reviews_total
+                views=reviews_total,
+                price_level=price_level,
+                serves_beer=serves_beer,
+                serves_wine=serves_wine,
+                serves_breakfast=serves_breakfast,
+                serves_brunch=serves_brunch,
+                serves_lunch=serves_lunch,
+                serves_dinner=serves_dinner,
+                serves_vegetarian_food=serves_vegetarian_food,
+                takeout=takeout
             ))
 
     # 평점과 리뷰 수를 기준으로 정렬 후 상위 5개 반환

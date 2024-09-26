@@ -20,17 +20,17 @@ def create(region : str = "데이터 크롤링 할 지역",
     필요한 데이터를 크롤링 한 다음, Faiss 파일로 만들어주는 함수
     """ 
     # 네이버 API 검색 -> 저장
-    naverList = fetch_naver_local_data(query=keyword, region=region, number=naverSize)
-    # 구글 API 검색 -> 저장
-    googleList = fetch_top_restaurants_nearby(search_term=keyword,region=region,number=googleSize)
 
-    combine_list = naverList + googleList
-    save(combine_list)
+    naverList = fetch_naver_local_data(query=keyword, region=region, number=naverSize)
+
+    save(    naverList = fetch_naver_local_data(query=keyword, region=region, number=naverSize)
+)
 
 def save(datas : list = "SearchResult list를 주면 DB에 저장하는 함수"):
     """
     크롤링한 데이터를 저장하는 함수
     """
+
 
     for data in datas:
         process(data)
@@ -43,9 +43,11 @@ def show():
 if __name__ == "__main__":
     # 서초동에 있는 맛집 데이터를 google api를 통해서 찾아오고 vdb로 저장하는 코드
     # TODO: 인터페이스 만들기
-    create(region="서초동", keyword="맛집", naverSize=5, googleSize=5)
+
+    create(region="서울", keyword="횟집", naverSize=0, googleSize=100)
 
     # 지금 테스트 중
+
     result = searchVDB(query="회", search_amount=3)
     print(f"vdb 검색 쿼리 : 회")
     if result:
@@ -53,6 +55,6 @@ if __name__ == "__main__":
             print(f"{r['title']} : {r['link']} : pk:{r['pk']}")
     else:
         print("검색 결과가 없습니다.")
-    
+
 
 
