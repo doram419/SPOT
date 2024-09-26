@@ -78,6 +78,7 @@ async def search_restaurant(request: Request, search_input: str = Form(...)):
         # 디버깅: 검색 결과 확인
         print(f"검색된 거리(distances): {distances}")
         print(f"검색된 인덱스(indices): {indices}")
+        print(f"검색된 인덱스: {indices}")
 
         # 검색된 인덱스에 맞는 결과 추출
         best_results = [valid_results[i] for i in indices[0]]  # 가장 유사한 결과 5개 선택
