@@ -3,7 +3,6 @@ from dotenv import load_dotenv
 from .datas.config import OPENAI_API_KEY
 from langchain.schema import Document  
 from openai import OpenAI
-from openai.types.error import APIError
 
 load_dotenv()
 
@@ -27,7 +26,7 @@ def summarize_desc(name: str, desc):
         result = response.choices[0].message.content
         return result
 
-    except APIError as e:
+    except Exception as e:
         print(f"OpenAI API 오류 발생: {e}")
         return "요약 생성 실패"
 

@@ -19,20 +19,21 @@ def find(region : str = "데이터 크롤링 할 지역",
     infos = start_crawling(keyword=keyword, region=region)
     infos = make_datas(infos)
     # 유저에게 뭘 표현해줄 것인가?
+    return infos
 
 def save(datas : list = "SearchResult list를 주면 DB에 저장하는 함수"):
     """
     크롤링한 데이터를 저장하는 함수
     """
-
     for data in datas:
         saveToVDB(data=data)
 
 if __name__ == "__main__":
-    find(keyword="갈비", region="서초동")
-    save(datas=find(keyword="갈비", region="서초동"))
+    # find(keyword="갈비", region="서초동")
+    # 크롤링 및 저장
+    # save(datas=find(keyword="맛집", region="서초동"))
 
-    result = searchVDB(query="갈비", search_amount=3)
+    result = searchVDB(query="냉면", search_amount=3)
 
 
 

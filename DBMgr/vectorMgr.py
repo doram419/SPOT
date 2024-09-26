@@ -2,6 +2,7 @@ import os
 from vectorStore.FaissVectorStore import FaissVectorStore
 from dotenv import load_dotenv
 from langchain_openai import OpenAIEmbeddings  # 새로운 모듈에서 임포트
+from langchain.schema import Document
 import numpy as np
 from crawling.datas.data import Data
 
@@ -34,14 +35,16 @@ def saveToVDB(data: Data):
     # 숫자로 전환 되지 않은 것들만 벡터화
     vectorization_desc = {}
     for i, des in enumerate(data.desc):
-        vectorization_desc[i] = get_openai_embedding(des)  # 인덱스를 키로 사용
+        # Document 객체에서 텍스트 내용을 추출
+        text_content = des.page_content if isinstance(des, Document) else str(des)
+        vectorization_desc[i] = get_openai_embedding(text_content)  # 인덱스를 키로 사용
     
     metadata = {
         "title": data.title,
-        "desc": data.desc,
+        "desc": [d.page_content if isinstance(d, Document) else str(d) for d in data.desc],
         "summary": data.summary
     }
-    
+
     # 벡터와 메타데이터를 함께 저장
     vector_store.add_to_index(vectorization_desc, metadata)
     vector_store.save_index()
@@ -69,7 +72,7 @@ def searchVDB(query : str = "검색할 문장",
             meta = vector_store.metadata[i]
             print(f"검색 결과: {meta}")
             results.append({
-                "title": meta.get("name", "Unknown"),
+                "title": meta.get("title", "Unknown"),
                 "similarity": float(D[0][idx]),
                 "summary": meta.get("summary", "Unknown")
             })
