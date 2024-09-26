@@ -1,9 +1,9 @@
 # 모든 크롤링을 시도하여 txt파일로 뽑아내는 코드
-from naver_service import crawling_naver_blog_data
+from .naver_service import crawling_naver_blog_data
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from utils import clean_html
-from datas.data import Data
-from summarizer import do_summarize
+from .utils import clean_html
+from .datas.data import Data
+from .summarizer import do_summarize
 from langchain.schema import Document  # 문서 객체가 필요하다면 임포트
 
 def start_crawling(keyword : str, region : str):

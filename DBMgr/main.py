@@ -3,7 +3,7 @@
 """
 # API 키를 환경변수로 관리하기 위한 설정 파일
 from dotenv import load_dotenv
-from vectorMgr import saveToVDB
+from vectorMgr import saveToVDB, searchVDB
 from crawling.crawling import start_crawling, make_datas
 
 user_input = int()
@@ -20,26 +20,19 @@ def find(region : str = "데이터 크롤링 할 지역",
     infos = make_datas(infos)
     # 유저에게 뭘 표현해줄 것인가?
 
-# def save(datas : list = "SearchResult list를 주면 DB에 저장하는 함수"):
-#     """
-#     크롤링한 데이터를 저장하는 함수
-#     """
+def save(datas : list = "SearchResult list를 주면 DB에 저장하는 함수"):
+    """
+    크롤링한 데이터를 저장하는 함수
+    """
 
-#     for data in datas:
-#         saveToVDB(data=data, fk=pk)
+    for data in datas:
+        saveToVDB(data=data)
 
 if __name__ == "__main__":
     find(keyword="갈비", region="서초동")
+    save(datas=find(keyword="갈비", region="서초동"))
 
-    # # 지금 테스트 중
-
-    # result = searchVDB(query="회", search_amount=3)
-    # print(f"vdb 검색 쿼리 : 회")
-    # if result:
-    #     for r in result:
-    #         print(f"{r['title']} : {r['link']} : pk:{r['pk']}")
-    # else:
-    #     print("검색 결과가 없습니다.")
+    result = searchVDB(query="갈비", search_amount=3)
 
 
 

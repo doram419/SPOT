@@ -46,6 +46,34 @@ def saveToVDB(data: Data):
     vector_store.add_to_index(vectorization_desc, metadata)
     vector_store.save_index()
 
-if __name__ == "__main__":
-    d = Data("제목", ["아", "무"], ["거", "나"])
-    saveToVDB(d)
+def searchVDB(query : str = "검색할 문장",
+              search_amount : int = 5): 
+    """
+    VectorDB에서 검색하는 함수
+    :param query: 검색할 쿼리 문장
+    :param search_amount: 반환할 결과의 개수
+    :return: 검색 결과 리스트 list<dict>
+    """
+    query_embedding = get_openai_embedding(query)
+    
+    if vector_store.dim is None:
+        print("경고: 벡터 저장소가 비어 있습니다. 먼저 데이터를 추가해주세요.")
+        return []
+    padding = np.zeros(vector_store.dim - len(query_embedding), dtype=np.float32)
+    query_embedding = np.concatenate([query_embedding, padding])
+    D, I = vector_store.search(query_embedding, k=search_amount)
+    results = []
+
+    for idx, i in enumerate(I[0]):
+        if i < len(vector_store.metadata):
+            meta = vector_store.metadata[i]
+            print(f"검색 결과: {meta}")
+            results.append({
+                "title": meta.get("name", "Unknown"),
+                "similarity": float(D[0][idx]),
+                "summary": meta.get("summary", "Unknown")
+            })
+
+    # 유사도 순으로 정렬
+    results.sort(key=lambda x: x["similarity"])
+    return results

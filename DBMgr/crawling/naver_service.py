@@ -1,9 +1,8 @@
 import requests
-import re
 from urllib import parse
 from typing import List
-from utils import clean_html
-from datas.config import NAVER_CLIENT_ID, NAVER_CLIENT_SECRET
+from .utils import clean_html
+from .datas.config import NAVER_CLIENT_ID, NAVER_CLIENT_SECRET
 
 # 지역 필터링 함수: 지역명이 제목 또는 설명에 포함된 블로그만 반환
 def filter_by_region(items: List[dict], region: str) -> List[dict]:
