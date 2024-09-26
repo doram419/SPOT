@@ -11,3 +11,5 @@ uvicorn
 faiss-cpu
 numpy
 typing_extensions
+passlib
+python-jose

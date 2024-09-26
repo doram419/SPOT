@@ -1,5 +1,4 @@
 import pickle
-import numpy as np
 import faiss
 import os
 
@@ -29,40 +28,6 @@ class FaissVectorStore:
         else:
             self.index = None
             self.dim = None
-
-    def save_index(self):
-        """
-        현재 인덱스와 메타데이터를 파일에 저장합니다.
-        """
-        if self.index is not None:
-            faiss.write_index(self.index, self.index_file)
-        with open(self.metadata_file, 'wb') as f:
-            pickle.dump(self.metadata, f)
-
-    def add_to_index(self, vector_dict, metadata):
-        """
-        벡터 딕셔너리와 메타데이터를 인덱스에 추가합니다.
-        :param vector_dict: 추가할 벡터 데이터가 포함된 딕셔너리
-        :param metadata: 벡터와 연관된 메타데이터
-        """
-        combined_vectors = []
-
-        for v in vector_dict.values():
-            combined_vectors.append(v.flatten())
-
-        combined_vector = np.vstack(combined_vectors)
-
-        if self.index is None:
-            self.dim = combined_vector.shape[1]  # 벡터의 차원으로 설정
-            self.index = faiss.IndexFlatL2(self.dim)
-
-        # 임베딩 차원 확인
-        if combined_vector.shape[1] != self.dim:
-            raise ValueError(f"입력 벡터의 차원({combined_vector.shape[1]})이 인덱스의 차원({self.dim})과 일치하지 않습니다.")
-
-        self.index.add(combined_vector)
-        self.metadata.append(metadata)
-        self.save_index()
 
     def search(self, query_vector, k=5):
             """

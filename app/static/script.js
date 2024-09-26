@@ -58,7 +58,6 @@ document.addEventListener("DOMContentLoaded", function() {
         alert('로그아웃되었습니다. 리뷰 기능을 사용할 수 없습니다.');
     });
 
-
     // 회원가입 처리
     // 변경: 함수 선언을 이벤트 리스너로 변경
     signupForm.addEventListener('submit', function(event) {
