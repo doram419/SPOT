@@ -6,7 +6,6 @@ from app.models import SearchResult
 from app.utils import clean_html
 from app.config import NAVER_CLIENT_ID, NAVER_CLIENT_SECRET
 
-
 # 지역 필터링 함수: 지역명이 제목 또는 설명에 포함된 블로그만 반환
 def filter_by_region(items: List[dict], region: str) -> List[dict]:
     filtered_items = []
@@ -22,7 +21,7 @@ def filter_by_region(items: List[dict], region: str) -> List[dict]:
     return filtered_items
 
 
-# 네이버 블로그 데이터 조회수 높은 순으로 5개 가져오기
+# 네이버 블로그에서 제목과 내용에 검색어가 포함된 데이터만 가져오기
 def fetch_naver_blog_data(query: str, region: str, keywords: List[str]) -> List[SearchResult]:
     try:
         # 지역과 검색어를 결합하여 검색
@@ -51,19 +50,15 @@ def fetch_naver_blog_data(query: str, region: str, keywords: List[str]) -> List[
             title = clean_html(item['title'])
             description = clean_html(item['description'])
 
-            # 키워드가 블로그 제목이나 내용에 포함되어 있는지 확인
+            # 키워드가 제목이나 내용에 포함된 항목만 필터링
             if any(keyword in title or keyword in description for keyword in keywords):
-                # 블로그 게시글 조회수(여기서는 postdate가 대신 사용됨)와 함께 결과 리스트에 추가
-                post_date = int(re.search(r'\d+', item.get('postdate', '0')).group())
                 results.append(SearchResult(
                     title=title,
                     link=item['link'],
                     description=description,
-                    views=post_date  # 조회수를 대신할 값이 없으므로 postdate 사용
                 ))
 
-        # 조회수 순으로 정렬 후 상위 5개 반환
-        return sorted(results, key=lambda x: x.views, reverse=True)[:5]
+        return results  # 필터링된 결과 반환
 
     except requests.exceptions.RequestException as e:
         print(f"Naver API 요청 실패: {str(e)}")

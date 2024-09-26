@@ -72,7 +72,7 @@ if __name__ == "__main__":
             print(count, ":", result[0])
 
             more = input("더보기 y, 그만 보기 n : ")
-            
+
             if(more == 'y'):
                 for i in range(1, len(result)):
                     count +=1
