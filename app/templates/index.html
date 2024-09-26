@@ -39,10 +39,10 @@
 
 
     <!-- 검색 폼 -->
-    <form id="searchForm">
+    <form id="searchForm" method="post" action="/search/" onsubmit="search(event)">
         <input type="text" id="searchInput" name="search_input" placeholder="검색어와 지역을 입력하세요 (예: 서울 맛집)">
         <button type="submit">검색</button><br/>
-        <button type="button" id="voiceSearchButton">🎤 음성 검색</button>
+        <button type="button" id="voiceSearchButton">🎤 음성 검색</button> <!-- 음성 검색 버튼 -->
     </form>
 
      <!-- 추천 문장 카드 -->
@@ -72,19 +72,8 @@
             <ul>
                 {% for result in search_results %}
                     <li>
-             <h3>{{ result.title }}</h3>
+                        <h3>{{ result.title }}</h3>
                         <p>{{ result.description }}</p>
-                        <p>평점: {{ result.rating }}</p>
-                        <p>리뷰 수: {{ result.views }}</p>
-                        <p>가격 수준: {{ result.price_level }}</p>
-                        <p>맥주 제공: {% if result.serves_beer %}예{% else %}아니요{% endif %}</p>
-                        <p>와인 제공: {% if result.serves_wine %}예{% else %}아니요{% endif %}</p>
-                        <p>아침 제공: {% if result.serves_breakfast %}예{% else %}아니요{% endif %}</p>
-                        <p>브런치 제공: {% if result.serves_brunch %}예{% else %}아니요{% endif %}</p>
-                        <p>점심 제공: {% if result.serves_lunch %}예{% else %}아니요{% endif %}</p>
-                        <p>저녁 제공: {% if result.serves_dinner %}예{% else %}아니요{% endif %}</p>
-                        <p>채식 음식 제공: {% if result.serves_vegetarian_food %}예{% else %}아니요{% endif %}</p>
-                        <p>테이크아웃 가능: {% if result.takeout %}예{% else %}아니요{% endif %}</p>
                         <a href="{{ result.link }}" target="_blank">더보기</a>
                     </li>
                 {% endfor %}
