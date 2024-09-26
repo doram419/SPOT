@@ -70,7 +70,6 @@ def searchVDB(query : str = "검색할 문장",
     for idx, i in enumerate(I[0]):
         if i < len(vector_store.metadata):
             meta = vector_store.metadata[i]
-            print(f"검색 결과: {meta}")
             results.append({
                 "title": meta.get("title", "Unknown"),
                 "similarity": float(D[0][idx]),
