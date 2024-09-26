@@ -3,7 +3,8 @@ from FaissVectorStore import FaissVectorStore
 import numpy as np
 from dotenv import load_dotenv
 from models import SearchResult
-from langchain_openai import OpenAIEmbeddings
+from langchain.embeddings import OpenAIEmbeddings
+
 
 # .env 파일에서 API 키 로드 (환경 변수 설정)
 load_dotenv()
@@ -65,6 +66,7 @@ def saveToVDB(data : SearchResult,
         "google_id":data.google_id
     }
     vector_store.add_to_index(embedding, metadata)
+    vector_store.save_index()
 
 def searchVDB(query : str = "검색할 문장",
               search_amount : int = 5): 
@@ -85,11 +87,9 @@ def searchVDB(query : str = "검색할 문장",
     results = []
 
     for idx, i in enumerate(I[0]):
-        # vector_store.metadata는 리스트 타입
         if i < len(vector_store.metadata):
-            # 리스트에서 직접 접근, meta는 dict 타입
-            meta = vector_store.metadata[i]         
-            # 찾아온 데이터를 result에 붙히기
+            meta = vector_store.metadata[i]
+            print(f"검색 결과: {meta}")
             results.append({
                 "title": meta.get("name", "Unknown"),
                 "similarity": float(D[0][idx]),
@@ -97,7 +97,7 @@ def searchVDB(query : str = "검색할 문장",
                 "link": meta.get("link", "Unknown"),
                 "google_id": meta.get("google_id", "Unknown")
             })
-    
+
     # 유사도 순으로 정렬
     results.sort(key=lambda x: x["similarity"])
     return results

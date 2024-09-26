@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 from typing import Optional
 from sqlalchemy import Column, String, Integer, Boolean, Float
+
 # from database import Base
 
 class SearchResult(BaseModel):
@@ -33,6 +34,7 @@ class SearchResult(BaseModel):
     serves_dinner: Optional[bool] = None
     serves_vegetarian_food: Optional[bool] = None
     takeout: Optional[bool] = None
+
     international_phone_number: Optional[bool] = None
 
 # TODO: rdb에 적재
