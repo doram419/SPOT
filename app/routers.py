@@ -35,7 +35,7 @@ async def search_restaurant(request: Request, search_input: str = Form(...)):
     print(f"검색어: {search_input}")
 
     try:
-        region = "강남역"  # 기본 지역 설정
+        region = "서울"  # 기본 지역 설정
         keywords = search_input.split()  # 검색어를 키워드로 사용
 
         # 비동기로 네이버 블로그 데이터 가져오기
