@@ -9,7 +9,6 @@ from app.auth import router as auth_router  # auth 모듈에서 라우터를 임
 from app.database import init_db
 from app.models import User
 
-
 app = FastAPI()
 
 # DB 초기화
@@ -17,7 +16,6 @@ init_db()
 
 # FastAPI 애플리케이션 인스턴스 생성
 app = FastAPI()
-
 
 # DB 초기화
 init_db()

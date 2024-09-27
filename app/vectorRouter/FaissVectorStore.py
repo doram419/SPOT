@@ -1,5 +1,4 @@
 import pickle
-import numpy as np
 import faiss
 import os
 
@@ -29,40 +28,6 @@ class FaissVectorStore:
         else:
             self.index = None
             self.dim = None
-            # self.index = faiss.IndexFlatL2(1536)  # OpenAI의 text-embedding-3-small 모델은 1536 차원 벡터를 생성합니다.
-
-    def save_index(self):
-        """
-        현재 인덱스와 메타데이터를 파일에 저장합니다.
-        """
-        if self.index is not None:
-            faiss.write_index(self.index, self.index_file)
-        with open(self.metadata_file, 'wb') as f:
-            pickle.dump(self.metadata, f)
-
-    def add_to_index(self, vector_dict, metadata):
-        """
-        벡터 딕셔너리와 메타데이터를 인덱스에 추가합니다.
-        :param vector_dict: 추가할 벡터 데이터가 포함된 딕셔너리
-        :param metadata: 벡터와 연관된 메타데이터
-        """
-    
-        # if self.index is None:
-        #     # 첫 번째 벡터의 총 차원 수를 계산합니다
-        #     total_dim = sum(len(v) for v in vector_dict.values() if isinstance(v, (list, np.ndarray)))
-        #     self.index = faiss.IndexFlatL2(total_dim)
-
-        # 딕셔너리의 값들을 하나의 리스트로 연결합니다
-        combined_vector = np.concatenate([v.flatten() for v in vector_dict.values()])
-
-        if self.index is None:
-            self.dim = combined_vector.shape[0]
-            self.index = faiss.IndexFlatL2(self.dim)
-
-        combined_vector = combined_vector.reshape(1, -1)
-        self.index.add(combined_vector)
-        self.metadata.append(metadata)
-        self.save_index()
 
     def search(self, query_vector, k=5):
             """
