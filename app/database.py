@@ -4,7 +4,7 @@ from sqlalchemy.orm import sessionmaker # type: ignore
 import os
 
 # MySQL 연결 설정
-DATABASE_URL = os.getenv("DATABASE_URL", "mysql+pymysql://root:himedia@localhost/spot")
+DATABASE_URL = os.getenv("DATABASE_URL", "mysql+pymysql://root:0000@localhost/spot")
 
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
