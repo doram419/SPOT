@@ -11,34 +11,8 @@
     <img src="/static/logo.png" alt="사이트 로고" width="80" height="80">
     <h1>오늘 가고 싶은 SPOT은?</h1>
 
-    <!-- 로그인 상태 표시 및 로그아웃 -->
-    <div id="loggedInStatus" style="display: none;">
-        <p id="welcomeMessage"></p>
-        <button id="logoutButton">로그아웃</button>
-    </div>
-
-    <!-- 로그인 및 회원가입 버튼 -->
-    <div id="authButtons">
-        <button id="loginToggle">로그인</button>
-        <button id="signupToggle">회원가입</button>
-    </div>
-
-    <!-- 로그인 폼 -->
-    <form id="loginForm" style="display: none;" method="post" onsubmit="login(event)">
-        <input type="text" id="loginUsername" name="username" placeholder="아이디" required>
-        <input type="password" id="loginPassword" name="password" placeholder="비밀번호" required>
-        <button type="submit">로그인</button>
-    </form>
-
-    <!-- 회원가입 폼 -->
-    <form id="signupForm" style="display: none;" method="post" onsubmit="signup(event)">
-        <input type="text" id="signupUsername" name="username" placeholder="아이디" required>
-        <input type="password" id="signupPassword" name="password" placeholder="비밀번호" required>
-        <button type="submit">회원가입</button>
-    </form>
-
     <!-- 검색 폼 -->
-    <form id="searchForm">
+    <form id="searchForm" method="POST" action="/search/">
         <input type="text" id="searchInput" name="search_input" placeholder="검색어와 지역을 입력하세요 (예: 서울 맛집)">
         <button type="submit">검색</button><br/>
         <button type="button" id="voiceSearchButton">🎤 음성 검색</button>
