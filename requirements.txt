@@ -12,3 +12,4 @@ numpy
 typing_extensions
 passlib
 python-jose
+langchain-community
