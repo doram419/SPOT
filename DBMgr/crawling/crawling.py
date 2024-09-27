@@ -6,7 +6,7 @@ from .datas.data import Data
 from .summarizer import do_summarize
 from langchain.schema import Document  # 문서 객체가 필요하다면 임포트
 
-def start_crawling(keyword : str, region : str):
+def start_crawling(keyword : str, region : str) -> list:
     """
     네이버 블로그에서 크롤링을 해서 돌려주는 함수
     """
@@ -14,7 +14,7 @@ def start_crawling(keyword : str, region : str):
     
     return result
 
-def make_datas(datas : list):
+def make_datas(datas : list) -> list:
     """
     가져온 정보들을 Class Data로 바꿔주는 함수
     """
@@ -32,8 +32,9 @@ def make_datas(datas : list):
 
         result.append(Data(
             title=clean_title, 
-            chunked_desc=chunked_list, 
-            summary=do_summarize(name=clean_title, descs=chunked_list))
+            chunked_desc=chunked_list,  
+            summary=do_summarize(name=clean_title, descs=chunked_list),
+            link=d['link'])
         )
 
     return result

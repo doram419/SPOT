@@ -25,7 +25,7 @@ def save(datas : list = "SearchResult list를 주면 DB에 저장하는 함수")
     """
     크롤링한 데이터를 저장하는 함수
     """
-    for data in datas:
+    for data in datas: 
         saveToVDB(data=data)
 
 def interface():
@@ -51,13 +51,13 @@ if __name__ == "__main__":
 
         if user_input == '1':
             print("==DB생성==")
-            keyword = input("키워드를 입력해 주세요: ")
             region = input("지역을 입력해 주세요: ")
+            keyword = input("키워드를 입력해 주세요: ")
             print(f"region:{region},keyword:{keyword}로 크롤링 중입니다... 잠시 기다려 주세요.") 
            
             result = find(keyword=keyword, region=region)
             print(f"검색 완료! DB 생성중입니다...") 
-            save(datas=find(keyword=keyword, region=region))
+            save(result)
             print(f"DB 생성이 완료되었습니다...") 
 
         elif user_input == '2':

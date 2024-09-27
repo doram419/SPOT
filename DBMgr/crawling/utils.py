@@ -1,5 +1,4 @@
 import re
-from fastapi import HTTPException
 
 # HTML 태그를 정규식으로 제거하는 함수
 def clean_html(raw_html):
