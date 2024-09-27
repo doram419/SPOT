@@ -42,7 +42,8 @@ def saveToVDB(data: Data):
     metadata = {
         "title": data.title,
         "desc": [d.page_content if isinstance(d, Document) else str(d) for d in data.desc],
-        "summary": data.summary
+        "summary": data.summary,
+        "link": data.link
     }
 
     # 벡터와 메타데이터를 함께 저장
@@ -73,7 +74,8 @@ def searchVDB(query : str = "검색할 문장",
             results.append({
                 "title": meta.get("title", "Unknown"),
                 "similarity": float(D[0][idx]),
-                "summary": meta.get("summary", "Unknown")
+                "summary": meta.get("summary", "Unknown"),
+                "link":meta.get("link","https://none")
             })
 
     # 유사도 순으로 정렬
