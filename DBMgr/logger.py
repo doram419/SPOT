@@ -28,9 +28,11 @@ def write_log(region, keyword, start_count, save_count):
     current_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     # TXT 파일 열기 (쓰기 모드)
     with open('vdbLog.txt', 'a', encoding='utf-8') as file:
-        file.write(f'[저장 시간 : {current_time}, 저장된 개수 : {start_count}개]\n')
         for key, value in data.items():
             file.write(f'{key}: {value}\n')
+        else:
+            num = start_count+save_count
+            file.write(f'[저장 시간 : {current_time}, 저장된 개수 : {num}개]\n')    
 
     print(f"{data} 저장되었습니다.")
     return save_count
