@@ -71,7 +71,10 @@ async def search_restaurant(request: Request, search_input: str = Form(...)):
                 "summary": summary,
                 "link": meta.get("link", "https://none")
             })
-    print(results)
+    
+    for i in range(1, len(results)):
+        print(i, ":", results[i])
+        
     # 검색 결과 렌더링
     return templates.TemplateResponse("index.html", {
         "request": request,
