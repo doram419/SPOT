@@ -3,6 +3,7 @@ from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from .vectorRouter.FaissVectorStore import FaissVectorStore
 from .vectorRouter.vectorMgr import get_openai_embedding
+from app.promptMgr import summarize_desc
 import faiss
 import numpy as np
 import asyncio
@@ -63,10 +64,11 @@ async def search_restaurant(request: Request, search_input: str = Form(...)):
     for idx, i in enumerate(I[0]):
         if i < len(vector_store.metadata):
             meta = vector_store.metadata[i]
+            summary = summarize_desc(meta.get("title", "Unknown"), meta.get("summary", ""))
             results.append({
                 "title": meta.get("title", "Unknown"),
                 "similarity": float(D[0][idx]),
-                "summary": meta.get("summary", "Unknown")
+                "summary": summary
             })
     print(results)
     # 검색 결과 렌더링
