@@ -21,6 +21,7 @@
                 <h3>{{ result.title }}</h3>
                 <p>유사도: {{ "%.2f"|format(result.similarity) }}</p>
                 <p>{{ result.summary }}</p>
+                <p><a href="{{ result.link }}" target="_blank">링크로 이동</a></p>
             </div>
             {% endfor %}
         </div>

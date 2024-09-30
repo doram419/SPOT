@@ -11,7 +11,7 @@ openai_api_key = os.getenv("OPENAI_API_KEY")
 embeddings = OpenAIEmbeddings(openai_api_key=openai_api_key, model="text-embedding-3-small")
 
 # 텍스트 임베딩 함수
-def get_openai_embedding(text): 
+def get_openai_embedding(text: str): 
     """
     OpenAI를 통해 자연어 임베딩을 생성하는 함수
     :param text: 임베딩 할 텍스트
