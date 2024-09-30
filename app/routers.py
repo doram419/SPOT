@@ -16,7 +16,7 @@ vector_store = FaissVectorStore()
 # GET 요청 처리, 메인 페이지 렌더링
 @router.get("/", response_class=HTMLResponse)
 async def root(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request})
+    return templates.TemplateResponse("search.html", {"request": request})
 
 
 # POST 요청을 통해 검색을 처리하는 엔드포인트
@@ -72,7 +72,7 @@ async def search_restaurant(request: Request, search_input: str = Form(...)):
     print(f"검색된 거리(D): {D}")
     print(f"검색된 인덱스(I): {I}")
     # 검색 결과 페이지 렌더링
-    return templates.TemplateResponse("search_results.html", {
+    return templates.TemplateResponse("results.html", {
         "request": request,
         "results": results,
         "search_input": search_input
