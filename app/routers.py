@@ -63,9 +63,10 @@ async def search_restaurant(request: Request, search_input: str = Form(...)):
             results.append({
                 "title": meta.get("title", "Unknown"),
                 "similarity": float(D[0][idx]),
-                "summary": summary
+                "summary": summary,
+                "link": meta.get("link", "https://none")
             })
-
+            
     # 검색 결과 페이지 렌더링
     return templates.TemplateResponse("search_results.html", {
         "request": request,
