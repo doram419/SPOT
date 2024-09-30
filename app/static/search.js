@@ -2,8 +2,8 @@ document.addEventListener("DOMContentLoaded", function() {
     const voiceSearchButton = document.getElementById('voiceSearchButton');
     const searchInput = document.getElementById('searchInput');
     const searchForm = document.getElementById('searchForm');
-    const loadingScreen = document.getElementById('loadingScreen');
 
+    
     // 음성 인식 기능
     if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;

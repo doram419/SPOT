@@ -47,7 +47,7 @@ async def search_restaurant(request: Request, search_input: str = Form(...)):
         padding = np.zeros(max(0, vector_store.dim - len(embedding)), dtype=np.float32)
         embedding = np.concatenate([embedding, padding])
     else:
-        raise ValueError("Unexpected embedding dimensions")
+        raise ValueError("예상치 못한 임베딩 차원입니다.")
 
     print(f"임베딩 벡터: {embedding}")
     print(f"임베딩 벡터 차원: {embedding.shape}")
@@ -71,6 +71,7 @@ async def search_restaurant(request: Request, search_input: str = Form(...)):
             })
     print(f"검색된 거리(D): {D}")
     print(f"검색된 인덱스(I): {I}")
+    
     # 검색 결과 페이지 렌더링
     return templates.TemplateResponse("results.html", {
         "request": request,
