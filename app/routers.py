@@ -6,11 +6,6 @@ from .vectorRouter.vectorMgr import get_openai_embedding
 from app.promptMgr import summarize_desc
 import faiss
 import numpy as np
-import asyncio
-import re
-# FAISS 설정
-dimension = 768
-index = faiss.IndexFlatL2(dimension)
 
 # FastAPI의 APIRouter 인스턴스 생성
 router = APIRouter()
@@ -71,13 +66,11 @@ async def search_restaurant(request: Request, search_input: str = Form(...)):
                 "summary": summary,
                 "link": meta.get("link", "https://none")
             })
-    
-    for i in range(1, len(results)):
-        print(i, ":", results[i])
-        
-    # 검색 결과 렌더링
-    return templates.TemplateResponse("index.html", {
+            
+    # 검색 결과 페이지 렌더링
+    return templates.TemplateResponse("search_results.html", {
         "request": request,
-        "result": results  # 템플릿에 검색 결과 전달
+        "results": results,
+        "search_input": search_input
     })
     

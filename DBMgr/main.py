@@ -5,6 +5,7 @@
 from dotenv import load_dotenv
 from vectorMgr import saveToVDB, searchVDB
 from crawling.crawling import start_crawling, make_datas
+from logger import vdb_logging
 
 user_input = int()
 
@@ -58,8 +59,8 @@ if __name__ == "__main__":
             result = find(keyword=keyword, region=region)
             print(f"검색 완료! DB 생성중입니다...") 
             save(result)
-            print(f"DB 생성이 완료되었습니다...") 
-
+            vdb_logging(region=region, keyword=keyword, count=len(result))
+            
         elif user_input == '2':
             print("==DB조회==")
             keyword = input("키워드를 입력해 주세요: ")

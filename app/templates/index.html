@@ -18,8 +18,8 @@
         <button type="button" id="voiceSearchButton">🎤 음성 검색</button>
     </form>
 
-     <!-- 추천 문장 카드 -->
-     <div id="cardContainer">
+    <!-- 추천 문장 카드 -->
+    <div id="cardContainer">
         <div class="card" onclick="autoSearch('서초동 분위기 좋은 카페')">
             <div class="icon"></div>
             <p>서초동 분위기 좋은 카페</p>
@@ -38,31 +38,13 @@
         </div>
     </div>
 
+    <div id="loadingScreen" style="display: none;">
+        <div class="spinner"></div>
+        <p>검색 중...</p>
+    </div>
+
     <div id="results">
-        <!-- 검색 결과 영역 -->
-        {% if search_results is defined and search_results %}
-            <h2>검색 결과</h2>
-            <ul>
-                {% for result in search_results %}
-                    <li>
-             <h3>{{ result.title }}</h3>
-                        <p>{{ result.description }}</p>
-                        <p>평점: {{ result.rating }}</p>
-                        <p>리뷰 수: {{ result.views }}</p>
-                        <p>가격 수준: {{ result.price_level }}</p>
-                        <p>맥주 제공: {% if result.serves_beer %}예{% else %}아니요{% endif %}</p>
-                        <p>와인 제공: {% if result.serves_wine %}예{% else %}아니요{% endif %}</p>
-                        <p>아침 제공: {% if result.serves_breakfast %}예{% else %}아니요{% endif %}</p>
-                        <p>브런치 제공: {% if result.serves_brunch %}예{% else %}아니요{% endif %}</p>
-                        <p>점심 제공: {% if result.serves_lunch %}예{% else %}아니요{% endif %}</p>
-                        <p>저녁 제공: {% if result.serves_dinner %}예{% else %}아니요{% endif %}</p>
-                        <p>채식 음식 제공: {% if result.serves_vegetarian_food %}예{% else %}아니요{% endif %}</p>
-                        <p>테이크아웃 가능: {% if result.takeout %}예{% else %}아니요{% endif %}</p>
-                        <a href="{{ result.link }}" target="_blank">더보기</a>
-                    </li>
-                {% endfor %}
-            </ul>
-        {% endif %}
+        <!-- 검색 결과가 여기에 표시됩니다 -->
     </div>
 
     <script src="/static/script.js"></script>
