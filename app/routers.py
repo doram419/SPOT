@@ -49,11 +49,14 @@ async def search_restaurant(request: Request, search_input: str = Form(...)):
     else:
         raise ValueError("Unexpected embedding dimensions")
 
+    print(f"임베딩 벡터: {embedding}")
+    print(f"임베딩 벡터 차원: {embedding.shape}")
+    
     # embedding을 2차원 배열로 변환 (search 함수에 맞게)
     embedding = embedding.reshape(1, -1)
 
     D, I = vector_store.search(embedding, k=5)
-
+    
     results = []
 
     for idx, i in enumerate(I[0]):
@@ -66,11 +69,12 @@ async def search_restaurant(request: Request, search_input: str = Form(...)):
                 "summary": summary,
                 "link": meta.get("link", "https://none")
             })
-            
+    print(f"검색된 거리(D): {D}")
+    print(f"검색된 인덱스(I): {I}")
     # 검색 결과 페이지 렌더링
     return templates.TemplateResponse("search_results.html", {
         "request": request,
         "results": results,
         "search_input": search_input
     })
-    
+   
