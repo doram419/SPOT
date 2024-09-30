@@ -3,6 +3,8 @@ document.addEventListener("DOMContentLoaded", function() {
     const voiceSearchButton = document.getElementById('voiceSearchButton');
     const searchInput = document.getElementById('searchInput');
     const searchForm = document.getElementById('searchForm');
+    const loadingScreen = document.getElementById('loadingScreen');
+    const resultsContainer = document.getElementById('results');
 
 
     // 검색 요청을 처리하는 함수
@@ -10,47 +12,39 @@ document.addEventListener("DOMContentLoaded", function() {
         event.preventDefault();  // 기본 폼 동작 막기
         const searchInputValue = searchInput.value;
 
-
-        // 변경: searchInput 대신 searchInputValue 사용
         if (!searchInputValue) {
-            alert("검색어와 지역을 입력하세요!");
+            alert("검색어를 입력하세요!");
             return;
         }
 
+        // 로딩 화면 표시
+        loadingScreen.style.display = 'flex';
+        resultsContainer.innerHTML = '';
+
         const formData = new URLSearchParams();
-        // 변경: searchInput 대신 searchInputValue 사용
         formData.append('search_input', searchInputValue);
 
-        fetch('http://127.0.0.1:8000/search/', {
+        fetch('/search/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
             },
             body: formData
         })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok. Status: ' + response.status);
-            }
-
-            const contentType = response.headers.get('content-type');
-            if (contentType && contentType.includes('application/json')) {
-                return response.json();
-            }
-
-            return response.text();
-        })
-        .then(data => {
-            if (typeof data === 'string') {
-                document.body.innerHTML = data;
-            } else {
-                console.log('JSON 응답:', data);
-                // 변경: JSON 데이터 처리에 대한 주석 추가
-                // JSON 데이터를 사용하여 결과를 표시하는 로직을 여기에 추가
-            }
+        .then(response => response.text())
+        .then(html => {
+            // 로딩 화면 숨기기
+            loadingScreen.style.display = 'none';
+            // 결과 페이지 내용으로 현재 페이지 업데이트
+            document.body.innerHTML = html;
+            // 스크립트 재실행을 위해 페이지에 스크립트 태그 추가
+            const script = document.createElement('script');
+            script.src = '/static/script.js';
+            document.body.appendChild(script);
         })
         .catch(error => {
             console.error('Error during fetch:', error);
+            loadingScreen.style.display = 'none';
             alert('Error: ' + error.message);
         });
     });

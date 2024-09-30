@@ -1,6 +1,6 @@
 import os
 from dotenv import load_dotenv
-from langchain.embeddings import OpenAIEmbeddings  # 새로운 모듈에서 임포트
+from langchain_openai import OpenAIEmbeddings  # 새로운 모듈에서 임포트
 import numpy as np
 
 # .env 파일에서 API 키 로드 (환경 변수 설정)
