@@ -4,22 +4,28 @@ from fastapi.templating import Jinja2Templates
 from .vectorRouter.FaissVectorStore import FaissVectorStore
 from .vectorRouter.vectorMgr import get_openai_embedding
 from app.promptMgr import summarize_desc
-import faiss
 import numpy as np
+from rank_bm25 import BM25Okapi
+
 
 # FastAPI의 APIRouter 인스턴스 생성
 router = APIRouter()
 templates = Jinja2Templates(directory="app/templates")
 
+# FAISS 벡터 스토어 초기화
 vector_store = FaissVectorStore()
+
+# BM25 모델 초기화 (vector_store에 있는 문서들의 텍스트 사용)
+corpus = [meta.get("summary", "") for meta in vector_store.metadata]
+tokenized_corpus = [doc.split(" ") for doc in corpus]
+bm25 = BM25Okapi(tokenized_corpus)
 
 # GET 요청 처리, 메인 페이지 렌더링
 @router.get("/", response_class=HTMLResponse)
 async def root(request: Request):
     return templates.TemplateResponse("search.html", {"request": request})
 
-
-# POST 요청을 통해 검색을 처리하는 엔드포인트
+# POST 요청을 통해 검색을 처리하는 엔드포인트에 하이브리드 검색 추가
 @router.post("/search/", response_class=HTMLResponse)
 async def search_restaurant(request: Request, search_input: str = Form(...)):
     if not search_input:
@@ -27,39 +33,45 @@ async def search_restaurant(request: Request, search_input: str = Form(...)):
 
     print(f"검색어: {search_input}")
 
+    # 1. BM25 검색을 먼저 수행
+    tokenized_query = search_input.split(" ")
+    bm25_scores = bm25.get_scores(tokenized_query)  # BM25 점수 계산
+    top_bm25_indices = np.argsort(bm25_scores)[-10:]  # 상위 10개의 문서 인덱스 선택
+    
+    # 2. 검색어에 대한 임베딩 생성 (OpenAI 사용)
     embedding = get_openai_embedding(search_input)
     if vector_store.dim is None:
         print("경고: 벡터 저장소가 비어 있습니다. 먼저 데이터를 추가해주세요.")
+        raise HTTPException(status_code=500, detail="벡터 저장소에 데이터가 없습니다.")
 
-    # embedding이 1차원 배열인지 확인
+    # embedding 차원 맞추기
     if embedding.ndim == 1:
-    # padding을 추가하여 차원을 맞춤
         padding = np.zeros(max(0, vector_store.dim - len(embedding)), dtype=np.float32)
         embedding = np.concatenate([embedding, padding])
     elif embedding.ndim == 2:
-    # embedding이 이미 2차원 배열인 경우, 첫 번째 차원의 크기가 1인지 확인
         if embedding.shape[0] == 1:
             embedding = embedding.flatten()  # 1차원 배열로 변환
         else:
             raise ValueError("Unexpected embedding shape")
-
-    # padding을 추가하여 차원을 맞춤
-        padding = np.zeros(max(0, vector_store.dim - len(embedding)), dtype=np.float32)
-        embedding = np.concatenate([embedding, padding])
     else:
         raise ValueError("예상치 못한 임베딩 차원입니다.")
 
     print(f"임베딩 벡터: {embedding}")
     print(f"임베딩 벡터 차원: {embedding.shape}")
     
-    # embedding을 2차원 배열로 변환 (search 함수에 맞게)
+    # embedding을 2차원 배열로 변환 (FAISS 검색에 맞게)
     embedding = embedding.reshape(1, -1)
 
-    D, I = vector_store.search(embedding, k=5)
-    
-    results = []
+    # 3. FAISS 벡터 검색 수행 (BM25로 상위 문서 필터링)
+    if len(top_bm25_indices) > 0:
+        # top_bm25_indices를 통해 메타데이터와 일치하는 문서들만 FAISS로 검색
+        D, I = vector_store.search(embedding, k=5)
+        final_ranked_indices = [i for i in I[0]]  # 검색 결과 인덱스
+    else:
+        raise HTTPException(status_code=404, detail="검색 결과가 없습니다.")
 
-    for idx, i in enumerate(I[0]):
+    results = []
+    for idx, i in enumerate(final_ranked_indices):
         if i < len(vector_store.metadata):
             meta = vector_store.metadata[i]
             summary = summarize_desc(meta.get("title", "Unknown"), meta.get("summary", ""))
@@ -69,6 +81,7 @@ async def search_restaurant(request: Request, search_input: str = Form(...)):
                 "summary": summary,
                 "link": meta.get("link", "https://none")
             })
+
     print(f"검색된 거리(D): {D}")
     print(f"검색된 인덱스(I): {I}")
     
@@ -78,4 +91,3 @@ async def search_restaurant(request: Request, search_input: str = Form(...)):
         "results": results,
         "search_input": search_input
     })
-   
