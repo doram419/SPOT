@@ -25,7 +25,6 @@ def summarize_desc(name: str, desc):
                 4. 해당 가게와 관련된 중복된 정보는 제공하지 말고 새로운 내용을 만들어 주세요.
                 5. 요약은 200자 이내로 하세요.
                 6. 요약할 수 없는 정보는 생략하세요."""}
-
             ],
             temperature=0.7,
             max_tokens=200,
