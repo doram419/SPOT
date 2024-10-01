@@ -22,6 +22,7 @@ vector_store = FaissVectorStore()
 # 벡터 저장소에서 문서의 요약 정보를 사용해 BM25 검색 모델 초기화
 corpus = [meta.get("summary", " ") for meta in vector_store.metadata]
 
+# 벡터 저장소에 데이터가 없을 경우 예외 처리
 if not corpus:
     raise EmptyVectorStoreException("메타 데이터 안에 summary가 없습니다")
 
@@ -44,7 +45,7 @@ def get_korean_embedding(text: str):
     return embeddings[0].numpy()
 
 # 검색 함수
-def search(search_input: str, k: int = 5, bm25_weight: float = 0.5, faiss_weight: float = 0.5):
+def search(search_input: str, k: int = 5, bm25_weight: float = 0.2, faiss_weight: float = 0.8):
     """
     주어진 검색어에 대해 유사한 항목을 검색하는 함수.
     BM25와 FAISS를 혼합하여 결과를 반환.
@@ -54,6 +55,7 @@ def search(search_input: str, k: int = 5, bm25_weight: float = 0.5, faiss_weight
     :param faiss_weight: FAISS 결과에 대한 가중치
     :return: 검색 결과 리스트
     """
+    # 검색어가 없으면 예외 처리
     if not search_input:
         raise EmptySearchQueryException()
 
@@ -62,15 +64,18 @@ def search(search_input: str, k: int = 5, bm25_weight: float = 0.5, faiss_weight
     bm25_scores = bm25.get_scores(tokenized_query)  # BM25 점수 계산
     top_bm25_indices = np.argsort(bm25_scores)[-10:]  # 상위 10개의 문서 인덱스 선택
 
+    # 검색 결과가 없으면 예외 처리
     if len(top_bm25_indices) == 0:
         raise NoSearchResultsException()
     
     # 2. 검색어에 대한 임베딩 생성 (한국어 SBERT 사용)
     embedding = get_korean_embedding(search_input)
+    
+    # 벡터 저장소가 비었는지 확인
     if vector_store.dim is None:
         raise EmptyVectorStoreException()
 
-    # 임베딩 차원 조정 (벡터 차원이 맞지 않으면 패딩을 추가)
+    # 3. 임베딩 차원 조정 (벡터 차원이 맞지 않으면 패딩을 추가)
     if embedding.ndim == 1:
         embedding = np.pad(embedding, (0, vector_store.dim - len(embedding)), mode='constant')
     elif embedding.ndim == 2:
@@ -84,10 +89,10 @@ def search(search_input: str, k: int = 5, bm25_weight: float = 0.5, faiss_weight
     # 임베딩을 2차원 배열로 변환
     embedding = embedding.reshape(1, -1)
 
-    # 3. FAISS 벡터 검색 수행 (BM25로 필터링된 상위 문서들에 대해 검색)
-    D, I = vector_store.search(embedding, k=k)  # FAISS 인덱스에서 검색 (유사도 거리 D와 인덱스 I 반환)
+    # 4. FAISS 벡터 검색 수행 (BM25로 필터링된 상위 문서들에 대해 검색)
+    D, I = vector_store.search(embedding, k=k)  # FAISS 인덱스에서 검색
     
-    # 4. BM25와 FAISS 결과를 가중치로 결합하여 최종 유사도 계산
+    # 5. BM25와 FAISS 결과를 가중치로 결합하여 최종 유사도 계산
     combined_scores = []
     for idx, bm25_idx in enumerate(top_bm25_indices):
         bm25_score = bm25_scores[bm25_idx]
@@ -102,13 +107,13 @@ def search(search_input: str, k: int = 5, bm25_weight: float = 0.5, faiss_weight
         combined_score = (bm25_weight * bm25_score) + (faiss_weight * (1 / (1 + faiss_score)))
         combined_scores.append((bm25_idx, combined_score))
 
-    # 5. 최종 결과를 결합된 점수를 기준으로 정렬
+    # 6. 최종 결과를 결합된 점수를 기준으로 정렬
     final_ranked_indices = sorted(combined_scores, key=lambda x: x[1], reverse=True)[:k]
 
-    # 6. 중복 음식점 필터링을 위한 집합 생성 (중복된 이름은 제외)
+    # 7. 중복 음식점 필터링을 위한 집합 생성 (중복된 이름은 제외)
     seen_titles = set()
     
-    # 7. 결과를 사용자의 검색어와 맞는 형태로 요약 및 출력 (중복된 음식점 이름 제외)
+    # 8. 결과를 사용자의 검색어와 맞는 형태로 요약 및 출력 (중복된 음식점 이름 제외)
     results = []
     for idx, (bm25_idx, score) in enumerate(final_ranked_indices):
         if bm25_idx < len(vector_store.metadata):
