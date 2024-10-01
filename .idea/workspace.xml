@@ -6,6 +6,10 @@
   <component name="ChangeListManager">
     <list default="true" id="61b933e9-284a-493c-a226-0eb615b1c28a" name="Changes" comment="">
       <change afterPath="$PROJECT_DIR$/DBMgr/crawling/google_service.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/DBMgr/log_number.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/DBMgr/spot_index.bin" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/DBMgr/spot_metadata.pkl" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/DBMgr/vdbLog.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/SPOT.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/SPOT.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
@@ -17,8 +21,6 @@
       <change beforePath="$PROJECT_DIR$/DBMgr/vectorMgr.py" beforeDir="false" afterPath="$PROJECT_DIR$/DBMgr/vectorMgr.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/promptMgr.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/promptMgr.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/routers.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/routers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/spot_index.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/spot_metadata.pkl" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -56,14 +58,14 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Python.main (1).executor&quot;: &quot;Run&quot;,
-    &quot;Python.main.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;hyohyohyo&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Python.main (1).executor": "Run",
+    "Python.main.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "YeaEun 병합 중"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\shw26\Desktop\웤슾\SPOT\venv" />
@@ -79,7 +81,6 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="SDK_NAME" value="C:\Users\shw26\anaconda3" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/DBMgr" />
       <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
@@ -102,7 +103,6 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="SDK_NAME" value="C:\Users\shw26\anaconda3" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/app" />
       <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
