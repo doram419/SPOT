@@ -23,8 +23,7 @@ def fetch_top_restaurants_nearby(query: str = "검색어", region: str = "지역
     places_result = gmaps.places(query=f"{region} {query}")
 
     results = []
-    if places_result['results']:
-        place = places_result['results'][0]  # 첫 번째 결과만 사용
+    for place in places_result['results']:
         place_id = place.get('place_id', 'None')
         place_details = gmaps.place(place_id=place_id, language='ko',
                                     fields=['name', 'url', 'vicinity', 'rating',
