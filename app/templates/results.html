@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>검색 결과 - 오늘 가고 싶은 SPOT은?</title>
+    <link rel="stylesheet" href="/static/results.css"> <!-- CSS 파일 연결 -->
+</head>
+<body>
+    <header>
+        <img src="/static/logo.png" alt="사이트 로고" width="80" height="80">
+        <h1>오늘 가고 싶은 SPOT은?</h1>
+    </header>
+
+    <main>
+        <h2>"{{ search_input }}" 검색 결과</h2>
+
+        <!-- 슬라이드 컨테이너 -->
+        <div class="slider-container">
+            <div class="slider-wrapper" id="sliderWrapper">
+                {% for result in results %}
+                <div class="slider-item">
+                    <h3>{{ result.title }}</h3>
+                    <p>유사도: {{ "%.2f"|format(result.similarity) }}</p>
+                    <p>{{ result.summary }}</p>
+                    <p><a href="{{ result.link }}" target="_blank">링크로 이동</a></p>
+                </div>
+                {% endfor %}
+            </div>
+            <button class="slider-button prev" id="prevBtn">‹</button>
+            <button class="slider-button next" id="nextBtn">›</button>
+        </div>
+
+        <a href="/" class="button">새로운 검색하기</a>
+    </main>
+
+    <script src="/static/results.js"></script> <!-- JS 파일 연결 -->
+</body>
+</html>

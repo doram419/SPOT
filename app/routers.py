@@ -16,7 +16,7 @@ vector_store = FaissVectorStore()
 # GET 요청 처리, 메인 페이지 렌더링
 @router.get("/", response_class=HTMLResponse)
 async def root(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request})
+    return templates.TemplateResponse("search.html", {"request": request})
 
 
 # POST 요청을 통해 검색을 처리하는 엔드포인트
@@ -47,13 +47,16 @@ async def search_restaurant(request: Request, search_input: str = Form(...)):
         padding = np.zeros(max(0, vector_store.dim - len(embedding)), dtype=np.float32)
         embedding = np.concatenate([embedding, padding])
     else:
-        raise ValueError("Unexpected embedding dimensions")
+        raise ValueError("예상치 못한 임베딩 차원입니다.")
 
+    print(f"임베딩 벡터: {embedding}")
+    print(f"임베딩 벡터 차원: {embedding.shape}")
+    
     # embedding을 2차원 배열로 변환 (search 함수에 맞게)
     embedding = embedding.reshape(1, -1)
 
     D, I = vector_store.search(embedding, k=5)
-
+    
     results = []
 
     for idx, i in enumerate(I[0]):
@@ -66,11 +69,13 @@ async def search_restaurant(request: Request, search_input: str = Form(...)):
                 "summary": summary,
                 "link": meta.get("link", "https://none")
             })
-            
+    print(f"검색된 거리(D): {D}")
+    print(f"검색된 인덱스(I): {I}")
+    
     # 검색 결과 페이지 렌더링
-    return templates.TemplateResponse("search_results.html", {
+    return templates.TemplateResponse("results.html", {
         "request": request,
         "results": results,
         "search_input": search_input
     })
-    
+
