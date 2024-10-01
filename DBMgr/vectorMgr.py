@@ -74,6 +74,7 @@ def searchVDB(query : str = "검색할 문장",
             results.append({
                 "title": meta.get("title", "Unknown"),
                 "similarity": float(D[0][idx]),
+                "chunked_desc": meta.get("desc", "Unknown"),
                 "summary": meta.get("summary", "Unknown"),
                 "link":meta.get("link","https://none")
             })
