@@ -70,7 +70,8 @@ if __name__ == "__main__":
             
             print(f"검색된 결과 {len(result)}개 입니다.")
             count = 1
-            print(count, ":", result[0])
+          #  print(count, ":", result[0])2
+
 
             more = input("더보기 y, 그만 보기 n : ")
 
