@@ -33,11 +33,14 @@ async def search_restaurant(request: Request, search_input: str = Form(...)):
 
     print(f"검색어: {search_input}")
 
-    # 1. BM25 검색을 먼저 수행
+    # 1. BM25 검색을 먼저 수행 (텍스트 기반 검색)
     tokenized_query = search_input.split(" ")
     bm25_scores = bm25.get_scores(tokenized_query)  # BM25 점수 계산
     top_bm25_indices = np.argsort(bm25_scores)[-10:]  # 상위 10개의 문서 인덱스 선택
-    
+
+    if len(top_bm25_indices) == 0:
+        raise HTTPException(status_code=404, detail="검색 결과가 없습니다.")
+
     # 2. 검색어에 대한 임베딩 생성 (OpenAI 사용)
     embedding = get_openai_embedding(search_input)
     if vector_store.dim is None:
@@ -62,14 +65,16 @@ async def search_restaurant(request: Request, search_input: str = Form(...)):
     # embedding을 2차원 배열로 변환 (FAISS 검색에 맞게)
     embedding = embedding.reshape(1, -1)
 
-    # 3. FAISS 벡터 검색 수행 (BM25로 상위 문서 필터링)
-    if len(top_bm25_indices) > 0:
-        # top_bm25_indices를 통해 메타데이터와 일치하는 문서들만 FAISS로 검색
-        D, I = vector_store.search(embedding, k=5)
-        final_ranked_indices = [i for i in I[0]]  # 검색 결과 인덱스
-    else:
-        raise HTTPException(status_code=404, detail="검색 결과가 없습니다.")
+    # 3. FAISS 벡터 검색 수행 (BM25로 필터링된 상위 문서들에 대해 검색)
+    D, I = vector_store.index.search(embedding, k=10)  # FAISS 인덱스에서 검색
 
+    # 4. FAISS 결과와 BM25 결과를 결합하여 최종 상위 결과 선택
+    final_ranked_indices = list(set(top_bm25_indices).intersection(set(I[0])))  # BM25와 FAISS의 교집합을 사용
+
+    if not final_ranked_indices:
+        final_ranked_indices = top_bm25_indices[:5]  # 교집합이 없으면 BM25의 상위 5개 문서 사용
+
+    # 5. 결과를 사용자의 검색어와 맞는 형태로 요약 및 출력
     results = []
     for idx, i in enumerate(final_ranked_indices):
         if i < len(vector_store.metadata):
@@ -84,7 +89,7 @@ async def search_restaurant(request: Request, search_input: str = Form(...)):
 
     print(f"검색된 거리(D): {D}")
     print(f"검색된 인덱스(I): {I}")
-    
+
     # 검색 결과 페이지 렌더링
     return templates.TemplateResponse("results.html", {
         "request": request,
