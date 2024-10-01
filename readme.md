@@ -10,3 +10,7 @@
 - 실행시 터미널 입력
   - conda activate {가상환경이름}
   - uvicorn app.main:app --reload 입력
+
+- vdb 초기화 방법
+삭제 : spot_index.bin, spot_metadata.pkl, vdbLog.txt
+내용 초기화 : log_number.txt -> 숫자를 0으로

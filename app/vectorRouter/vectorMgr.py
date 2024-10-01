@@ -18,7 +18,11 @@ embeddings = OpenAIEmbeddings(openai_api_key=openai_api_key, model="text-embeddi
 vector_store = FaissVectorStore()
 
 # BM25 모델 초기화 (vector_store에 있는 문서들의 텍스트 사용)
-corpus = [meta.get("summary", "") for meta in vector_store.metadata]
+corpus = [meta.get("summary", " ") for meta in vector_store.metadata]
+
+if not corpus:
+    raise EmptyVectorStoreException("메타 데이터 안에 desc가 없습니다")
+
 tokenized_corpus = [doc.split(" ") for doc in corpus]
 bm25 = BM25Okapi(tokenized_corpus)
 
@@ -51,7 +55,8 @@ def search(search_input: str, k: int = 5):
     if len(top_bm25_indices) == 0:
         raise NoSearchResultsException()
     
-    # 2. 검색어에 대한 임베딩 생성 (OpenAI 사용)
+    # 2. 검색어에 대한 
+    # 임베딩 생성 (OpenAI 사용)
     embedding = get_openai_embedding(search_input)
     if vector_store.dim is None:
         raise EmptyVectorStoreException()
@@ -64,13 +69,10 @@ def search(search_input: str, k: int = 5):
         if embedding.shape[0] == 1:
             embedding = embedding.flatten()
         else:
-            raise ValueError("Unexpected embedding shape")
+            raise ValueError("예상치 못한 임베딩 차원입니다.")
     else:
         raise ValueError("예상치 못한 임베딩 차원입니다.")
     
-    print(f"임베딩 벡터: {embedding}")
-    print(f"임베딩 벡터 차원: {embedding.shape}")
-
     # 임베딩을 2차원 배열로 변환
     embedding = embedding.reshape(1, -1)
 
@@ -94,9 +96,5 @@ def search(search_input: str, k: int = 5):
                 "summary": summary,
                 "link": meta.get("link", "https://none")
             })
-    print(f"Tokenized corpus: {tokenized_corpus}")
-
-    print(f"검색된 거리(D): {D}")
-    print(f"검색된 인덱스(I): {I}")
 
     return results

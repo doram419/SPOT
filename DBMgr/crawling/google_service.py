@@ -23,8 +23,8 @@ def fetch_top_restaurants_nearby(query: str = "검색어", region: str = "지역
     places_result = gmaps.places(query=f"{region} {query}")
 
     results = []
-    if places_result['results']:
-        place = places_result['results'][0]  # 첫 번째 결과만 사용
+
+    for place in places_result['results']:
         place_id = place.get('place_id', 'None')
         place_details = gmaps.place(place_id=place_id, language='ko',
                                     fields=['name', 'url', 'vicinity', 'rating',
@@ -48,7 +48,7 @@ def fetch_top_restaurants_nearby(query: str = "검색어", region: str = "지역
         # 네이버 블로그에서 해당 식당 이름으로 검색한 데이터 가져오기
         naver_description = crawling_naver_blog_data(query=place_details.get('name', ''), region=region)
         description_list.append(f"네이버 블로그 설명: {naver_description}")
-        print("네이버 블로그설명:"+naver_description)
+        
         # 리뷰가 있으면 추가
         reviews = place_details.get('reviews', [])
         if reviews:
