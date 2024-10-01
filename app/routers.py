@@ -83,6 +83,7 @@ async def search_restaurant(request: Request, search_input: str = Form(...)):
             results.append({
                 "title": meta.get("title", "Unknown"),
                 "similarity": float(D[0][idx]),
+                "chunked_desc": meta.get("desc", "Unknown"),
                 "summary": summary,
                 "link": meta.get("link", "https://none")
             })
