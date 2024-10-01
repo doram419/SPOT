@@ -33,8 +33,8 @@ def summarize_desc(name: str, desc):
             presence_penalty=0.5    # 새로운 정보에 대한 장려
         )
         result = response.choices[0].message.content
-        print("요약결과"+result)
-        print("desc"+desc)
+        # print("요약결과"+result)
+        # print("desc"+desc)
         return result
 
     except Exception as e:
