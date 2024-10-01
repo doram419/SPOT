@@ -87,6 +87,7 @@ async def search_restaurant(request: Request, search_input: str = Form(...)):
                 "summary": summary,
                 "link": meta.get("link", "https://none")
             })
+    print(f"Tokenized corpus: {tokenized_corpus}")
 
     print(f"검색된 거리(D): {D}")
     print(f"검색된 인덱스(I): {I}")
