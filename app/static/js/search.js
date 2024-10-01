@@ -2,6 +2,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const voiceSearchButton = document.getElementById('voiceSearchButton');
     const searchInput = document.getElementById('searchInput');
     const searchForm = document.getElementById('searchForm');
+    const spinner = document.getElementById('spinner');
 
     // 음성 인식 기능
     if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
@@ -28,12 +29,19 @@ document.addEventListener("DOMContentLoaded", function() {
         console.log('음성 인식이 지원되지 않는 브라우저입니다.');
     }
     
+     // 검색 폼 제출 이벤트 처리
+     searchForm.addEventListener('submit', function(event) {
+        // 스피너 표시
+        spinner.style.display = 'block';
+    });
+
     // 페이지 로드 시 추천 카드 렌더링
     renderRecommendationCards();
 
-    // 추천 문장 카드 자동 검색 기능 (전역 함수)
+    // 자동 검색 함수
     window.autoSearch = function(searchTerm) {
         searchInput.value = searchTerm;
+        spinner.style.display = 'block';
         searchForm.submit();
     };
 });
