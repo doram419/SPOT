@@ -1,5 +1,5 @@
 from dotenv import load_dotenv
-from langchain_openai import OpenAIEmbeddings  # 새로운 모듈에서 임포트
+from langchain_openai import OpenAIEmbeddings
 from rank_bm25 import BM25Okapi
 import os
 import numpy as np
@@ -37,11 +37,13 @@ def get_openai_embedding(text: str):
     return np.array(embedding, dtype=np.float32)
 
 # 서치 함수
-def search(search_input: str, k: int = 5):
+def search(search_input: str, k: int = 5, bm25_weight: float = 0.5, faiss_weight: float = 0.5):
     """
     주어진 검색어에 대해 유사한 항목을 검색하는 함수
     :param search_input: 검색어
     :param k: 반환할 결과의 수
+    :param bm25_weight: BM25 결과에 대한 가중치
+    :param faiss_weight: FAISS 결과에 대한 가중치
     :return: 검색 결과 리스트
     """
     if not search_input:
@@ -55,16 +57,14 @@ def search(search_input: str, k: int = 5):
     if len(top_bm25_indices) == 0:
         raise NoSearchResultsException()
     
-    # 2. 검색어에 대한 
-    # 임베딩 생성 (OpenAI 사용)
+    # 2. 검색어에 대한 임베딩 생성 (OpenAI 사용)
     embedding = get_openai_embedding(search_input)
     if vector_store.dim is None:
         raise EmptyVectorStoreException()
 
     # 임베딩 차원 조정
     if embedding.ndim == 1:
-        padding = np.zeros(max(0, vector_store.dim - len(embedding)), dtype=np.float32)
-        embedding = np.concatenate([embedding, padding])
+        embedding = np.pad(embedding, (0, vector_store.dim - len(embedding)), mode='constant')
     elif embedding.ndim == 2:
         if embedding.shape[0] == 1:
             embedding = embedding.flatten()
@@ -77,24 +77,43 @@ def search(search_input: str, k: int = 5):
     embedding = embedding.reshape(1, -1)
 
     # 3. FAISS 벡터 검색 수행 (BM25로 필터링된 상위 문서들에 대해 검색)
-    D, I = vector_store.search(embedding, k=k) # FAISS 인덱스에서 검색
+    D, I = vector_store.search(embedding, k=k)  # FAISS 인덱스에서 검색
     
-    # 4. FAISS 결과와 BM25 결과를 결합하여 최종 상위 결과 선택
-    final_ranked_indices = list(set(top_bm25_indices).intersection(set(I[0])))  # BM25와 FAISS의 교집합을 사용
-    if not final_ranked_indices:
-        final_ranked_indices = top_bm25_indices[:5]  # 교집합이 없으면 BM25의 상위 5개 문서 사용
+    # 4. BM25와 FAISS 결과를 가중치로 결합하여 최종 유사도 계산
+    combined_scores = []
+    for idx, bm25_idx in enumerate(top_bm25_indices):
+        bm25_score = bm25_scores[bm25_idx]
+        faiss_score = 0
+        
+        if bm25_idx in I[0]:
+            faiss_index = np.where(I[0] == bm25_idx)[0][0]
+            faiss_score = D[0][faiss_index]
+
+        combined_score = (bm25_weight * bm25_score) + (faiss_weight * (1 / (1 + faiss_score)))
+        combined_scores.append((bm25_idx, combined_score))
+
+    # 5. 최종 결과를 결합된 점수를 기준으로 정렬
+    final_ranked_indices = sorted(combined_scores, key=lambda x: x[1], reverse=True)[:k]
+
+    # 6. 중복 음식점 필터링을 위한 집합 생성
+    seen_titles = set()
     
-     # 5. 결과를 사용자의 검색어와 맞는 형태로 요약 및 출력
+    # 7. 결과를 사용자의 검색어와 맞는 형태로 요약 및 출력 (중복된 음식점 이름 제외)
     results = []
-    for idx, i in enumerate(final_ranked_indices):
-        if i < len(vector_store.metadata):
-            meta = vector_store.metadata[i]
-            summary = summarize_desc(meta.get("title", "Unknown"), meta.get("summary", ""))
-            results.append({
-                "title": meta.get("title", "Unknown"),
-                "similarity": float(D[0][idx]),
-                "summary": summary,
-                "link": meta.get("link", "https://none")
-            })
+    for idx, (bm25_idx, score) in enumerate(final_ranked_indices):
+        if bm25_idx < len(vector_store.metadata):
+            meta = vector_store.metadata[bm25_idx]
+            title = meta.get("title", "Unknown")
+            
+            # 중복된 음식점 이름이 있는지 확인
+            if title not in seen_titles:
+                seen_titles.add(title)  # 새로운 음식점 이름은 집합에 추가
+                summary = summarize_desc(meta.get("title", "Unknown"), meta.get("summary", ""))
+                results.append({
+                    "title": title,
+                    "similarity": score,
+                    "summary": summary,
+                    "link": meta.get("link", "https://none")
+                })
 
     return results
