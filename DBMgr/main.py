@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 from vectorMgr import saveToVDB, searchVDB
 from crawling.crawling import start_crawling, make_datas
 from logger import vdb_logging
+from ocr_processor import process_image
 
 user_input = int()
 
