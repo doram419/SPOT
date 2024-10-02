@@ -6,7 +6,11 @@ from fastapi import FastAPI
 
 
 # FastAPI 애플리케이션 인스턴스 생성
-app = FastAPI()
+app = FastAPI(debug=True)
+
+
+# 라우터 등록
+app.include_router(router)
 
 # 정적 파일 및 템플릿 경로 설정
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
@@ -20,7 +24,5 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# 라우터 등록
-app.include_router(router)
 
 
