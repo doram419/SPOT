@@ -7,12 +7,12 @@
     <link rel="stylesheet" href="/static/css/results.css"> <!-- CSS 파일 연결 -->
 </head>
 <body>
-    <header>
+    <head>
         <img src="/static/logo.png" alt="사이트 로고" width="80" height="80">
         <h1>오늘 가고 싶은 SPOT은?</h1>
-    </header>
-
-    <main>
+    </head>
+    
+    <main role="main">
         <h2>"{{ search_input }}" 검색 결과</h2>
     
         <div class="slider-container">
@@ -20,18 +20,20 @@
                 {% for result in results %}
                 <div class="slider-item">
                     <div class="item-content">
-                        <div class="item-image">
-                            {% if result.image %}
-                            <img src="{{ result.image }}" alt="{{ result.title }}">
-                            {% else %}
-                            <img src="/static/default-image.png" alt="기본 이미지">
-                            {% endif %}
+                        <div class="item-header">
+                            <h3>{{ result.title }}</h3>
+                            <div class="item-image">
+                                {% if result.image %}
+                                <img src="{{ result.image }}" alt="{{ result.title }}">
+                                {% else %}
+                                <img src="/static/default-image.png" alt="기본 이미지">
+                                {% endif %}
+                            </div>
                         </div>
                         <div class="item-text">
-                            <h3>{{ result.title }}</h3>
                             <p class="similarity">유사도: {{ "%.2f"|format(result.similarity) }}</p>
                             <p class="summary">{{ result.summary }}</p>
-                            <a href="{{ result.link }}" target="_blank" class="link-button">링크로 이동</a>
+                            <a href="{{ result.link }}" class="link-button" target="_blank">링크로 이동</a>
                         </div>
                     </div>
                 </div>
@@ -44,7 +46,7 @@
         <a href="/" class="button">새로운 검색하기</a>
     </main>
 
-    <script src="/static/js/results.js"></script> <!-- JS 파일 연결 -->
+    <script src="/static/js/results.js"></script> 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const spinner = document.getElementById('spinner');
@@ -53,5 +55,6 @@
             }
         });
     </script>
+
 </body>
 </html>
