@@ -14,8 +14,8 @@ def summarize_desc(name: str, desc):
         response = client.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=[
-                {"role": "system", "content": "아래의 요청에따라 가게의 특징을 잘 알 수 있게 최대 100자 이내로 요약해주세요. (예: 우유푸딩이 맛있는 중세시대 느낌의 조용한 까페입니다. 대표메뉴로는 아메리카노, 티라미수케익 등이 있습니다. 데이트코스로도 적합합니다.)"},
-                {"role": "user", "content": f"가게 이름: {name}\n설명: {name}\n\n가게의 인기 메뉴, 음식점 분류 (예 : 한식집, 일식집), 가게의 분위기를 바탕으로 100자 이내로 요약해줘."}
+                {"role": "system", "content": "아래의 요청에따라 가게의 특징을 잘 알 수 있게 요약해주세요. (예: 우유푸딩이 맛있는 중세시대 느낌의 조용한 까페입니다. 대표메뉴로는 아메리카노, 티라미수케익 등이 있습니다. 데이트코스로도 적합합니다.)"},
+                {"role": "user", "content": f"가게 이름: {name}\n설명: {desc}\n\n"}
             ],
             temperature=0.7,
             max_tokens=200,
