@@ -38,6 +38,9 @@ def write_log(region, keyword, start_count, save_count):
     return save_count
 
 def vdb_logging(region, keyword, count):
+    """
+    크롤링을 한 결과를 저장하는 함수
+    """
     log_number = load_log_number()
     count = write_log(region, keyword, log_number, count)
     log_number += count

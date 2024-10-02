@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 from vectorMgr import saveToVDB, searchVDB
 from crawling.crawling import start_crawling, make_datas
 from logger import vdb_logging
+from tools.metaMgr import print_meta
 
 user_input = int()
 
@@ -38,6 +39,7 @@ def interface():
         숫자를 입력하시면 해당 행동을 실행합니다 
         1 : db 형성
         2 : db 조회
+        3 : meta 데이터 출력
         0 : 종료
         """
     print(message)    
@@ -79,6 +81,10 @@ if __name__ == "__main__":
                 for i in range(1, len(result)):
                     count +=1
                     print(count, ":", result[i])
+        elif user_input == '3':
+            print("==메타데이터를 출력합니다==")
+            print_meta()
+
         elif user_input == '0':
             print("종료합니다")
 
