@@ -14,23 +14,33 @@
 
     <main>
         <h2>"{{ search_input }}" 검색 결과</h2>
-
-        <!-- 슬라이드 컨테이너 -->
+    
         <div class="slider-container">
-            <div class="slider-wrapper" id="sliderWrapper">
+            <div id="sliderWrapper" class="slider-wrapper">
                 {% for result in results %}
                 <div class="slider-item">
-                    <h3>{{ result.title }}</h3>
-                    <p>유사도: {{ "%.2f"|format(result.similarity) }}</p>
-                    <p>{{ result.summary }}</p>
-                    <p><a href="{{ result.link }}" target="_blank">링크로 이동</a></p>
+                    <div class="item-content">
+                        <div class="item-image">
+                            {% if result.image %}
+                            <img src="{{ result.image }}" alt="{{ result.title }}">
+                            {% else %}
+                            <img src="/static/default-image.png" alt="기본 이미지">
+                            {% endif %}
+                        </div>
+                        <div class="item-text">
+                            <h3>{{ result.title }}</h3>
+                            <p class="similarity">유사도: {{ "%.2f"|format(result.similarity) }}</p>
+                            <p class="summary">{{ result.summary }}</p>
+                            <a href="{{ result.link }}" target="_blank" class="link-button">링크로 이동</a>
+                        </div>
+                    </div>
                 </div>
                 {% endfor %}
             </div>
-            <button class="slider-button prev" id="prevBtn">‹</button>
-            <button class="slider-button next" id="nextBtn">›</button>
+            <button id="prevBtn" class="slider-button prev">‹</button>
+            <button id="nextBtn" class="slider-button next">›</button>
         </div>
-
+    
         <a href="/" class="button">새로운 검색하기</a>
     </main>
 
