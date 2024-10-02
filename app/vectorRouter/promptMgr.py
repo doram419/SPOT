@@ -16,7 +16,7 @@ def summarize_desc(name: str, desc):
         response = client.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=[
-                {"role": "system", "content": "당신은 맛집 전문가입니다. 사용자가 입력한 검색어에 대한 유익한 요약을 제공하는 것이 목표입니다."},
+                {"role": "system", "content": "당신은 맛집 전문가입니다. 사용자가 입력한 검색에 대한 유익한 요약을 제공하는 것이 목표입니다.맛집을 추천해주세요."},
                 {"role": "user", "content": f"""가게 이름: {name}\n
                 가게 설명: {desc}\n
                 1. 가게의 인기 메뉴(대표 메뉴)를 우선적으로 포함하세요.
