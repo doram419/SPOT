@@ -2,6 +2,8 @@ from datetime import datetime
 import tkinter as tk
 from tkinter import ttk
 from .window_utils import position_window
+from .api_key import get_key
+from .google_service import GoogleService
 
 class CrawlingModule:
     def __init__(self, parent):
@@ -9,7 +11,8 @@ class CrawlingModule:
         self.window = tk.Toplevel(parent)
         self.window.title("크롤링 모듈")
         self.window.geometry("600x400")
-        self.crawling_mode = tk.StringVar(value="테스트 모드")  # 기본값을 "test"로 설정
+        self.crawling_mode = tk.StringVar(value="테스트 모드")  # 기본값을 테스트 모드로 설정
+        self.google = GoogleService(google_key=get_key("GOOGLE_API_KEY"))
         self.create_widgets()
         
         # 창 크기를 위젯에 맞게 조절

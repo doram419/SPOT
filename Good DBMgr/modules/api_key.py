@@ -2,17 +2,24 @@ import os
 import tkinter as tk
 from tkinter import ttk
 from pathlib import Path
-from dotenv import load_dotenv, dotenv_values
+from dotenv import dotenv_values
 from .window_utils import position_window
 
 env_path = Path('.') / '.env'
 
 if env_path.exists():
-    load_dotenv(dotenv_path=env_path)
+    env_const = dotenv_values(env_path)
 else:
     print(".env 파일을 찾지 못했습니다.")
+    env_const = {}
 
-class Api_Key():
+def get_key(keyName) -> str:
+        """
+        키를 요청 받으면 있으면 반환, 없으면 None을 하는 함수
+        """
+        return env_const.get(keyName, None)
+    
+class ApiKey():
     def __init__(self, parent):
         self.parent = parent
         self.window = tk.Toplevel(parent)
@@ -65,8 +72,7 @@ class Api_Key():
         position_window(self.parent, self.window)
 
     def check_status(self) -> dict:
-        env_vars = dotenv_values(env_path)
-        status = {key: bool(value) for key, value in env_vars.items()}
+        status = {key: bool(value) for key, value in env_const.items()}
         return status
 
     def create_widgets(self):
@@ -108,3 +114,6 @@ class Api_Key():
         # 여기에 키 추가 로직을 구현합니다.
         print("키 추가 버튼이 클릭되었습니다.")
         # 예: 새 창을 열어 키 입력 받기, 파일에 저장하기 등
+
+    
+        

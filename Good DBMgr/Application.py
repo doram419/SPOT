@@ -1,7 +1,7 @@
 from tkinter import ttk, Menu
 from modules.settings import SettingsWindow
 from modules.crawling import CrawlingModule
-from modules.api_key import Api_Key
+from modules.api_key import ApiKey
 from configuration import load_config, save_config
 
 class Application:
@@ -29,7 +29,7 @@ class Application:
         """
         api 상태 관리창을 여는 항목
         """
-        Api_Key(self.root) 
+        ApiKey(self.root) 
 
     def apply_settings(self, new_settings):
         self.config.update(new_settings)
