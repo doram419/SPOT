@@ -18,6 +18,9 @@ class CrawlingModule:
 
         position_window(self.parent, self.window)
 
+        # 엔터 키 이벤트 바인딩 추가
+        self.window.bind('<Return>', self.on_enter)
+
     def on_crawl(self):
         keyword = self.keyword_entry.get()
         region = self.region_entry.get()
@@ -30,6 +33,10 @@ class CrawlingModule:
         else:
             message = "검색어 또는 지역이 누락되었습니다"
             self.update_status(message)
+            
+    def on_enter(self, event):
+        """엔터 키를 눌렀을 때 크롤링 시작"""
+        self.on_crawl()
 
     def start_crawling(self, keyword: str, region: str, mode: str):
         """
@@ -86,6 +93,10 @@ class CrawlingModule:
         self.keyword_entry.grid(row=0, column=3, padx=(0,5), pady=5, sticky='w')
 
         # 크롤링 시작 버튼
+        self.crawl_button = ttk.Button(self.main_frame, text="크롤링 시작", command=self.on_crawl)
+        self.crawl_button.grid(row=1, column=0, pady=10, sticky='w')
+
+        # 크롤링 시작 버튼에 커맨드 연결
         self.crawl_button = ttk.Button(self.main_frame, text="크롤링 시작", command=self.on_crawl)
         self.crawl_button.grid(row=1, column=0, pady=10, sticky='w')
 
