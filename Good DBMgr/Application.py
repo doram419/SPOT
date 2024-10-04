@@ -1,12 +1,12 @@
 from tkinter import ttk
-from settings import SettingsWindow
+from modules.settings import SettingsWindow
 from modules.crawling import CrawlingModule
 from configuration import load_config, save_config
 
 class Application:
     def __init__(self, root):
         self.root = root
-        self.root.title("Good DB Mgr (ver p0.2)")
+        self.root.title("Good DB Mgr (ver p0.3)")
 
         self.config = load_config()
         self.apply_settings(self.config)

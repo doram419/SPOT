@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
+from .window_utils import position_window
 
 class CrawlingModule:
     def __init__(self, parent):
@@ -7,7 +8,14 @@ class CrawlingModule:
         self.window = tk.Toplevel(parent)
         self.window.title("크롤링 모듈")
         self.window.geometry("600x350")
-        self.create_widgets()  # create_widgets 메서드 호출
+        self.create_widgets()
+        
+        # 창 크기를 위젯에 맞게 조절
+        self.window.update()
+        self.window.geometry('')
+
+        # 부모 창의 오른쪽에 크롤링 창 배치
+        position_window(self.parent, self.window)
 
     def on_crawl(self):
         keyword = self.keyword_entry.get()

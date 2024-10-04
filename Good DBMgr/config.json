@@ -1,10 +1,10 @@
 {
     "width": 600,
     "height": 400,
-    "x": 847,
-    "y": 88,
+    "x": 998,
+    "y": 137,
     "font_family": "Verdana",
-    "font_size": 15,
+    "font_size": 12,
     "theme": "light",
     "button_style": "default"
 }
