@@ -1,16 +1,16 @@
 from tkinter import ttk, Menu
 from modules.settings import SettingsWindow
 from modules.crawling import CrawlingModule
+from modules.api_key import Api_Key
 from configuration import load_config, save_config
 
 class Application:
     def __init__(self, root):
         self.root = root
-        self.root.title("Good DB Mgr (ver p0.3)")
+        self.root.title("Good DB Mgr (ver p0.4)")
 
         self.config = load_config()
         self.apply_settings(self.config)
-
         self.create_widgets()
 
     def open_settings(self):
@@ -24,6 +24,12 @@ class Application:
         크롤링 창을 여는 항목
         """
         CrawlingModule(self.root) 
+
+    def open_api_status(self):
+        """
+        api 상태 관리창을 여는 항목
+        """
+        Api_Key(self.root) 
 
     def apply_settings(self, new_settings):
         self.config.update(new_settings)
@@ -54,6 +60,11 @@ class Application:
         settings_menu = Menu(menubar, tearoff=0)
         menubar.add_cascade(label="설정", menu=settings_menu)
         settings_menu.add_command(label="설정 열기", command=self.open_settings)
+
+        # 상태 메뉴 추가
+        status_menu = Menu(menubar, tearoff=0)
+        menubar.add_cascade(label="상태", menu=status_menu)
+        status_menu.add_command(label="api key 관리", command=self.open_api_status)
 
         # 구분선 추가
         separator = ttk.Separator(self.root, orient='horizontal')

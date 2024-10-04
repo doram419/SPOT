@@ -15,7 +15,6 @@ class CrawlingModule:
         self.window.update()
         self.window.geometry('')
 
-        # 부모 창의 오른쪽에 크롤링 창 배치
         position_window(self.parent, self.window)
 
     def on_crawl(self):
