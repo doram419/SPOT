@@ -7,7 +7,7 @@ from configuration import load_config, save_config
 class Application:
     def __init__(self, root):
         self.root = root
-        self.root.title("Good DB Mgr (proto ver0.5)")
+        self.root.title("Good DB Mgr (proto ver0.6)")
 
         self.config = load_config()
         self.apply_settings(self.config)

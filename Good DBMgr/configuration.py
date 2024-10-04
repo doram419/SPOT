@@ -51,6 +51,3 @@ def load_config():
         with open(CONFIG_FILE, "r", encoding='utf-8') as f:
             return {**default_config, **json.load(f)}
     return default_config
-
-# 설정 파일의 경로 출력 (디버깅용)
-print(f"Config file path: {CONFIG_FILE}")
