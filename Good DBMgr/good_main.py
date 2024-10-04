@@ -27,5 +27,7 @@ from application import Application
 
 if __name__ == "__main__":
     root = tk.Tk()
+    icon = tk.PhotoImage(file="logo.png")
+    root.wm_iconphoto(True, icon)
     app = Application(root)
     app.run()
