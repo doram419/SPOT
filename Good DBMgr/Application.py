@@ -1,4 +1,4 @@
-from tkinter import ttk
+from tkinter import ttk, Menu
 from modules.settings import SettingsWindow
 from modules.crawling import CrawlingModule
 from configuration import load_config, save_config
@@ -33,8 +33,10 @@ class Application:
         if self.config['theme'] == 'dark':
             style.theme_use('clam')
             style.configure(".", background="gray20", foreground="white")
+            style.configure("TSeparator", background="white")
         else:
             style.theme_use('default')
+            style.configure("TSeparator", background="gray")
         
         if self.config['button_style'] == 'rounded':
             style.configure('TButton', relief='rounded', padding=6)
@@ -44,6 +46,19 @@ class Application:
         self.root.update()    
 
     def create_widgets(self):
+        # 메뉴바 생성
+        menubar = Menu(self.root)
+        self.root.config(menu=menubar)
+
+        # 설정 메뉴 추가
+        settings_menu = Menu(menubar, tearoff=0)
+        menubar.add_cascade(label="설정", menu=settings_menu)
+        settings_menu.add_command(label="설정 열기", command=self.open_settings)
+
+        # 구분선 추가
+        separator = ttk.Separator(self.root, orient='horizontal')
+        separator.pack(fill='x')
+
         self.frame = ttk.Frame(self.root)
         self.frame.pack(expand=True, fill='both')
 
@@ -60,9 +75,6 @@ class Application:
 
         self.button_frame = ttk.Frame(self.frame)
         self.button_frame.pack(pady=10)
-
-        self.settings_button = ttk.Button(self.button_frame, text="설정", command=self.open_settings)
-        self.settings_button.pack(side='left', padx=5)
 
         self.exit_button = ttk.Button(self.button_frame, text="종료", command=self.exit_application)
         self.exit_button.pack(side='left', padx=5)

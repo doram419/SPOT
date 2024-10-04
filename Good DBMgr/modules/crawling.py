@@ -1,3 +1,4 @@
+from datetime import datetime
 import tkinter as tk
 from tkinter import ttk
 from .window_utils import position_window
@@ -21,25 +22,31 @@ class CrawlingModule:
         keyword = self.keyword_entry.get()
         region = self.region_entry.get()
 
-        if len(keyword) >= 1 and len(region) >= 1:
+        if len(keyword) > 1 and len(region) > 1:
             results = self.start_crawling(keyword, region)
         else:
-            self.update_status("검색어 또는 지역이 누락되었습니다")
+            message = "검색어 또는 지역이 누락되었습니다"
+            self.update_status(message)
 
     def start_crawling(self, keyword: str, region: str) -> list:
         """
         크롤링을 해서 돌려주는 함수
         """
-        message = f"키워드: {keyword}, 지역: {region}(으)로 크롤링을 시작합니다\n"
+        message = f"키워드: {keyword}, 지역: {region}(으)로 크롤링을 시작합니다"
         self.update_status(message)
+
         return []  # 실제 크롤링 결과를 반환해야 합니다
 
     def update_status(self, message: str):
         """
-        상태 텍스트 필드를 업데이트하는 함수
+        상태 텍스트 필드를 업데이트 하는 함수
         """
+        start_time = datetime.now()
+        formatted_time = start_time.strftime("%Y-%m-%d %H:%M:%S")
+        message = formatted_time + " | " + message
+        message = message + "\n"
+
         self.status_text.config(state='normal')
-        # self.status_text.delete('1.0', tk.END)
         self.status_text.insert(tk.END, message)
         self.status_text.config(state='disabled')
 
