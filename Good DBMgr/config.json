@@ -1,9 +1,9 @@
 {
-    "width": 585,
-    "height": 200,
-    "x": 903,
-    "y": 81,
-    "font_family": "Arial",
+    "width": 600,
+    "height": 400,
+    "x": 847,
+    "y": 88,
+    "font_family": "Verdana",
     "font_size": 10,
     "theme": "light",
     "button_style": "default"

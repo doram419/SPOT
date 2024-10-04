@@ -16,7 +16,7 @@ class SettingsWindow:
     def create_widgets(self):
         # 폰트 설정
         ttk.Label(self.window, text="폰트:").grid(row=0, column=0, padx=5, pady=5)
-        self.font_combo = ttk.Combobox(self.window, values=["Arial", "Helvetica", "Times New Roman"])
+        self.font_combo = ttk.Combobox(self.window, values=["Arial", "Helvetica", "Verdana", "Tahoma"])
         self.font_combo.set(self.settings["font_family"])
         self.font_combo.grid(row=0, column=1, padx=5, pady=5)
         

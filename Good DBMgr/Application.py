@@ -41,7 +41,7 @@ class Application:
         self.frame = ttk.Frame(self.root)
         self.frame.pack(expand=True, fill='both')
 
-        self.label = ttk.Label(self.frame, text="버튼을 눌러보세요")
+        self.label = ttk.Label(self.frame, text="Press the button")
         self.label.pack(pady=20)
 
         self.button = ttk.Button(self.frame, text="클릭하세요", command=button_click)
