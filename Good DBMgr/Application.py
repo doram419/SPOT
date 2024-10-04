@@ -1,7 +1,7 @@
 from tkinter import ttk
-from buttons import button_click
-from configuration import load_config, save_config
 from settings import SettingsWindow
+from configuration import load_config, save_config
+from modules.crawling import start_crawling
 
 class Application:
     def __init__(self, root):
@@ -15,7 +15,7 @@ class Application:
 
     def open_settings(self):
         """
-        dbMgr의 설정을 불러오는 항목
+        application의 설정을 불러오는 항목
         """
         SettingsWindow(self.root, self.config, self.apply_settings) 
 
@@ -44,7 +44,7 @@ class Application:
         self.label = ttk.Label(self.frame, text="Press the button")
         self.label.pack(pady=20)
 
-        self.button = ttk.Button(self.frame, text="클릭하세요", command=button_click)
+        self.button = ttk.Button(self.frame, text="크롤링 시작하기", command=start_crawling("강남구","맛집"))
         self.button.pack(expand=True)
 
         self.settings_button = ttk.Button(self.frame, text="설정", command=self.open_settings)
