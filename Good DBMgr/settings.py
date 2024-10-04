@@ -9,7 +9,7 @@ class SettingsWindow:
 
         self.window = tk.Toplevel(parent)
         self.window.title("설정")
-        self.window.geometry("300x250")
+        self.window.geometry("500x350")
 
         self.create_widgets()
 
@@ -19,7 +19,8 @@ class SettingsWindow:
         self.font_combo = ttk.Combobox(self.window, values=["Arial", "Helvetica", "Times New Roman"])
         self.font_combo.set(self.settings["font_family"])
         self.font_combo.grid(row=0, column=1, padx=5, pady=5)
-
+        
+        # 폰트 크기 설정
         ttk.Label(self.window, text="폰트 크기:").grid(row=1, column=0, padx=5, pady=5)
         self.font_size = tk.Spinbox(self.window, from_=8, to=20, width=5)
         self.font_size.delete(0, "end")

@@ -13,21 +13,11 @@ class Application:
 
         self.create_widgets()
 
-    def create_widgets(self):
-        self.frame = ttk.Frame(self.root)
-        self.frame.pack(expand=True, fill='both')
-
-        self.label = ttk.Label(self.frame, text="버튼을 눌러보세요")
-        self.label.pack(pady=20)
-
-        self.button = ttk.Button(self.frame, text="클릭하세요", command=button_click)
-        self.button.pack(expand=True)
-
-        self.settings_button = ttk.Button(self.frame, text="설정", command=self.open_settings)
-        self.settings_button.pack(pady=10)
-
     def open_settings(self):
-        SettingsWindow(self.root, self.config, self.apply_settings)
+        """
+        dbMgr의 설정을 불러오는 항목
+        """
+        SettingsWindow(self.root, self.config, self.apply_settings) 
 
     def apply_settings(self, new_settings):
         self.config.update(new_settings)
@@ -45,7 +35,20 @@ class Application:
         elif self.config['button_style'] == 'flat':
             style.configure('TButton', relief='flat', padding=6)
         
-        self.root.update()
+        self.root.update()    
+
+    def create_widgets(self):
+        self.frame = ttk.Frame(self.root)
+        self.frame.pack(expand=True, fill='both')
+
+        self.label = ttk.Label(self.frame, text="버튼을 눌러보세요")
+        self.label.pack(pady=20)
+
+        self.button = ttk.Button(self.frame, text="클릭하세요", command=button_click)
+        self.button.pack(expand=True)
+
+        self.settings_button = ttk.Button(self.frame, text="설정", command=self.open_settings)
+        self.settings_button.pack(pady=10)
 
     def run(self):
         self.root.geometry(f"{self.config['width']}x{self.config['height']}+{self.config['x']}+{self.config['y']}")
