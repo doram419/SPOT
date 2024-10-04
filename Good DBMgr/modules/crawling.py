@@ -1,42 +1,45 @@
-# 모든 크롤링을 시도하여 txt파일로 뽑아내는 코드
-#from .naver_service import crawling_naver_blog_data
-from langchain.text_splitter import RecursiveCharacterTextSplitter
-# from .utils import clean_html
-# from .datas.data import Data
-# from .summarizer import do_summarize
-from langchain.schema import Document  # 문서 객체가 필요하다면 임포트
-# from .google_service import fetch_top_restaurants_nearby
+import tkinter as tk
+from tkinter import ttk
 
-def start_crawling(keyword : str, region : str) -> list:
-    """
-    네이버 블로그에서 크롤링을 해서 돌려주는 함수
-    """
-    print("크롤링을 시작합니다")
-#    # result = crawling_naver_blog_data(query=keyword, region=region)
-#     result = fetch_top_restaurants_nearby(query=keyword, region=region)
-#     return result
+class CrawlingModule:
+    def __init__(self, parent):
+        self.parent = parent
+        self.window = tk.Toplevel(parent)
+        self.window.title("크롤링 모듈")
+        self.window.geometry("500x350")
+        self.create_widgets()  # create_widgets 메서드 호출
 
-# def make_datas(datas : list) -> list:
-#     """
-#     가져온 정보들을 Class Data로 바꿔주는 함수
-#     """
-#     result = []
-#     text_splitter = RecursiveCharacterTextSplitter(chunk_size=350, chunk_overlap=100)
-#     for d in datas:
-#         clean_title = clean_html(d.title)
-#         clean_desc = clean_html(' '.join(d.desc))
+    def start_crawling(self, keyword: str, region: str) -> list:
+        """
+        크롤링을 해서 돌려주는 함수
+        """
+        print(f"키워드: {keyword}, 지역: {region}로 크롤링을 시작합니다")    
+        return []  # 실제 크롤링 결과를 반환해야 합니다
 
-#         # 청킹하기 위해 네이버 blog의 설명만 떼서 컨텐츠로 전달
-#         doc=Document(page_content=clean_desc) 
+    def create_widgets(self):
+        """
+        내부 항목을 추가하는 항목
+        """
+        self.main_frame = ttk.Frame(self.window, padding="10")
+        self.main_frame.pack(fill=tk.BOTH, expand=True)
         
-#         # document 타입을 청킹
-#         chunked_list=text_splitter.split_documents([doc])
+        self.label = ttk.Label(self.main_frame, text="지역:")
+        self.label.grid(row=0, column=0, padx=5, pady=5)
 
-#         result.append(Data(
-#             title=clean_title, 
-#             chunked_desc=chunked_list,  
-#             summary=do_summarize(name=clean_title, descs=chunked_list),
-#             link=d.link)
-#         )
+        # 지역 입력 필드
+        self.region_entry = ttk.Entry(self.main_frame)
+        self.region_entry.grid(row=0, column=1, padx=5, pady=5)
 
-#     return result
+        # 키워드 라벨과 입력 필드
+        ttk.Label(self.main_frame, text="키워드:").grid(row=1, column=0, padx=5, pady=5)
+        self.keyword_entry = ttk.Entry(self.main_frame)
+        self.keyword_entry.grid(row=1, column=1, padx=5, pady=5)
+
+        # 크롤링 시작 버튼
+        self.crawl_button = ttk.Button(self.main_frame, text="크롤링 시작", command=self.on_crawl)
+        self.crawl_button.grid(row=2, column=0, columnspan=2, pady=10)
+
+    def on_crawl(self):
+        keyword = self.keyword_entry.get()
+        region = self.region_entry.get()
+        results = self.start_crawling(keyword, region)

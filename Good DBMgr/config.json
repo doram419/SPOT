@@ -4,7 +4,7 @@
     "x": 847,
     "y": 88,
     "font_family": "Verdana",
-    "font_size": 13,
+    "font_size": 15,
     "theme": "light",
-    "button_style": "rounded"
+    "button_style": "default"
 }
