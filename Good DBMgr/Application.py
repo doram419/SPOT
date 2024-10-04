@@ -58,8 +58,18 @@ class Application:
         self.button = ttk.Button(self.frame, text="크롤링", command=self.open_crawling)
         self.button.pack(expand=True)
 
-        self.settings_button = ttk.Button(self.frame, text="설정", command=self.open_settings)
-        self.settings_button.pack(pady=10)
+        self.button_frame = ttk.Frame(self.frame)
+        self.button_frame.pack(pady=10)
+
+        self.settings_button = ttk.Button(self.button_frame, text="설정", command=self.open_settings)
+        self.settings_button.pack(side='left', padx=5)
+
+        self.exit_button = ttk.Button(self.button_frame, text="종료", command=self.exit_application)
+        self.exit_button.pack(side='left', padx=5)
+
+    def exit_application(self):
+        save_config(self.root, self.config)
+        self.root.destroy()
 
     def run(self):
         self.root.geometry(f"{self.config['width']}x{self.config['height']}+{self.config['x']}+{self.config['y']}")

@@ -6,8 +6,17 @@ class CrawlingModule:
         self.parent = parent
         self.window = tk.Toplevel(parent)
         self.window.title("크롤링 모듈")
-        self.window.geometry("500x350")
+        self.window.geometry("600x350")
         self.create_widgets()  # create_widgets 메서드 호출
+
+    def on_crawl(self):
+        keyword = self.keyword_entry.get()
+        region = self.region_entry.get()
+
+        if len(keyword) >= 1 & len(region) >= 1:
+            results = self.start_crawling(keyword, region)
+        else:
+            print("검색어 또는 지역이 누락되었습니다")
 
     def start_crawling(self, keyword: str, region: str) -> list:
         """
@@ -26,20 +35,17 @@ class CrawlingModule:
         self.label = ttk.Label(self.main_frame, text="지역:")
         self.label.grid(row=0, column=0, padx=5, pady=5)
 
-        # 지역 입력 필드
-        self.region_entry = ttk.Entry(self.main_frame)
-        self.region_entry.grid(row=0, column=1, padx=5, pady=5)
+        # 지역 라벨과 입력 필드
+        ttk.Label(self.main_frame, text="지역:").grid(row=0, column=0, padx=(0,5), pady=5, sticky='e')
+        self.region_entry = ttk.Entry(self.main_frame, width=15)
+        self.region_entry.grid(row=0, column=1, padx=(0,15), pady=5, sticky='w')
 
         # 키워드 라벨과 입력 필드
-        ttk.Label(self.main_frame, text="키워드:").grid(row=1, column=0, padx=5, pady=5)
-        self.keyword_entry = ttk.Entry(self.main_frame)
-        self.keyword_entry.grid(row=1, column=1, padx=5, pady=5)
+        ttk.Label(self.main_frame, text="키워드:").grid(row=0, column=2, padx=(0,5), pady=5, sticky='e')
+        self.keyword_entry = ttk.Entry(self.main_frame, width=15)
+        self.keyword_entry.grid(row=0, column=3, padx=(0,5), pady=5, sticky='w')
 
         # 크롤링 시작 버튼
         self.crawl_button = ttk.Button(self.main_frame, text="크롤링 시작", command=self.on_crawl)
         self.crawl_button.grid(row=2, column=0, columnspan=2, pady=10)
 
-    def on_crawl(self):
-        keyword = self.keyword_entry.get()
-        region = self.region_entry.get()
-        results = self.start_crawling(keyword, region)
