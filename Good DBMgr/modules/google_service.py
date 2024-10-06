@@ -1,13 +1,13 @@
 import googlemaps
 from typing import List
 from datas.data import Data
-from naver_service import crawling_naver_blog_data
-# from .summarizer import do_summarize
+from naver_service import NaverService
+from api_key import get_key
 
 class GoogleService():
-    def __init__(self, google_key):
+    def __init__(self):
         # Google Maps 클라이언트 초기화 
-        self.gmaps = googlemaps.Client(key=google_key)
+        self.gmaps = googlemaps.Client(key=get_key("GOOGLE_API_KEY"))
         self.mode = None
 
     # 구글로 맛집 검색
@@ -19,38 +19,23 @@ class GoogleService():
         places_result = self.gmaps.places(query=f"{region} {query}")
 
         results = []
-
         for place in places_result['results']:
             place_id = place.get('place_id', 'None')
             place_details = self.gmaps.place(place_id=place_id, language='ko',
                                         fields=['name', 'url', 'vicinity', 'rating',
                                                 'user_ratings_total', 'price_level', 'reviews'])['result']
-            
+
             name = place_details.get('name', '이름 없음')
             address = place_details.get('vicinity', '주소 없음')
             google_json = place_details
+
             # 네이버 블로그에서 해당 식당 이름으로 검색한 데이터 가져오기
-            blog_datas = crawling_naver_blog_data(query=name)
-            # description_list.append(f"네이버 블로그 설명: {naver_description}")
+            blog_datas = NaverService().crawling_naver_blog_data(query=name, region=region)
+
+            results.append(Data(name, address, google_json, blog_datas))
             
-#         # 리뷰가 있으면 추가
-#         reviews = place_details.get('reviews', [])
-#         if reviews:
-#             review_texts = [review.get('text', '리뷰 내용 없음') for review in reviews]
-#             description_list.append(f"리뷰: {' '.join(review_texts)}")
-
-#         # 최종 요약 생성
-#         summary = do_summarize(name=place_details.get('name', '이름 없음'), descs=description_list)
-
-#         # Data 객체 생성 및 결과 리스트에 추가
-#         results.append(Data(
-#             title=place_details.get('name', '이름 없음'),
-#             chunked_desc=description_list,  # 결합된 description_list를 chunked_desc에 저장
-#             summary=summary,
-#             link=place_details.get('url', 'URL 없음')
-#         ))
-#     return results
+        return results
 
 if __name__ == "__main__":
-    gs = GoogleService('AIzaSyCNnfck488KTdBaPpbrOGz8j0Ncq-y8-Js')
+    gs = GoogleService()
     gs.google_crawling("자장면", "서초동")

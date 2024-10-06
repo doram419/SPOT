@@ -3,7 +3,7 @@ import tkinter as tk
 from tkinter import ttk
 from pathlib import Path
 from dotenv import dotenv_values
-from .window_utils import position_window
+from window_utils import position_window
 
 env_path = Path('.') / '.env'
 
@@ -14,10 +14,10 @@ else:
     env_const = {}
 
 def get_key(keyName) -> str:
-        """
-        키를 요청 받으면 있으면 반환, 없으면 None을 하는 함수
-        """
-        return env_const.get(keyName, None)
+    """
+    키를 요청 받으면 있으면 반환, 없으면 None을 하는 함수
+    """
+    return env_const.get(keyName, None)
     
 class ApiKey():
     def __init__(self, parent):
