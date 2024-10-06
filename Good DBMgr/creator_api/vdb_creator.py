@@ -4,6 +4,7 @@ from creator_api.crawling import CrawlingModule
 from creator_api.preprocessing import PreprocessingModule
 from configuration import update_module_config
 from .status_module import StatusModule
+from .datas.constants import GATHER_MODE
 
 class VdbCreatorModule:
     def __init__(self, parent, config):
@@ -17,6 +18,7 @@ class VdbCreatorModule:
         self.window.geometry(f"{window_config.get('width', 600)}x{window_config.get('height', 500)}" \
                      f"+{window_config.get('x', 150)}+{window_config.get('y', 150)}")
 
+        self.crawling_results = None
         self.create_widgets()
         
         # 창 닫힐 때 설정 저장
@@ -45,13 +47,13 @@ class VdbCreatorModule:
         status_frame.grid(row=2, column=0, pady=10, sticky='nsew')
         self.status_module = StatusModule(status_frame)
 
-        # 데이터 처리 탭 (새로운 모듈)
+        # 데이터 처리 탭
         data_processing_tab = ttk.Frame(self.tab_control)
         self.tab_control.add(data_processing_tab, text='데이터 전처리')
 
         # 전처리 모듈의 위젯 추가
-        processing_module = PreprocessingModule(data_processing_tab, self.status_module)
-        processing_widget = processing_module.get_widget()
+        self.preprocessing_module = PreprocessingModule(data_processing_tab, self.status_module)
+        processing_widget = self.preprocessing_module.get_widget()
         processing_widget.pack(fill=tk.BOTH, expand=True)
 
         # 크롤링 탭
@@ -59,8 +61,8 @@ class VdbCreatorModule:
         self.tab_control.add(crawling_tab, text='크롤링')
         
         # 크롤링 모듈의 위젯 추가
-        crawling_module = CrawlingModule(crawling_tab, self.status_module)
-        crawling_widget = crawling_module.get_widget()
+        self.crawling_module = CrawlingModule(crawling_tab, self.status_module, self.on_crawling_complete)
+        crawling_widget = self.crawling_module.get_widget()
         crawling_widget.pack(fill=tk.BOTH, expand=True)
 
         # 벡터 생성 탭 (새로운 모듈)
@@ -75,8 +77,16 @@ class VdbCreatorModule:
         self.close_button = ttk.Button(self.main_frame, text="Close", command=self.on_closing)
         self.close_button.grid(row=3, column=0, pady=10, sticky='se')
 
-    def start_data_processing(self):
-        self.status_module.update_status("데이터 처리 시작 (아직 구현되지 않음)")
+    def on_crawling_complete(self, results, mode):
+        """
+        크롤링이 끝나면 이뤄지는 처리
+        """
+        self.crawling_results = results
+        
+        if mode == GATHER_MODE:
+            self.status_module.update_status("전처리를 시작합니다.")
+            self.preprocessing_module.set_crawling_results(results)
+            self.preprocessing_module.start_preprocessing()
 
     def start_vector_creation(self):
         self.status_module.update_status("벡터 생성 시작 (아직 구현되지 않음)")

@@ -69,6 +69,9 @@ class PreprocessingModule:
         self.preprocess_button.grid(row=5, column=0, columnspan=3, pady=10)
 
     def update_embedding_versions(self, event=None):
+        """
+        선택된 임베딩 모델에 따라 임베딩 버전을 바꿔주는 함수
+        """
         selected_type = self.embedding_model_type.get()
         versions = EMBEDDING_MODEL_VERSIONS.get(selected_type, [])
         self.embedding_version_dropdown['values'] = versions
@@ -78,6 +81,9 @@ class PreprocessingModule:
             self.embedding_version_dropdown.set('')
 
     def update_summary_versions(self, event=None):
+        """
+        선택된 요약 모델에 따라 요약 모델 버전을 바꿔주는 함수
+        """
         selected_type = self.summary_model_type.get()
         versions = SUMMARY_MODEL_VERSIONS.get(selected_type, [])
         self.summary_version_dropdown['values'] = versions
@@ -87,6 +93,9 @@ class PreprocessingModule:
             self.summary_version_dropdown.set('')
 
     def start_preprocessing(self):
+        """
+        데이터 전처리를 하는 모델
+        """
         embedding_type = self.embedding_model_type.get()
         embedding_version = self.embedding_model_version.get()
         vector_db = self.vector_db.get()

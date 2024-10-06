@@ -6,10 +6,11 @@ from .google_service import GoogleService
 from .datas.constants import TEST_MODE, GATHER_MODE
 
 class CrawlingModule:
-    def __init__(self, parent, status_module):
+    def __init__(self, parent, status_module, on_complete_callback):
         self.parent = parent
         self.status_module = status_module
-        self.crawling_mode = tk.StringVar(value=TEST_MODE)  # 기본값을 테스트 모드로 설정
+        self.on_complete_callback = on_complete_callback
+        self.crawling_mode = tk.StringVar(value=TEST_MODE)
         self.create_widgets()
     
     def on_enter(self, event):
@@ -38,25 +39,24 @@ class CrawlingModule:
         thread.start()
 
     def crawl_thread(self, keyword: str, region: str, mode: str):
+        """
+        실질적인 크롤링을 하는 쓰레드
+        """
         try:
-            # GoogleService 인스턴스 생성
             google_service = GoogleService(mode=mode)
             
-            # 실제 크롤링 수행
             results = google_service.google_crawling(query=keyword, region=region)
             
             total_results = len(results)
             
             for i, result in enumerate(results):
-                # 크롤링 진행 상황에 따라 프로그레스바 업데이트
                 progress = int((i + 1) / total_results * 100)
                 self.parent.after(0, lambda p=progress: self.update_progress(p))
                 
-                # 현재 처리 중인 항목에 대한 상태 메시지 업데이트
                 status_message = f"처리 중: {result.name} ({i+1}/{total_results})"
                 self.parent.after(0, lambda msg=status_message: self.status_module.update_status(msg))
 
-            self.parent.after(0, self.finish_crawling)
+            self.parent.after(0, lambda: self.finish_crawling(results, mode))
         except Exception as e:
             error_message = f"크롤링 중 오류 발생: {str(e)}"
             self.parent.after(0, lambda msg=error_message: self.status_module.update_status(msg))
@@ -66,10 +66,14 @@ class CrawlingModule:
         self.progress_bar['value'] = value
         self.parent.update_idletasks()
 
-    def finish_crawling(self):
+    def finish_crawling(self, results, mode):
+        """
+        크롤링 쓰레드가 끝났을때, 호출되는 함수
+        """
         self.progress_bar['value'] = 100
         self.status_module.update_status("크롤링이 완료되었습니다.")
         self.crawl_button['state'] = 'normal'
+        self.on_complete_callback(results, mode)
 
     def create_widgets(self):
         self.main_frame = ttk.Frame(self.parent, padding="10")
