@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 from creator_api.crawling import CrawlingModule
+from creator_api.preprocessing import PreprocessingModule
 from configuration import update_module_config
 from .status_module import StatusModule
 
@@ -48,7 +49,7 @@ class VdbCreatorModule:
         crawling_tab = ttk.Frame(self.tab_control)
         self.tab_control.add(crawling_tab, text='크롤링')
         
-        # CrawlingModule의 위젯 추가 (status_module 전달)
+        # 크롤링 모듈의 위젯 추가
         crawling_module = CrawlingModule(crawling_tab, self.status_module)
         crawling_widget = crawling_module.get_widget()
         crawling_widget.pack(fill=tk.BOTH, expand=True)
@@ -56,10 +57,11 @@ class VdbCreatorModule:
         # 데이터 처리 탭 (새로운 모듈)
         data_processing_tab = ttk.Frame(self.tab_control)
         self.tab_control.add(data_processing_tab, text='데이터 전처리')
-        
-        # 데이터 처리 탭의 내용 (임시)
-        ttk.Label(data_processing_tab, text="데이터 처리 모듈이 여기에 구현될 예정입니다.").pack(pady=20)
-        ttk.Button(data_processing_tab, text="데이터 처리 시작", command=self.start_data_processing).pack(pady=10)
+
+        # 전처리 모듈의 위젯 추가
+        processing_module = PreprocessingModule(data_processing_tab, self.status_module)
+        processing_widget = processing_module.get_widget()
+        processing_widget.pack(fill=tk.BOTH, expand=True)
 
         # 벡터 생성 탭 (새로운 모듈)
         vector_creation_tab = ttk.Frame(self.tab_control)
