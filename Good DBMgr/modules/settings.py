@@ -1,6 +1,5 @@
 import tkinter as tk
 from tkinter import ttk
-from .window_utils import position_window
 from configuration import update_module_config
 
 class SettingsWindow:
@@ -23,9 +22,6 @@ class SettingsWindow:
         # 창 크기를 위젯에 맞게 조절
         self.window.update()
         self.window.geometry('')
-
-        # 부모 창의 오른쪽에 설정 창 배치
-        position_window(self.parent, self.window)
 
         # 창 닫힐 때 설정 저장
         self.window.protocol("WM_DELETE_WINDOW", self.on_closing)

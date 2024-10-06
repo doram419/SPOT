@@ -2,7 +2,6 @@ from datetime import datetime
 import threading
 import tkinter as tk
 from tkinter import ttk
-from .window_utils import position_window
 from .google_service import GoogleService
 from .datas.constants import TEST_MODE, GATHER_MODE
 

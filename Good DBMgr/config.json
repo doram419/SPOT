@@ -1,8 +1,8 @@
 {
     "width": 600,
     "height": 216,
-    "x": 789,
-    "y": 45,
+    "x": 104,
+    "y": 104,
     "font_family": "Arial",
     "font_size": 10,
     "theme": "light",
@@ -28,13 +28,13 @@
     "api_key": {
         "width": 491,
         "height": 269,
-        "x": 1410,
-        "y": 42
+        "x": 1104,
+        "y": 94
     },
     "settings": {
         "width": 272,
         "height": 206,
-        "x": 486,
-        "y": 38
+        "x": 758,
+        "y": 155
     }
 }

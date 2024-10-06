@@ -3,7 +3,6 @@ import tkinter as tk
 from tkinter import ttk
 from pathlib import Path
 from dotenv import dotenv_values
-from .window_utils import position_window
 from configuration import update_module_config
 
 env_path = Path('.') / '.env'
@@ -74,9 +73,6 @@ class ApiKey():
 
         # 캔버스 크기 설정
         self.canvas.config(width=window_width-100, height=window_height)  # 오른쪽 버튼 영역을 위해 너비 조정
-
-        # 부모 창의 오른쪽에 설정 창 배치
-        position_window(self.parent, self.window)
 
         # 창 닫힐 때 설정 저장
         self.window.protocol("WM_DELETE_WINDOW", self.on_closing)
