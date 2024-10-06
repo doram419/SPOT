@@ -4,46 +4,67 @@ from modules.vdb_creator import VdbCreatorModule
 from modules.vdb_selector import VdbSelectorModule
 from modules.vdb_retriever import VdbRetrieverModule
 from modules.api_key import ApiKey
-from configuration import load_config, save_config
+from configuration import load_config, save_config, update_module_config
 
 class Application:
-    def __init__(self, root):
+    def __init__(self, root):   
         self.root = root
-        self.root.title("Good DB Mgr (proto ver 0.8)")
+        self.root.title("Good DB Mgr (proto ver0.9)")
 
         self.config = load_config()
         self.apply_settings(self.config)
         self.create_widgets()
 
+        # 모듈 인스턴스 저장을 위한 딕셔너리
+        self.modules = {}
+
+        # 설정 변경 이벤트 바인딩
+        self.root.bind("&lt;&lt;SettingsChanged>>", self.on_settings_changed)
+
     def open_settings(self):
         """
         application의 설정창을 여는 항목
         """
-        SettingsWindow(self.root, self.config, self.apply_settings) 
+        self.open_module('settings', SettingsWindow)
 
     def open_vdb_creator(self):
         """
         vdb 생성하는 창을 띄워주는 함수
         """
-        VdbCreatorModule(self.root)
+        self.open_module('vdb_creator', VdbCreatorModule)
 
     def open_vdb_selector(self):
         """
         vdb 조회하는 창을 띄워주는 함수
         """
-        VdbSelectorModule(self.root)
+        self.open_module('vdb_selector', VdbSelectorModule)
 
     def open_vdb_retriever(self):
         """
         vdb 검색하는 창을 띄워주는 함수
         """
-        VdbRetrieverModule(self.root)
+        self.open_module('vdb_retriever', VdbRetrieverModule)
 
     def open_api_status(self):
         """
         api 상태 관리창을 여는 항목
         """
-        ApiKey(self.root) 
+        self.open_module('api_key', ApiKey)
+
+    def open_module(self, module_name, ModuleClass):
+        if module_name not in self.modules or not self.modules[module_name].window.winfo_exists():
+            self.modules[module_name] = ModuleClass(self.root, self.config)
+            self.modules[module_name].window.protocol("WM_DELETE_WINDOW", lambda: self.on_module_close(module_name))
+        else:
+            self.modules[module_name].window.lift()
+
+    def on_module_close(self, module_name):
+        if module_name in self.modules:
+            self.modules[module_name].on_closing()
+            del self.modules[module_name]
+
+    def on_settings_changed(self, event):
+        self.apply_settings(self.config)
 
     def apply_settings(self, new_settings):
         """
@@ -117,10 +138,16 @@ class Application:
         self.exit_button.pack(pady=10)
 
     def exit_application(self):
+        # 열려 있는 모든 모듈의 설정 저장
+        for module_name, module in list(self.modules.items()):
+            if module.window.winfo_exists():
+                update_module_config(self.config, module_name, module.window)
+                module.window.destroy()
+
         save_config(self.root, self.config)
         self.root.destroy()
 
     def run(self):
         self.root.geometry(f"{self.config['width']}x{self.config['height']}+{self.config['x']}+{self.config['y']}")
-        self.root.protocol("WM_DELETE_WINDOW", lambda: (save_config(self.root, self.config), self.root.destroy()))
+        self.root.protocol("WM_DELETE_WINDOW", self.exit_application)
         self.root.mainloop()

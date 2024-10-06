@@ -1,17 +1,25 @@
 import tkinter as tk
 from tkinter import ttk
 from modules.crawling import CrawlingModule
+from configuration import update_module_config
 
 class VdbCreatorModule:
-    def __init__(self, parent):
+    def __init__(self, parent, config):
         self.parent = parent
+        self.config = config
         self.window = tk.Toplevel(parent)
         self.window.title("VDB Creator")
-        self.window.geometry("600x500")
+        
+        # 저장된 설정 적용
+        window_config = config.get('vdb_creator', {})
+        self.window.geometry(f"{window_config.get('width', 600)}x{window_config.get('height', 500)}" \
+                     f"+{window_config.get('x', 150)}+{window_config.get('y', 150)}")
+
+        
         self.create_widgets()
         
-        self.window.update()
-        self.window.geometry('')
+        # 창 닫힐 때 설정 저장
+        self.window.protocol("WM_DELETE_WINDOW", self.on_closing)
 
     def create_widgets(self):
         self.main_frame = ttk.Frame(self.window, padding="10")
@@ -55,3 +63,7 @@ class VdbCreatorModule:
 
     def start_vector_creation(self):
         print("벡터 생성 시작 (아직 구현되지 않음)")
+    
+    def on_closing(self):
+        update_module_config(self.config, 'vdb_creator', self.window)
+        self.window.destroy()

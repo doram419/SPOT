@@ -26,7 +26,12 @@ def save_config(window, settings):
         "font_family": settings.get("font_family", "Arial"),
         "font_size": settings.get("font_size", 10),
         "theme": settings.get("theme", "light"),
-        "button_style": settings.get("button_style", "default")
+        "button_style": settings.get("button_style", "default"),
+        "vdb_creator": settings.get("vdb_creator", {}),
+        "vdb_selector": settings.get("vdb_selector", {}),
+        "vdb_retriever": settings.get("vdb_retriever", {}),
+        "api_key": settings.get("api_key", {}),
+        "settings": settings.get("settings", {})
     }
     # Good DBMgr 폴더가 없으면 생성
     os.makedirs(GOOD_DBMGR_PATH, exist_ok=True)
@@ -45,9 +50,25 @@ def load_config():
         "font_family": "Arial",
         "font_size": 10,
         "theme": "light", 
-        "button_style": "default"
+        "button_style": "default",
+        "vdb_creator": {"width": 600, "height": 500, "x": 150, "y": 150},
+        "vdb_selector": {"width": 400, "height": 300, "x": 200, "y": 200},
+        "vdb_retriever": {"width": 400, "height": 300, "x": 250, "y": 250},
+        "api_key": {"width": 500, "height": 400, "x": 300, "y": 300},
+        "settings": {"width": 300, "height": 250, "x": 350, "y": 350}
     }
     if os.path.exists(CONFIG_FILE):
         with open(CONFIG_FILE, "r", encoding='utf-8') as f:
             return {**default_config, **json.load(f)}
     return default_config
+
+def update_module_config(config, module_name, window):
+    """
+    특정 모듈의 설정을 업데이트하는 함수
+    """
+    config[module_name] = {
+        "width": window.winfo_width(),
+        "height": window.winfo_height(),
+        "x": window.winfo_x(),
+        "y": window.winfo_y()
+    }
