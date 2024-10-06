@@ -66,7 +66,8 @@ class SettingsWindow:
             "button_style": self.button_style_combo.get()
         }
         self.config.update(new_settings)
-        self.parent.event_generate("&lt;&lt;SettingsChanged>>")  
+        # 가상 이벤트 표시를 위해 << >> 를 써야한다
+        self.parent.event_generate("<<SettingsChanged>>")  
         self.on_closing()
 
     def on_closing(self):

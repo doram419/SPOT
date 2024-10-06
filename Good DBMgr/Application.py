@@ -19,7 +19,7 @@ class Application:
         self.modules = {}
 
         # 설정 변경 이벤트 바인딩
-        self.root.bind("&lt;&lt;SettingsChanged>>", self.on_settings_changed)
+        self.root.bind("<<SettingsChanged>>", self.on_settings_changed)
 
     def open_settings(self):
         """
