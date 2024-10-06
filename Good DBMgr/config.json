@@ -1,8 +1,8 @@
 {
     "width": 415,
     "height": 216,
-    "x": 52,
-    "y": 52,
+    "x": 182,
+    "y": 182,
     "font_family": "Arial",
     "font_size": 10,
     "theme": "light",
@@ -10,8 +10,8 @@
     "vdb_creator": {
         "width": 676,
         "height": 502,
-        "x": 2100,
-        "y": 193
+        "x": 629,
+        "y": 175
     },
     "vdb_selector": {
         "width": 400,

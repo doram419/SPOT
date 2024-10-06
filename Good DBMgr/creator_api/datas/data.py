@@ -6,7 +6,6 @@ class Data():
     """
     name : str
     address : str
-    google_json : dict 
     blog_datas : list[NaverData] 
     # 하나의 구글 결과를 기반으로 여러 개의 리뷰와 블로그를 가져옴으로써 정확도 향상을 도모함
 

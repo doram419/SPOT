@@ -12,9 +12,6 @@ EMBEDDING_MODEL_TYPES = [
 
 EMBEDDING_MODEL_VERSIONS = {
     "OpenAI": ["text-embedding-3-small"]
-    # "OpenAI": ["text-embedding-3-small", "text-embedding-3-large"],
-    # "Hugging Face": ["bert-base-uncased", "roberta-base"],
-    # "Custom": ["custom-model-v1", "custom-model-v2"]
 }
 
 # 벡터 db

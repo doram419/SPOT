@@ -1,3 +1,4 @@
+import asyncio
 import tkinter as tk
 from tkinter import ttk
 from creator_api.crawling import CrawlingModule
@@ -23,6 +24,9 @@ class VdbCreatorModule:
         
         # 창 닫힐 때 설정 저장
         self.window.protocol("WM_DELETE_WINDOW", self.on_closing)
+
+        # 이벤트 루프 설정
+        self.loop = asyncio.get_event_loop()
 
     def create_widgets(self):
         self.main_frame = ttk.Frame(self.window, padding="10")
@@ -83,9 +87,12 @@ class VdbCreatorModule:
         """
         self.crawling_results = results
         
+        self.crawling_results = results
+        
         # if mode == GATHER_MODE:
         self.status_module.update_status("전처리를 시작합니다.")
-        self.preprocessing_module.start_preprocessing(results)
+        # 비동기 함수 실행을 위한 코드
+        self.loop.run_until_complete(self.preprocessing_module.start_preprocessing(results))
 
     def start_vector_creation(self):
         self.status_module.update_status("벡터 생성 시작 (아직 구현되지 않음)")
@@ -93,3 +100,5 @@ class VdbCreatorModule:
     def on_closing(self):
         update_module_config(self.config, 'vdb_creator', self.window)
         self.window.destroy()
+        # 이벤트 루프 종료
+        self.loop.close()

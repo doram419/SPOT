@@ -1,9 +1,13 @@
-from datetime import datetime
-import threading
 import tkinter as tk
 from tkinter import ttk
 from .datas.constants import (EMBEDDING_MODEL_TYPES, EMBEDDING_MODEL_VERSIONS,
                               VECTOR_DBS, SUMMARY_MODEL_TYPES, SUMMARY_MODEL_VERSIONS)
+from langchain.schema import Document
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+import json
+from .embeddings import EmbeddingModule
+import asyncio
+from concurrent.futures import ThreadPoolExecutor
 
 class PreprocessingModule:
     def __init__(self, parent, status_module):
@@ -64,10 +68,6 @@ class PreprocessingModule:
         self.overlap_entry = ttk.Entry(self.main_frame, textvariable=self.overlap, width=10)
         self.overlap_entry.grid(row=4, column=1, padx=(0,15), pady=5, sticky='w')
 
-        # 전처리 시작 버튼
-        self.preprocess_button = ttk.Button(self.main_frame, text="전처리 시작", command=self.start_preprocessing)
-        self.preprocess_button.grid(row=5, column=0, columnspan=3, pady=10)
-
     def update_embedding_versions(self, event=None):
         """
         선택된 임베딩 모델에 따라 임베딩 버전을 바꿔주는 함수
@@ -92,25 +92,64 @@ class PreprocessingModule:
         else:
             self.summary_version_dropdown.set('')
 
-    def start_preprocessing(self, crawling_result):
+    async def start_preprocessing(self, crawling_result):
         """
-        데이터 전처리를 하는 모델
+        비동기 처리
         """
         embedding_type = self.embedding_model_type.get()
         embedding_version = self.embedding_model_version.get()
-        vector_db = self.vector_db.get()
-        summary_type = self.summary_model_type.get()
-        summary_version = self.summary_model_version.get()
-        chunk_size = self.chunk_size.get()
-        overlap = self.overlap.get()
+        chunk_size = int(self.chunk_size.get())
+        overlap = int(self.overlap.get())
+
+        self.status_module.update_status("전처리 시작")
+
+        embedding = EmbeddingModule(model_name=embedding_type, version=embedding_version)
         
-        # 상태 업데이트
-        self.status_module.update_status(
-            f"\n=====전처리 시작=====\n"
-            f"임베딩 모델 - {embedding_type}/{embedding_version}\n"
-            f"DB - {vector_db}, 요약 모델 - {summary_type}/{summary_version}\n"
-            f"청킹 사이즈 - {chunk_size}, 오버랩 - {overlap}\n"
-        )
+        tasks = []
+        for google_data in crawling_result:
+            tasks.append(self.process_google_data(google_data, embedding, chunk_size, overlap))
+        
+        await asyncio.gather(*tasks)
+        
+        self.status_module.update_status("전처리 완료")
+
+    async def process_google_data(self, google_data, embedding, chunk_size, overlap):
+        google_data.google_json = self.do_chucking(google_data.google_json, chunk_size, overlap)
+        
+        with ThreadPoolExecutor() as executor:
+            google_data.google_json = await asyncio.get_event_loop().run_in_executor(
+                executor,
+                lambda: [embedding.get_text_embedding(chunk) for chunk in google_data.google_json]
+            )
+        
+        for naver_data in google_data.blog_datas:
+            naver_data.content = self.do_chucking(naver_data.content, chunk_size, overlap)
+            with ThreadPoolExecutor() as executor:
+                naver_data.content = await asyncio.get_event_loop().run_in_executor(
+                    executor,
+                    lambda: [embedding.get_text_embedding(chunk) for chunk in naver_data.content]
+                )
+
+        self.status_module.update_status(f"Google 데이터 처리 완료: {google_data.name}")
+        
+    def do_chucking(self, data, size, overlap) -> list:
+        """
+        청킹 함수
+        """
+        text_splitter = RecursiveCharacterTextSplitter(chunk_size=int(size), chunk_overlap=int(overlap))
+        isDict = isinstance(data, dict)
+
+        if isDict:
+            data = json.dumps(data, ensure_ascii=False)
+
+        doc=Document(page_content=data) 
+        chunked_list = text_splitter.split_documents([doc])
+
+        if isDict:
+            # 청킹된 문서를 dict 리스트로 변환
+            return [{"chunk": i, "content": chunk.page_content} for i, chunk in enumerate(chunked_list)]
+
+        return [chunk.page_content for chunk in chunked_list]
 
     def get_widget(self):
         return self.main_frame
