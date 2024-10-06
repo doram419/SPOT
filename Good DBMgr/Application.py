@@ -1,13 +1,15 @@
 from tkinter import ttk, Menu
 from modules.settings import SettingsWindow
 from modules.vdb_creator import VdbCreatorModule
+from modules.vdb_selector import VdbSelectorModule
+from modules.vdb_retriever import VdbRetrieverModule
 from modules.api_key import ApiKey
 from configuration import load_config, save_config
 
 class Application:
     def __init__(self, root):
         self.root = root
-        self.root.title("Good DB Mgr (proto ver0.7)")
+        self.root.title("Good DB Mgr (proto ver 0.8)")
 
         self.config = load_config()
         self.apply_settings(self.config)
@@ -20,7 +22,22 @@ class Application:
         SettingsWindow(self.root, self.config, self.apply_settings) 
 
     def open_vdb_creator(self):
+        """
+        vdb 생성하는 창을 띄워주는 함수
+        """
         VdbCreatorModule(self.root)
+
+    def open_vdb_selector(self):
+        """
+        vdb 조회하는 창을 띄워주는 함수
+        """
+        VdbSelectorModule(self.root)
+
+    def open_vdb_retriever(self):
+        """
+        vdb 검색하는 창을 띄워주는 함수
+        """
+        VdbRetrieverModule(self.root)
 
     def open_api_status(self):
         """
@@ -29,6 +46,9 @@ class Application:
         ApiKey(self.root) 
 
     def apply_settings(self, new_settings):
+        """
+        Application의 환경 설정을 할 수 있는 setting 창을 여는 함수
+        """
         self.config.update(new_settings)
         self.root.option_add("*Font", f"{self.config['font_family']} {self.config['font_size']}")
         
@@ -49,6 +69,9 @@ class Application:
         self.root.update()    
 
     def create_widgets(self):
+        """
+        Application의 컨텐츠가 든 함수
+        """
         # 메뉴바 생성
         menubar = Menu(self.root)
         self.root.config(menu=menubar)
@@ -78,14 +101,20 @@ class Application:
         self.label = ttk.Label(self.label_frame, text="for Team Spotlight")
         self.label.pack()
 
-        self.button = ttk.Button(self.frame, text="벡터DB 생성하기", command=self.open_vdb_creator)
-        self.button.pack(expand=True)
-
         self.button_frame = ttk.Frame(self.frame)
         self.button_frame.pack(pady=10)
 
-        self.exit_button = ttk.Button(self.button_frame, text="종료", command=self.exit_application)
-        self.exit_button.pack(side='left', padx=5)
+        self.create_button = ttk.Button(self.button_frame, text="생성하기", command=self.open_vdb_creator)
+        self.create_button.grid(row=0, column=0, padx=10, pady=10)
+
+        self.select_button = ttk.Button(self.button_frame, text="조회하기", command=self.open_vdb_selector)
+        self.select_button.grid(row=0, column=1, padx=10, pady=10)
+
+        self.retrieve_button = ttk.Button(self.button_frame, text="검색하기", command=self.open_vdb_retriever)
+        self.retrieve_button.grid(row=0, column=2, padx=10, pady=10)
+        
+        self.exit_button = ttk.Button(self.frame, text="종료", command=self.exit_application)
+        self.exit_button.pack(pady=10)
 
     def exit_application(self):
         save_config(self.root, self.config)
