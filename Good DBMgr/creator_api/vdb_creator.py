@@ -45,15 +45,6 @@ class VdbCreatorModule:
         status_frame.grid(row=2, column=0, pady=10, sticky='nsew')
         self.status_module = StatusModule(status_frame)
 
-        # 크롤링 탭
-        crawling_tab = ttk.Frame(self.tab_control)
-        self.tab_control.add(crawling_tab, text='크롤링')
-        
-        # 크롤링 모듈의 위젯 추가
-        crawling_module = CrawlingModule(crawling_tab, self.status_module)
-        crawling_widget = crawling_module.get_widget()
-        crawling_widget.pack(fill=tk.BOTH, expand=True)
-
         # 데이터 처리 탭 (새로운 모듈)
         data_processing_tab = ttk.Frame(self.tab_control)
         self.tab_control.add(data_processing_tab, text='데이터 전처리')
@@ -62,6 +53,15 @@ class VdbCreatorModule:
         processing_module = PreprocessingModule(data_processing_tab, self.status_module)
         processing_widget = processing_module.get_widget()
         processing_widget.pack(fill=tk.BOTH, expand=True)
+
+        # 크롤링 탭
+        crawling_tab = ttk.Frame(self.tab_control)
+        self.tab_control.add(crawling_tab, text='크롤링')
+        
+        # 크롤링 모듈의 위젯 추가
+        crawling_module = CrawlingModule(crawling_tab, self.status_module)
+        crawling_widget = crawling_module.get_widget()
+        crawling_widget.pack(fill=tk.BOTH, expand=True)
 
         # 벡터 생성 탭 (새로운 모듈)
         vector_creation_tab = ttk.Frame(self.tab_control)

@@ -1,14 +1,14 @@
 {
-    "width": 600,
+    "width": 415,
     "height": 216,
-    "x": 156,
-    "y": 156,
+    "x": 259,
+    "y": 92,
     "font_family": "Arial",
     "font_size": 10,
     "theme": "light",
     "button_style": "default",
     "vdb_creator": {
-        "width": 598,
+        "width": 676,
         "height": 502,
         "x": 785,
         "y": 65
