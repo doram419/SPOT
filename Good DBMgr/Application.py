@@ -1,13 +1,13 @@
 from tkinter import ttk, Menu
 from modules.settings import SettingsWindow
-from modules.crawling import CrawlingModule
+from modules.vdb_creator import VdbCreatorModule
 from modules.api_key import ApiKey
 from configuration import load_config, save_config
 
 class Application:
     def __init__(self, root):
         self.root = root
-        self.root.title("Good DB Mgr (proto ver0.6)")
+        self.root.title("Good DB Mgr (proto ver0.7)")
 
         self.config = load_config()
         self.apply_settings(self.config)
@@ -19,11 +19,8 @@ class Application:
         """
         SettingsWindow(self.root, self.config, self.apply_settings) 
 
-    def open_crawling(self):
-        """
-        크롤링 창을 여는 항목
-        """
-        CrawlingModule(self.root) 
+    def open_vdb_creator(self):
+        VdbCreatorModule(self.root)
 
     def open_api_status(self):
         """
@@ -81,7 +78,7 @@ class Application:
         self.label = ttk.Label(self.label_frame, text="for Team Spotlight")
         self.label.pack()
 
-        self.button = ttk.Button(self.frame, text="크롤링", command=self.open_crawling)
+        self.button = ttk.Button(self.frame, text="벡터DB 생성하기", command=self.open_vdb_creator)
         self.button.pack(expand=True)
 
         self.button_frame = ttk.Frame(self.frame)
