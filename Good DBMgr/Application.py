@@ -1,9 +1,9 @@
 from tkinter import ttk, Menu
 from modules.settings import SettingsWindow
-from modules.vdb_creator import VdbCreatorModule
+from creator_api.vdb_creator import VdbCreatorModule
+from creator_api.api_key import ApiKey
 from modules.vdb_selector import VdbSelectorModule
 from modules.vdb_retriever import VdbRetrieverModule
-from modules.api_key import ApiKey
 from configuration import load_config, save_config, update_module_config
 
 class Application:

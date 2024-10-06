@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
-from modules.crawling import CrawlingModule
+from creator_api.crawling import CrawlingModule
 from configuration import update_module_config
 
 class VdbCreatorModule:
