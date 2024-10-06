@@ -1,10 +1,9 @@
 import requests
 from urllib import parse
 from typing import List
-from datas.naver_data import NaverData
-from api_key import get_key
-import requests
 from bs4 import BeautifulSoup
+from .datas.naver_data import NaverData
+from .api_key import get_key
 
 class NaverService():
     def __init__(self) -> None:

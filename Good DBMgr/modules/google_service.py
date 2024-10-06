@@ -1,10 +1,10 @@
 import googlemaps
-from typing import List
-from datas.data import Data
-from naver_service import NaverService
-from api_key import get_key
-from crawling import TEST_MODE, GATHER_MODE
 import time
+from typing import List
+from .datas.data import Data
+from .datas.constants import TEST_MODE, GATHER_MODE
+from .naver_service import NaverService
+from .api_key import get_key
 
 class GoogleService():
     def __init__(self, mode=TEST_MODE):
@@ -46,7 +46,7 @@ class GoogleService():
 
                 results.append(Data(name, address, google_json, blog_datas))
 
-            if self.mode == self.TEST_MODE:
+            if self.mode == TEST_MODE:
                 break  # TEST_MODE에서는 첫 페이지만 크롤링
 
             next_page_token = places_result.get('next_page_token')
@@ -54,10 +54,3 @@ class GoogleService():
                 break  # GATHER_MODE에서는 최대 3페이지까지 크롤링 (약 60개 결과)
 
         return results
-
-if __name__ == "__main__":
-    # TEST_MODE 예시
-    gs_test = GoogleService(mode=TEST_MODE)
-
-    # GATHER_MODE 예시
-    gs_gather = GoogleService(mode=GATHER_MODE)

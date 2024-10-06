@@ -3,7 +3,7 @@ import tkinter as tk
 from tkinter import ttk
 from pathlib import Path
 from dotenv import dotenv_values
-from window_utils import position_window
+from .window_utils import position_window
 
 env_path = Path('.') / '.env'
 
