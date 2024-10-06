@@ -45,12 +45,13 @@ class GoogleService():
                 blog_datas = NaverService().crawling_naver_blog_data(query=name, region=region)
 
                 results.append(Data(name, address, google_json, blog_datas))
-
+            
+            print(self.mode)
             if self.mode == TEST_MODE:
                 break  # TEST_MODE에서는 첫 페이지만 크롤링
 
             next_page_token = places_result.get('next_page_token')
-            if not next_page_token or (self.mode == self.GATHER_MODE and page_count >= 3):
+            if not next_page_token or (self.mode == GATHER_MODE and page_count >= 3):
                 break  # GATHER_MODE에서는 최대 3페이지까지 크롤링 (약 60개 결과)
 
         return results

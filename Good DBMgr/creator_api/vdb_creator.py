@@ -83,10 +83,9 @@ class VdbCreatorModule:
         """
         self.crawling_results = results
         
-        if mode == GATHER_MODE:
-            self.status_module.update_status("전처리를 시작합니다.")
-            self.preprocessing_module.set_crawling_results(results)
-            self.preprocessing_module.start_preprocessing()
+        # if mode == GATHER_MODE:
+        self.status_module.update_status("전처리를 시작합니다.")
+        self.preprocessing_module.start_preprocessing(results)
 
     def start_vector_creation(self):
         self.status_module.update_status("벡터 생성 시작 (아직 구현되지 않음)")

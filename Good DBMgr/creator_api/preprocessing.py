@@ -92,7 +92,7 @@ class PreprocessingModule:
         else:
             self.summary_version_dropdown.set('')
 
-    def start_preprocessing(self):
+    def start_preprocessing(self, crawling_result):
         """
         데이터 전처리를 하는 모델
         """
