@@ -1,15 +1,21 @@
-class Data():
-    title : str
-    desc : list
-    summary : str = "생성되지 않음"
-    link : str
+from .naver_data import NaverData
 
-    def __init__(self, title, chunked_desc, summary, link) -> None:
-        self.title = title
-        self.desc = chunked_desc
-        self.summary = summary
-        self.link = link
+class Data():
+    """
+    크롤링한 정보들을 저장하는 클래스
+    """
+    name : str
+    address : str
+    google_json : dict 
+    blog_datas : list[NaverData] 
+    # 하나의 구글 결과를 기반으로 여러 개의 리뷰와 블로그를 가져옴으로써 정확도 향상을 도모함
+
+    def __init__(self, name, address, google_json, blog_datas) -> None:
+        self.name = name
+        self.address = address
+        self.google_json = google_json
+        self.blog_datas = blog_datas
 
     def print_data(self):
-        return "Data { title:" + self.title + "desc:" + str(self.desc[0]) + \
-            "summary:" + str(self.summary[0]) + "link:" + str(self.link) + " }"
+        return f"Data [name: {self.name}\n address: {self.address} \
+            google_json: {self.google_json}\n blog_datas:{self.blog_datas}"

@@ -5,13 +5,16 @@ from .window_utils import position_window
 from .api_key import get_key
 from .google_service import GoogleService
 
+TEST_MODE = "테스트 모드"
+GATHER_MODE = "데이터 수집 모드"
+
 class CrawlingModule:
     def __init__(self, parent):
         self.parent = parent
         self.window = tk.Toplevel(parent)
         self.window.title("크롤링 모듈")
         self.window.geometry("600x400")
-        self.crawling_mode = tk.StringVar(value="테스트 모드")  # 기본값을 테스트 모드로 설정
+        self.crawling_mode = tk.StringVar(value=TEST_MODE)  # 기본값을 테스트 모드로 설정
         self.google = GoogleService(google_key=get_key("GOOGLE_API_KEY"))
         self.create_widgets()
         
@@ -46,6 +49,13 @@ class CrawlingModule:
         크롤링을 해서 돌려주는 함수
         """
         message = f"키워드: {keyword}, 지역: {region}, 모드: {mode}(으)로 크롤링을 시작합니다"
+        if mode == TEST_MODE:
+            # 하나의 데이터를 들고 옵니다.
+            pass
+        elif mode == GATHER_MODE:
+            # 실제 크롤링을 시작합니다.
+            pass
+
         self.update_status(message)
 
         # 크롤링 과정을 시뮬레이션합니다
@@ -95,11 +105,7 @@ class CrawlingModule:
         self.keyword_entry = ttk.Entry(self.main_frame, width=15)
         self.keyword_entry.grid(row=0, column=3, padx=(0,5), pady=5, sticky='w')
 
-        # 크롤링 시작 버튼
-        self.crawl_button = ttk.Button(self.main_frame, text="크롤링 시작", command=self.on_crawl)
-        self.crawl_button.grid(row=1, column=0, pady=10, sticky='w')
-
-        # 크롤링 시작 버튼에 커맨드 연결
+        # 크롤링 시작
         self.crawl_button = ttk.Button(self.main_frame, text="크롤링 시작", command=self.on_crawl)
         self.crawl_button.grid(row=1, column=0, pady=10, sticky='w')
 
@@ -111,12 +117,12 @@ class CrawlingModule:
         ttk.Label(self.main_frame, text="크롤링 모드:").grid(row=2, column=0, padx=(0,5), pady=5, sticky='w')
 
         # 테스트 모드 라디오 버튼
-        ttk.Radiobutton(self.main_frame, text="테스트 모드", 
-                        variable=self.crawling_mode, value="테스트 모드").grid(row=2, column=1, padx=(0,5), pady=5, sticky='w')
+        ttk.Radiobutton(self.main_frame, text=TEST_MODE, 
+                        variable=self.crawling_mode, value=TEST_MODE).grid(row=2, column=1, padx=(0,5), pady=5, sticky='w')
 
         # 데이터 수집 모드 라디오 버튼
-        ttk.Radiobutton(self.main_frame, text="데이터 수집 모드", 
-                        variable=self.crawling_mode, value="데이터 수집 모드").grid(row=2, column=2, padx=(0,5), pady=5, sticky='w')
+        ttk.Radiobutton(self.main_frame, text=GATHER_MODE, 
+                        variable=self.crawling_mode, value=GATHER_MODE).grid(row=2, column=2, padx=(0,5), pady=5, sticky='w')
 
         # 현재 상태 라벨
         ttk.Label(self.main_frame, text="현재 상태:").grid(row=3, column=0, padx=(0,5), pady=5, sticky='nw')
