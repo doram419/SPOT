@@ -9,20 +9,12 @@ from .datas.constants import TEST_MODE, GATHER_MODE
 class CrawlingModule:
     def __init__(self, parent):
         self.parent = parent
-        self.window = tk.Toplevel(parent)
-        self.window.title("크롤링 모듈")
-        self.window.geometry("600x400")
         self.crawling_mode = tk.StringVar(value=TEST_MODE)  # 기본값을 테스트 모드로 설정
         self.create_widgets()
-        
-        # 창 크기를 위젯에 맞게 조절
-        self.window.update()
-        self.window.geometry('')
-
-        position_window(self.parent, self.window)
-
-        # 엔터 키 이벤트 바인딩 추가
-        self.window.bind('<Return>', self.on_enter)
+    
+    def on_enter(self, event):
+        """엔터 키를 눌렀을 때 크롤링 시작"""
+        self.on_crawl()
 
     def on_crawl(self):
         keyword = self.keyword_entry.get()
@@ -102,11 +94,7 @@ class CrawlingModule:
         self.status_text.config(state='disabled')
 
     def create_widgets(self):
-        """
-        내부 항목을 추가하는 항목
-        """
-        self.main_frame = ttk.Frame(self.window, padding="10")
-        self.main_frame.pack(fill=tk.BOTH, expand=True)
+        self.main_frame = ttk.Frame(self.parent, padding="10")
         
         # 지역 라벨과 입력 필드
         ttk.Label(self.main_frame, text="지역:").grid(row=0, column=0, padx=(0,5), pady=5, sticky='e')
@@ -152,3 +140,9 @@ class CrawlingModule:
         # 그리드 설정을 조정하여 텍스트 필드가 창 크기에 맞춰 확장되도록 함
         self.main_frame.columnconfigure(3, weight=1)
         self.main_frame.rowconfigure(4, weight=1)
+
+        # 엔터 키 이벤트 바인딩 추가
+        self.main_frame.bind('<Return>', self.on_enter)
+
+    def get_widget(self):
+        return self.main_frame
