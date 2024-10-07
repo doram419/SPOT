@@ -1,8 +1,8 @@
 {
     "width": 600,
-    "height": 506,
-    "x": 78,
-    "y": 78,
+    "height": 288,
+    "x": 264,
+    "y": 112,
     "font_family": "Verdana",
     "font_size": 10,
     "theme": "scidgrey",
@@ -10,8 +10,8 @@
     "vdb_creator": {
         "width": 600,
         "height": 506,
-        "x": 777,
-        "y": 150
+        "x": 266,
+        "y": 440
     },
     "vdb_selector": {
         "width": 400,
