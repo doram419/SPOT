@@ -15,10 +15,8 @@ class Application:
         self.apply_settings(self.config)
         self.create_widgets()
 
-        # 모듈 인스턴스 저장을 위한 딕셔너리
         self.modules = {}
 
-        # 설정 변경 이벤트 바인딩
         self.root.bind("<<SettingsChanged>>", self.on_settings_changed)
 
     def open_settings(self):
@@ -73,15 +71,13 @@ class Application:
         self.config.update(new_settings)
         self.root.option_add("*Font", f"{self.config['font_family']} {self.config['font_size']}")
         
-        style = ttk.Style()
-        if self.config['theme'] == 'dark':
-            style.theme_use('clam')
-            style.configure(".", background="gray20", foreground="white")
-            style.configure("TSeparator", background="white")
+        if 'theme' in new_settings:
+            self.root.set_theme(new_settings['theme'])
         else:
-            style.theme_use('default')
-            style.configure("TSeparator", background="gray")
+            print(f"테마 설정에 실패하였습니다. 기본 테마(arc)를 사용합니다")
+            self.root.set_theme('arc')  # 기본 테마로 'arc' 사용
         
+        style = ttk.Style()
         if self.config['button_style'] == 'rounded':
             style.configure('TButton', relief='rounded', padding=6)
         elif self.config['button_style'] == 'flat':

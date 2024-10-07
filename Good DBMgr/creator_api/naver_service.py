@@ -42,7 +42,7 @@ class NaverService():
                 link = item.get('link')
                 blogs.append(self.make_naver_data(blog_url=link))
             
-            return blogs
+            return blogs[:3]
 
         except requests.exceptions.RequestException as e:
             print(f"Naver API 요청 실패: {str(e)}")
@@ -90,7 +90,9 @@ class NaverService():
             if address:
                 refined_address = address.text
 
-            return NaverData(title=refined_title, address=refined_address, content=refined_content, link=blog_url)
+            data = NaverData(title=refined_title, address=refined_address, content=refined_content, link=blog_url)
+            print(data.print_data())
+            return data
         
         return None
 

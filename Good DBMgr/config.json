@@ -1,40 +1,40 @@
 {
-    "width": 415,
-    "height": 216,
-    "x": 182,
-    "y": 182,
+    "width": 600,
+    "height": 400,
+    "x": 498,
+    "y": 133,
     "font_family": "Arial",
     "font_size": 10,
-    "theme": "light",
+    "theme": "arc",
     "button_style": "default",
     "vdb_creator": {
-        "width": 676,
-        "height": 502,
-        "x": 629,
-        "y": 175
+        "width": 600,
+        "height": 500,
+        "x": 1167,
+        "y": 138
     },
     "vdb_selector": {
         "width": 400,
         "height": 300,
-        "x": 817,
-        "y": 577
+        "x": 200,
+        "y": 200
     },
     "vdb_retriever": {
         "width": 400,
         "height": 300,
-        "x": 1243,
-        "y": 503
+        "x": 250,
+        "y": 250
     },
     "api_key": {
-        "width": 491,
-        "height": 269,
-        "x": 1104,
-        "y": 94
+        "width": 500,
+        "height": 400,
+        "x": 300,
+        "y": 300
     },
     "settings": {
-        "width": 327,
-        "height": 214,
-        "x": 584,
-        "y": 36
+        "width": 282,
+        "height": 227,
+        "x": 1005,
+        "y": 141
     }
 }

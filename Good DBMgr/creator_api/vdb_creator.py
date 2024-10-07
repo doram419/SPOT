@@ -87,8 +87,6 @@ class VdbCreatorModule:
         """
         self.crawling_results = results
         
-        self.crawling_results = results
-        
         # if mode == GATHER_MODE:
         self.status_module.update_status("전처리를 시작합니다.")
         # 비동기 함수 실행을 위한 코드

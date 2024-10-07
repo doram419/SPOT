@@ -15,3 +15,4 @@ torch
 transformers
 typing_extensions
 uvicorn
+ttkthemes
