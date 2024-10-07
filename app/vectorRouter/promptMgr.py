@@ -14,12 +14,13 @@ def summarize_desc(name: str, desc):
     """
     try:
         response = client.chat.completions.create(
-            model="gpt-3.5-turbo",
+            model="gpt-4o-mini",
             messages=[
                 {"role": "system", "content": (
                     "당신은 한국의 맛집 전문가입니다. "
                     "사용자가 제공한 가게 정보를 바탕으로 핵심적인 요약을 제공하는 것이 목표입니다. "
                     "요약은 사용자가 가게를 빠르게 이해할 수 있도록 간결하고 명확해야 합니다."
+                    "식당에 대한 평가나 생각을 중심으로 요약해주세요."
                 )},
                 {"role": "user", "content": f"""
                 가게 이름: {name}\n
@@ -30,7 +31,7 @@ def summarize_desc(name: str, desc):
                 분위기: 가게의 분위기를 간결하게 설명하세요 (예: 로맨틱한, 캐주얼한, 가족 친화적인 등).\n
                 차별점: 이 가게만의 특별한 특징을 강조하세요.\n
                 최대 200자로 요약을 간결하게 작성하세요.
-                """}
+                사용자가 짧은 검색어를 입력했다면 키워드에 맞는 링크와 요약을 작성해주세요."""}
             ],
             temperature=0.7,
             max_tokens=200,
