@@ -10,9 +10,10 @@ import asyncio
 from concurrent.futures import ThreadPoolExecutor
 
 class PreprocessingModule:
-    def __init__(self, parent, status_module):
+    def __init__(self, parent, status_module, on_complete_callback):
         self.parent = parent
         self.status_module = status_module
+        self.on_complete_callback = on_complete_callback
         self.create_widgets()
 
     def create_widgets(self):
@@ -112,6 +113,10 @@ class PreprocessingModule:
         await asyncio.gather(*tasks)
         
         self.status_module.update_status("전처리 완료")
+
+        # 전처리 완료 후 콜백 함수 호출
+        if self.on_complete_callback:
+            self.on_complete_callback(crawling_result)
 
     async def process_google_data(self, google_data, embedding, chunk_size, overlap):
         google_data.google_json = self.do_chucking(google_data.google_json, chunk_size, overlap)

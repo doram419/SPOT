@@ -3,6 +3,7 @@ import tkinter as tk
 from tkinter import ttk
 from creator_api.crawling import CrawlingModule
 from creator_api.preprocessing import PreprocessingModule
+from creator_api.vdb_save import VdbSaveModule
 from configuration import update_module_config
 from .status_module import StatusModule
 from .datas.constants import GATHER_MODE
@@ -21,7 +22,7 @@ class VdbCreatorModule:
 
         self.crawling_results = None
         self.create_widgets()
-        
+
         # 창 닫힐 때 설정 저장
         self.window.protocol("WM_DELETE_WINDOW", self.on_closing)
 
@@ -55,8 +56,8 @@ class VdbCreatorModule:
         data_processing_tab = ttk.Frame(self.tab_control)
         self.tab_control.add(data_processing_tab, text='데이터 전처리')
 
-        # 전처리 모듈의 위젯 추가
-        self.preprocessing_module = PreprocessingModule(data_processing_tab, self.status_module)
+        # 전처리 모듈의 위젯 추가 
+        self.preprocessing_module = PreprocessingModule(data_processing_tab, self.status_module, self.on_preprocessing_complete)
         processing_widget = self.preprocessing_module.get_widget()
         processing_widget.pack(fill=tk.BOTH, expand=True)
 
@@ -69,13 +70,14 @@ class VdbCreatorModule:
         crawling_widget = self.crawling_module.get_widget()
         crawling_widget.pack(fill=tk.BOTH, expand=True)
 
-        # 벡터 생성 탭 (새로운 모듈)
-        vector_creation_tab = ttk.Frame(self.tab_control)
-        self.tab_control.add(vector_creation_tab, text='벡터 생성')
-        
-        # 벡터 생성 탭의 내용 (임시)
-        ttk.Label(vector_creation_tab, text="벡터 생성 모듈이 여기에 구현될 예정입니다.").pack(pady=20)
-        ttk.Button(vector_creation_tab, text="벡터 생성 시작", command=self.start_vector_creation).pack(pady=10)
+        # VDB 저장 탭
+        vdb_save_tab = ttk.Frame(self.tab_control)
+        self.tab_control.add(vdb_save_tab, text='VDB 저장')
+
+        # VdbSaveModule 인스턴스 생성 및 위젯 추가
+        self.vdb_save_module = VdbSaveModule(vdb_save_tab, self.status_module)
+        vdb_save_widget = self.vdb_save_module.get_widget()
+        vdb_save_widget.pack(fill=tk.BOTH, expand=True)
 
         # 종료 버튼 추가
         self.close_button = ttk.Button(self.main_frame, text="Close", command=self.on_closing)
@@ -92,8 +94,11 @@ class VdbCreatorModule:
         # 비동기 함수 실행을 위한 코드
         self.loop.run_until_complete(self.preprocessing_module.start_preprocessing(results))
 
-    def start_vector_creation(self):
-        self.status_module.update_status("벡터 생성 시작 (아직 구현되지 않음)")
+    def on_preprocessing_complete(self, preprocessed_data):
+        """
+        데이터 전처리가 끝나면 이뤄지는 함수
+        """
+        self.vdb_save_module.set_preprocessed_data(preprocessed_data)
     
     def on_closing(self):
         update_module_config(self.config, 'vdb_creator', self.window)
