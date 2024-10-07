@@ -6,7 +6,6 @@ from dotenv import load_dotenv
 from vectorMgr import saveToVDB, searchVDB
 from crawling.crawling import start_crawling, make_datas
 from logger import vdb_logging
-from crawling.ocr_processor import process_image
 import requests
 from io import BytesIO
 from bs4 import BeautifulSoup
