@@ -1,3 +1,4 @@
+import sys
 from tkinter import ttk, Menu
 from modules.settings import SettingsWindow
 from creator_api.vdb_creator import VdbCreatorModule
@@ -15,7 +16,7 @@ class Application:
         self.apply_settings(self.config)
         self.create_widgets()
 
-        self.modules = {}
+        self.modules = {}   
 
         self.root.bind("<<SettingsChanged>>", self.on_settings_changed)
 
@@ -140,9 +141,18 @@ class Application:
                 update_module_config(self.config, module_name, module.window)
                 module.window.destroy()
 
-        save_config(self.root, self.config)
-        self.root.destroy()
+        # 모든 자식 위젯 파괴
+        for widget in self.root.winfo_children():
+            widget.destroy()
 
+        save_config(self.root, self.config)
+        
+        # 루트 창에 종료 이벤트 발생
+        self.root.event_generate("<<ApplicationExit>>")
+        
+        # 루트 창 종료
+        self.root.quit()
+        
     def run(self):
         self.root.geometry(f"{self.config['width']}x{self.config['height']}+{self.config['x']}+{self.config['y']}")
         self.root.protocol("WM_DELETE_WINDOW", self.exit_application)

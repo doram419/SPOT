@@ -1,17 +1,17 @@
 {
     "width": 600,
-    "height": 400,
-    "x": 498,
-    "y": 133,
+    "height": 460,
+    "x": 52,
+    "y": 52,
     "font_family": "Arial",
     "font_size": 10,
-    "theme": "arc",
+    "theme": "plastik",
     "button_style": "default",
     "vdb_creator": {
         "width": 600,
-        "height": 500,
-        "x": 1167,
-        "y": 138
+        "height": 452,
+        "x": 251,
+        "y": 166
     },
     "vdb_selector": {
         "width": 400,
@@ -32,9 +32,9 @@
         "y": 300
     },
     "settings": {
-        "width": 282,
-        "height": 227,
-        "x": 1005,
-        "y": 141
+        "width": 279,
+        "height": 217,
+        "x": 1276,
+        "y": 194
     }
 }

@@ -40,7 +40,9 @@ class SettingsWindow:
         self.font_size.grid(row=1, column=1, padx=5, pady=5, sticky=tk.W)
 
         ttk.Label(main_frame, text="테마:").grid(row=2, column=0, padx=5, pady=5, sticky=tk.W)
-        self.theme_combo = ttk.Combobox(main_frame, values=ThemedTk().get_themes())
+        # 부모에서 테마 가져오게 함
+        themes = self.parent.tk.call('ttk::themes')
+        self.theme_combo = ttk.Combobox(main_frame, values=themes)
         self.theme_combo.set(self.settings.get("theme", "arc"))
         self.theme_combo.grid(row=2, column=1, padx=5, pady=5, sticky=tk.W)
 
