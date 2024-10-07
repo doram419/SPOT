@@ -1,4 +1,5 @@
 import asyncio
+import threading
 import tkinter as tk
 from tkinter import ttk
 from creator_api.crawling import CrawlingModule
@@ -25,6 +26,12 @@ class VdbCreatorModule:
 
         # 창 닫힐 때 설정 저장
         self.window.protocol("WM_DELETE_WINDOW", self.on_closing)
+
+        # asyncio 이벤트 루프 생성
+        self.loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(self.loop)
+        self.thread = threading.Thread(target=self.run_async_loop, daemon=True)
+        self.thread.start()
 
     def create_widgets(self):
         self.main_frame = ttk.Frame(self.window, padding="10")
@@ -87,12 +94,22 @@ class VdbCreatorModule:
         # 종료 버튼 추가
         self.close_button = ttk.Button(self.main_frame, text="Close", command=self.on_closing)
         self.close_button.grid(row=3, column=0, pady=10, sticky='se')
+    
+    def start_vdb_creation(self):
+        self.window.after(0, lambda: self.create_vdb_button.config(state='disabled'))
+        asyncio.run_coroutine_threadsafe(self.async_vdb_creation(), self.loop)
 
-    async def start_vdb_creation(self):
-        self.create_vdb_button.config(state='disabled')
-        self.status_module.update_status("VDB 생성 프로세스 시작...")
+    def run_async_loop(self):
+        asyncio.set_event_loop(self.loop)
+        self.loop.run_forever()
 
+    async def async_vdb_creation(self):
+        """
+        VDB를 생성하는 함수
+        """
         try:
+            self.status_module.update_status("VDB 생성 프로세스 시작...")
+
             # 크롤링 시작
             self.status_module.update_status("크롤링 시작...")
             keyword = self.crawling_module.keyword_entry.get()
@@ -124,11 +141,13 @@ class VdbCreatorModule:
         except Exception as e:
             self.status_module.update_status(f"오류 발생: {str(e)}")
         finally:
-            self.create_vdb_button.config(state='normal')
+            # GUI 업데이트는 메인 스레드에서 수행해야 함
+            self.window.after(0, lambda: self.create_vdb_button.config(state='normal'))
 
     def on_closing(self):
         update_module_config(self.config, 'vdb_creator', self.window)
+        self.loop.call_soon_threadsafe(self.loop.stop)
         self.window.destroy()
 
     def run(self):
-        asyncio.run(self.start_vdb_creation())
+        self.window.mainloop()

@@ -100,8 +100,11 @@ class PreprocessingModule:
         google_data.google_json = [embedding.get_text_embedding(chunk) for chunk in google_data.google_json]
         
         for naver_data in google_data.blog_datas:
-            naver_data.content = self.do_chucking(naver_data.content, chunk_size, overlap)
-            naver_data.content = [embedding.get_text_embedding(chunk) for chunk in naver_data.content]
+            if naver_data.content is not None:
+                naver_data.content = self.do_chucking(naver_data.content, chunk_size, overlap)
+                naver_data.content = [embedding.get_text_embedding(chunk) for chunk in naver_data.content]
+            else:
+                self.status_module.update_status(f"경고: Naver 데이터 '{naver_data.title}'의 내용이 없습니다.")
 
         self.status_module.update_status(f"Google 데이터 처리 완료: {google_data.name}")
         return google_data

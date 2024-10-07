@@ -1,15 +1,15 @@
 {
     "width": 600,
-    "height": 366,
-    "x": 156,
-    "y": 156,
+    "height": 506,
+    "x": 78,
+    "y": 78,
     "font_family": "Verdana",
     "font_size": 10,
     "theme": "scidgrey",
     "button_style": "default",
     "vdb_creator": {
         "width": 600,
-        "height": 700,
+        "height": 506,
         "x": 777,
         "y": 150
     },

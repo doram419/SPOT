@@ -44,7 +44,7 @@ class CrawlingModule:
         
         try:
             google_service = GoogleService(mode=mode)
-            results = await google_service.google_crawling(query=keyword, region=region)
+            results = google_service.google_crawling(query=keyword, region=region)
             
             total_results = len(results)
             
