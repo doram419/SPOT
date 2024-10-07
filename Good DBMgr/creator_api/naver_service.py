@@ -91,7 +91,6 @@ class NaverService():
                 refined_address = address.text
 
             data = NaverData(title=refined_title, address=refined_address, content=refined_content, link=blog_url)
-            print(data.print_data())
             return data
         
         return None
