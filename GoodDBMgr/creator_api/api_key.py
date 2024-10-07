@@ -1,11 +1,13 @@
 import os
+import sys
 import tkinter as tk
 from tkinter import ttk
 from pathlib import Path
 from dotenv import dotenv_values
-from configuration import update_module_config
+from GoodDBMgr.configuration import update_module_config
 
 env_path = Path('.') / '.env'
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../../")))
 
 if env_path.exists():
     env_const = dotenv_values(env_path)

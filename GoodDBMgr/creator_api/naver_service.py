@@ -80,15 +80,17 @@ class NaverService():
                 refined_content = div_container.text.replace('\n', ' ')
 
                 # 이미지 태그 찾기
-                img_tags = div_container.find_all('img', class_ ='se-image')
+                img_tags = div_container.find_all('img', class_ ='se-image-resource')
                 ocr_results = []
                 for img_tag in img_tags:
-                    img_url = img_tag.get('src')
+                    img_url = img_tag.get('src') or img_tag.get('data-lazy-src')
                     if img_url:
                         # 이미지 URL을 이용해서 OCR 수행하기
                         ocr_text = perform_ocr_from_url(img_url)
                         if ocr_text:
-                            ocr_results.append(ocr_text)
+                            ocr_results.append(f"[OCR 결과 시작] {ocr_text} [OCR 결과 끝]")
+                            # OCR 결과를 출력하여 확인
+                            print(f"OCR 결과: {ocr_text}")
 
                 # OCR 결과를 추가하기
                 if ocr_results:
@@ -109,6 +111,27 @@ class NaverService():
             return NaverData(title=refined_title, address=refined_address, content=refined_content, link=blog_url)
         
         return None
+    
+     # 여기에서 테스트용 블로그 URL로 데이터를 추출하는 함수를 추가
+    def test_make_naver_data(self, blog_url: str):
+        """
+        특정 블로그 URL로부터 데이터를 추출하는 테스트 함수
+        """
+        naver_data = self.make_naver_data(blog_url=blog_url)
+        if naver_data:
+            print("블로그 제목:", naver_data.title)
+            print("블로그 주소:", naver_data.address)
+            print("블로그 내용:", naver_data.content)
+            print("=" * 40)
+        else:
+            print("데이터 추출 실패")
+            
+if __name__ == "__main__":
+    naver_service = NaverService()
+    test_url = "https://blog.naver.com/95yulee/223288290394"
+    naver_service.test_make_naver_data(blog_url=test_url)
+
+
 
 
     

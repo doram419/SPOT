@@ -20,7 +20,7 @@ def make_datas(datas : list) -> list:
     가져온 정보들을 Class Data로 바꿔주는 함수
     """
     result = []
-    text_splitter = RecursiveCharacterTextSplitter(chunk_size=200, chunk_overlap=50)
+    text_splitter = RecursiveCharacterTextSplitter(chunk_size=50, chunk_overlap=10)
     for d in datas:
         clean_title = clean_html(d.title)
         clean_desc = clean_html(' '.join(d.desc))
