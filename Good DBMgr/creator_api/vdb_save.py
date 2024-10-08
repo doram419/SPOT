@@ -74,40 +74,39 @@ class VdbSaveModule:
         faiss Vector DB에 저장하는 코드
         """
         try:
-            # FaissVectorStore 인스턴스 생성
             vector_store = FaissVectorStore(
-                index_file=os.path.join(save_path, "faiss_index.bin"),
-                metadata_file=os.path.join(save_path, "metadata.pkl")
+                index_file=os.path.join(save_path, "spot_index.bin"),
+                metadata_file=os.path.join(save_path, "spot_metadata.pkl")
             )
 
-            for data in self.preprocessed_data:
-                # Google 데이터 처리
-                google_meta = {
+            for data_id, data in enumerate(self.preprocessed_data):
+                base_meta = {
+                    "data_id": data_id,
                     "name": data.name,
                     "address": data.address
                 }
 
+                # Google 데이터 처리
                 for i, google_item in enumerate(data.google_json):
                     vector_store.add_to_index(
-                        {f"google_{i}": google_item},
-                        {**google_meta, "content_index": i}
+                        {f"google_{data_id}_{i}": google_item},
+                        {**base_meta, "content_type": "google", "content_index": i}
                     )
 
-                 # Naver 블로그 데이터 처리
+                # Naver 블로그 데이터 처리
                 for blog_index, blog_data in enumerate(data.blog_datas):
                     blog_meta = {
-                        "name": data.name,
-                        "address": data.address,
-                        "source": "naver",
-                        "title": blog_data.title,
+                        **base_meta,
+                        "content_type": "naver_blog",
+                        "blog_index": blog_index,
                         "link": blog_data.link
                     }
                     
                     if isinstance(blog_data.content, list):
                         for chunk_index, chunk in enumerate(blog_data.content):
                             vector_store.add_to_index(
-                                {f"naver_{blog_index}_{chunk_index}": chunk},
-                                {**blog_meta, "content_index": chunk_index}
+                                {f"naver_{data_id}_{blog_index}_{chunk_index}": chunk},
+                                {**blog_meta, "chunk_index": chunk_index}
                             )
                     else:
                         self.status_module.update_status(f"경고: 블로그 데이터 '{blog_data.title}'의 내용이 리스트 형식이 아닙니다.")
