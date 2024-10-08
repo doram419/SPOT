@@ -77,20 +77,8 @@ class NaverService():
             refined_content = str()
             if div_container:
                 refined_content = div_container.text.replace('\n', ' ')
-            
-            # 네이버 블로그에 내장된 지도에서 이름 가져오기
-            title = iframe_soup.find('strong', class_='se-map-title')
-            refined_title = str()
-            if title:
-                refined_title = title.text
-            
-            # 네이버 블로그에 내장된 지도에서 주소 가져오기
-            address = iframe_soup.find('p', class_='se-map-address')
-            refined_address = str()
-            if address:
-                refined_address = address.text
 
-            data = NaverData(title=refined_title, address=refined_address, content=refined_content, link=blog_url)
+            data = NaverData(content=refined_content, link=blog_url)
             return data
         
         return None
