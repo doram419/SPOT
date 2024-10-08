@@ -97,6 +97,6 @@ def search(search_input: str, k: int = 5):
                 "link": meta.get("link", "https://none")
             })
 
-    return results
 
+    return results
 
