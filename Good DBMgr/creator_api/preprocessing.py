@@ -95,14 +95,13 @@ class PreprocessingModule:
         return processed_results
 
     async def process_google_data(self, google_data, embedding, chunk_size, overlap):
-        google_data.google_json = self.do_chucking(google_data.google_json, chunk_size, overlap)
-        
-        google_data.google_json = [embedding.get_text_embedding(chunk) for chunk in google_data.google_json]
+        google_data.google_json = self.do_chucking(google_data.google_json, chunk_size, overlap) 
+        google_data.vectorized_json = [embedding.get_text_embedding(chunk) for chunk in google_data.google_json]
         
         for naver_data in google_data.blog_datas:
             if naver_data.content is not None:
                 naver_data.content = self.do_chucking(naver_data.content, chunk_size, overlap)
-                naver_data.content = [embedding.get_text_embedding(chunk) for chunk in naver_data.content]
+                naver_data.vectorized_content = [embedding.get_text_embedding(chunk) for chunk in naver_data.content]
             else:
                 self.status_module.update_status(f"경고: Naver 데이터 '{google_data.name}'의 내용이 없습니다.")
 

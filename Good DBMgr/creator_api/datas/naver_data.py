@@ -1,5 +1,6 @@
 class NaverData():
     content : str
+    vectorized_content : str
     link : str
 
     def __init__(self, content, link):

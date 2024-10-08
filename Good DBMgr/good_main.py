@@ -7,7 +7,7 @@ from application import Application
 
 class MainApplication:
     def __init__(self):
-        self.root = ThemedTk(theme="arc")  # 기본 테마를 'arc'로 설정
+        self.root = ThemedTk(theme="arc")  
         self.icon = tk.PhotoImage(file="logo.png")
         self.root.wm_iconphoto(True, self.icon)
         self.app = Application(self.root)
