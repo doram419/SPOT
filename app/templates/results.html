@@ -9,11 +9,10 @@
 <body>
     <header>
         <img src="/static/logo.png" alt="사이트 로고" width="80" height="80">
-        <h2>오늘 가고 싶은 SPOT은?</h2>
     </header>
     
     <main role="main">
-        <h3>"{{ search_input }}" 검색 결과 <a href="/" class="button">새로운 검색하기</a></h3>
+        <b>"{{ search_input }}" 검색 결과 </b>
         
     
         <div class="slider-container">
@@ -22,7 +21,7 @@
                 <div class="slider-item">
                     <div class="item-content">
                         <div class="item-header">
-                            <h4>{{ result.title }}</h4>
+                            <h2>{{ result.title }}</h2>
                             <div class="item-image">
                                 {% if result.image %}
                                 <img src="{{ result.image }}" alt="{{ result.title }}">
@@ -34,6 +33,7 @@
                         <div class="item-text">
                             <p class="summary">{{ result.summary | safe }}</p>
                             <a href="{{ result.link }}" class="link-button" target="_blank">링크로 이동</a>
+                            <a href="/" class="button">새로운 검색하기</a>
                         </div>
                     </div>
                 </div>
