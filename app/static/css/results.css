@@ -24,22 +24,10 @@ header {
     margin-bottom: 10px;
 }
 
-h2 {
-    color: #0288d1;
-    margin-top: 30px;
-    font-size: 2.5rem;
-    font-weight: 700;
-}
 
-h3 {
-    color: #01579b;
-    font-size: 2rem;
-    margin-bottom: 20px;
-}
 
-h3 .button {
-    margin-left: 210px; /* 검색결과와 버튼 사이의 간격 설정 */
-}
+
+
 
 /* 슬라이드 컨테이너 */
 .slider-container {
