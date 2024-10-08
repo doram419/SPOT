@@ -1,7 +1,6 @@
 from fastapi import APIRouter, Request, Form, HTTPException
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
-# from .vectorRouter.vectorMgr_sbert import search as vector_search
 from .vectorRouter.vectorMgr import search as vector_search
 from .vectorRouter.exceptions import VectorSearchException, EmptySearchQueryException, NoSearchResultsException, EmptyVectorStoreException
 

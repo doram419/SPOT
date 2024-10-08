@@ -1,5 +1,5 @@
 # 모든 크롤링을 시도하여 txt파일로 뽑아내는 코드
-#from .naver_service import crawling_naver_blog_data
+from .naver_service import crawling_naver_blog_data
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from .utils import clean_html
 from .datas.data import Data
@@ -11,7 +11,7 @@ def start_crawling(keyword : str, region : str) -> list:
     """
     네이버 블로그에서 크롤링을 해서 돌려주는 함수
     """
-   # result = crawling_naver_blog_data(query=keyword, region=region)
+    # result = crawling_naver_blog_data(query=keyword, region=region)
     result = fetch_top_restaurants_nearby(query=keyword, region=region)
     return result
 
@@ -20,7 +20,7 @@ def make_datas(datas : list) -> list:
     가져온 정보들을 Class Data로 바꿔주는 함수
     """
     result = []
-    text_splitter = RecursiveCharacterTextSplitter(chunk_size=350, chunk_overlap=100)
+    text_splitter = RecursiveCharacterTextSplitter(chunk_size=100, chunk_overlap=20)
     for d in datas:
         clean_title = clean_html(d.title)
         clean_desc = clean_html(' '.join(d.desc))

@@ -1,13 +1,11 @@
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
-from app.routers import router
+from .routers import router
 from fastapi import FastAPI
-
 
 # FastAPI 애플리케이션 인스턴스 생성
 app = FastAPI(debug=True)
-
 
 # 라우터 등록
 app.include_router(router)
