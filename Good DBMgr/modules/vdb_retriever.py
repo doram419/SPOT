@@ -26,6 +26,9 @@ class VdbRetrieverModule:
         self.label = ttk.Label(self.main_frame, text="VDB Retriever Module")
         self.label.pack(pady=10)
 
+        self.label = ttk.Label(self.main_frame, text="아직 구현되지 않았습니다")
+        self.label.pack(pady=10)
+
         self.close_button = ttk.Button(self.main_frame, text="Close", command=self.on_closing)
         self.close_button.pack(pady=10)
 
