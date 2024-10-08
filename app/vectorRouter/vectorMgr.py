@@ -43,8 +43,8 @@ class FaissVectorStore:
         return D, I
 
 # FAISS 인덱스와 메타데이터 파일 경로 설정
-index_file_path = "C:\\Users\\201-18\\Documents\\GitHub\\deeplearning\\SPOT\\spot_index.bin"
-metadata_file_path = "C:\\Users\\201-18\\Documents\\GitHub\\deeplearning\\SPOT\\spot_metadata.pkl"
+index_file_path = "spot_index.bin"
+metadata_file_path = "spot_metadata.pkl"
 
 # 벡터 저장소 인스턴스 생성
 vector_store = FaissVectorStore(index_file=index_file_path, metadata_file=metadata_file_path)

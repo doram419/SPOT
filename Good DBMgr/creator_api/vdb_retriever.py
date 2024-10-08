@@ -17,11 +17,9 @@ class VdbRetrieverModule:
         window_config = config.get('vdb_retriever', {})
         self.window.geometry(f"{window_config.get('width', 600)}x{window_config.get('height', 500)}" \
                      f"+{window_config.get('x', 150)}+{window_config.get('y', 150)}")
-        
-        # FaissVectorStore 인스턴스 생성
-        self.vector_store = FaissVectorStore() 
-        # EmbeddingModule 인스턴스는 나중에 생성 
-        self.embedding = None  
+
+        self.vector_store = FaissVectorStore()  # FaissVectorStore 인스턴스 생성
+        self.embedding = None  # EmbeddingModule 인스턴스는 나중에 생성
         self.create_widgets()
         
         # 창 닫힐 때 설정 저장
@@ -31,23 +29,20 @@ class VdbRetrieverModule:
         self.main_frame = ttk.Frame(self.window, padding="10")
         self.main_frame.pack(fill=tk.BOTH, expand=True)
 
-        # 임베딩 모델 선택
+        # 임베딩 모델 표시 (읽기 전용)
         embedding_frame = ttk.Frame(self.main_frame)
         embedding_frame.pack(fill=tk.X, pady=(0, 10))
 
         ttk.Label(embedding_frame, text="임베딩 모델:").pack(side=tk.LEFT, padx=(0, 5))
-        self.embedding_model_type = tk.StringVar()
-        self.embedding_type_dropdown = ttk.Combobox(embedding_frame, textvariable=self.embedding_model_type, 
-                                                    values=EMBEDDING_MODEL_TYPES, state="readonly", width=15)
-        self.embedding_type_dropdown.pack(side=tk.LEFT, padx=(0, 5))
-        self.embedding_type_dropdown.set(EMBEDDING_MODEL_TYPES[0])
-        self.embedding_type_dropdown.bind("<<ComboboxSelected>>", self.update_embedding_versions)
+        self.embedding_model_type = tk.StringVar(value=EMBEDDING_MODEL_TYPES[0])
+        self.embedding_type_entry = ttk.Entry(embedding_frame, textvariable=self.embedding_model_type, 
+                                              state="readonly", width=15)
+        self.embedding_type_entry.pack(side=tk.LEFT, padx=(0, 5))
 
-        self.embedding_model_version = tk.StringVar()
-        self.embedding_version_dropdown = ttk.Combobox(embedding_frame, textvariable=self.embedding_model_version, 
-                                                       state="readonly", width=20)
-        self.embedding_version_dropdown.pack(side=tk.LEFT, padx=(0, 5))
-        self.update_embedding_versions()
+        self.embedding_model_version = tk.StringVar(value=EMBEDDING_MODEL_VERSIONS[EMBEDDING_MODEL_TYPES[0]][0])
+        self.embedding_version_entry = ttk.Entry(embedding_frame, textvariable=self.embedding_model_version, 
+                                                 state="readonly", width=20)
+        self.embedding_version_entry.pack(side=tk.LEFT, padx=(0, 5))
 
         # 쿼리 입력 섹션
         query_frame = ttk.Frame(self.main_frame)
@@ -102,15 +97,6 @@ class VdbRetrieverModule:
         self.close_button = ttk.Button(self.main_frame, text="Close", command=self.on_closing)
         self.close_button.pack(pady=(10, 0))
 
-    def update_embedding_versions(self, event=None):
-        selected_type = self.embedding_model_type.get()
-        versions = EMBEDDING_MODEL_VERSIONS.get(selected_type, [])
-        self.embedding_version_dropdown['values'] = versions
-        if versions:
-            self.embedding_version_dropdown.set(versions[0])
-        else:
-            self.embedding_version_dropdown.set('')
-
     def increase_count(self):
         current = int(self.count_var.get())
         self.count_var.set(str(current + 1))
@@ -127,19 +113,41 @@ class VdbRetrieverModule:
         embedding_type = self.embedding_model_type.get()
         embedding_version = self.embedding_model_version.get()
 
-        if self.embedding is None or self.embedding.model_name != embedding_type or self.embedding.version != embedding_version:
+        if self.embedding is None:
             self.embedding = EmbeddingModule(model_name=embedding_type, version=embedding_version)
 
         try:
             query_vector = self.embedding.get_text_embedding(query)
             
-            distances, indices = self.vector_store.search(query_vector, k)
+            # 더 많은 결과를 검색하여 중복 제거 후에도 충분한 결과를 확보
+            distances, indices = self.vector_store.search(query_vector, k * 2)
             
             results = []
-            for i, (distance, idx) in enumerate(zip(distances[0], indices[0]), 1):
+            seen_data_ids = set()
+            
+            for distance, idx in zip(distances[0], indices[0]):
                 if idx < len(self.vector_store.metadata):
                     metadata = self.vector_store.metadata[idx]
-                    results.append(f"{i}. Distance: {distance:.4f}, Metadata: {metadata}")
+                    data_id = metadata.get('data_id')
+                    
+                    if data_id not in seen_data_ids:
+                        seen_data_ids.add(data_id)
+                        
+                        result_str = f"Distance: {distance:.4f}, "
+                        result_str += f"Name: {metadata.get('name', 'N/A')}, "
+                        result_str += f"Address: {metadata.get('address', 'N/A')}, "
+                        
+                        if 'link' in metadata:
+                            result_str += f"Link: {metadata['link']}"
+                        elif 'content_type' in metadata and metadata['content_type'] == 'google':
+                            result_str += "Source: Google"
+                        else:
+                            result_str += "Link: N/A"
+                        
+                        results.append(result_str)
+                        
+                        if len(results) == k:
+                            break
                 else:
                     break
 
@@ -151,7 +159,8 @@ class VdbRetrieverModule:
             # 결과 텍스트 위젯 업데이트
             self.result_text.config(state="normal")
             self.result_text.delete(1.0, tk.END)
-            self.result_text.insert(tk.END, "\n".join(results))
+            for i, result in enumerate(results, 1):
+                self.result_text.insert(tk.END, f"{i}. {result}\n\n")
             self.result_text.config(state="disabled")
 
         except Exception as e:

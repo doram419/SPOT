@@ -1,8 +1,8 @@
 {
     "width": 600,
-    "height": 348,
-    "x": 52,
-    "y": 52,
+    "height": 476,
+    "x": 182,
+    "y": 182,
     "font_family": "Verdana",
     "font_size": 10,
     "theme": "scidgrey",
@@ -10,20 +10,20 @@
     "vdb_creator": {
         "width": 600,
         "height": 506,
-        "x": 150,
-        "y": 437
+        "x": 876,
+        "y": 176
     },
     "vdb_selector": {
         "width": 400,
         "height": 300,
-        "x": 1423,
-        "y": 192
+        "x": 440,
+        "y": 699
     },
     "vdb_retriever": {
-        "width": 400,
-        "height": 300,
-        "x": 1345,
-        "y": 228
+        "width": 833,
+        "height": 375,
+        "x": 915,
+        "y": 627
     },
     "vdb_merge": {
         "width": 400,
