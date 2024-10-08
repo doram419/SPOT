@@ -87,7 +87,7 @@ class VdbSaveModule:
                 }
 
                 # Google 데이터 처리
-                for i, google_item in enumerate(data.google_json):
+                for i, google_item in enumerate(data.vectorized_json):
                     vector_store.add_to_index(
                         {f"google_{data_id}_{i}": google_item},
                         {**base_meta, "content_type": "google", "content_index": i}
@@ -103,10 +103,15 @@ class VdbSaveModule:
                     }
                     
                     if isinstance(blog_data.content, list):
-                        for chunk_index, chunk in enumerate(blog_data.content):
+                        for chunk_index, (chunk_vector, chunk_content) in enumerate(zip(blog_data.vectorized_content, blog_data.content)):
+                            chunk_meta = {
+                                **blog_meta,
+                                "chunk_index": chunk_index,
+                                "chunk_content": chunk_content  # 각 청크의 원본 내용
+                            }
                             vector_store.add_to_index(
-                                {f"naver_{data_id}_{blog_index}_{chunk_index}": chunk},
-                                {**blog_meta, "chunk_index": chunk_index}
+                                {f"naver_{data_id}_{blog_index}_{chunk_index}": chunk_vector},
+                                chunk_meta
                             )
                     else:
                         self.status_module.update_status(f"경고: 블로그 데이터 '{blog_data.title}'의 내용이 리스트 형식이 아닙니다.")
