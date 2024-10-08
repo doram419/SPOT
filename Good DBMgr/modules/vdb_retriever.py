@@ -23,14 +23,49 @@ class VdbRetrieverModule:
         self.main_frame = ttk.Frame(self.window, padding="10")
         self.main_frame.pack(fill=tk.BOTH, expand=True)
 
-        self.label = ttk.Label(self.main_frame, text="VDB Retriever Module")
-        self.label.pack(pady=10)
+        # 쿼리 입력 섹션
+        query_frame = ttk.Frame(self.main_frame)
+        query_frame.pack(fill=tk.X, pady=(0, 10))
 
-        self.label = ttk.Label(self.main_frame, text="아직 구현되지 않았습니다")
-        self.label.pack(pady=10)
+        self.query_label = ttk.Label(query_frame, text="쿼리:")
+        self.query_label.pack(side=tk.LEFT, padx=(0, 5))
+
+        self.query_entry = ttk.Entry(query_frame)
+        self.query_entry.pack(side=tk.LEFT, expand=True, fill=tk.X)
+
+        self.search_button = ttk.Button(query_frame, text="검색", command=self.search)
+        self.search_button.pack(side=tk.LEFT, padx=(5, 0))
+
+        # 결과 표시 섹션
+        result_frame = ttk.Frame(self.main_frame)
+        result_frame.pack(fill=tk.BOTH, expand=True)
+
+        self.result_label = ttk.Label(result_frame, text="결과:")
+        self.result_label.pack(anchor=tk.W)
+
+        self.result_text = tk.Text(result_frame, wrap=tk.WORD, state="disabled")
+        self.result_text.pack(fill=tk.BOTH, expand=True)
+
+        # 스크롤바 추가
+        scrollbar = ttk.Scrollbar(result_frame, orient="vertical", command=self.result_text.yview)
+        scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+        self.result_text.configure(yscrollcommand=scrollbar.set)
 
         self.close_button = ttk.Button(self.main_frame, text="Close", command=self.on_closing)
-        self.close_button.pack(pady=10)
+        self.close_button.pack(pady=(10, 0))
+
+    def search(self):
+        # 여기에 검색 로직을 구현합니다
+        query = self.query_entry.get()
+        
+        # 임시 결과 (실제 검색 결과로 대체해야 함)
+        result = f"Query: {query}\n\nSearch results will be displayed here."
+        
+        # 결과 텍스트 위젯 업데이트
+        self.result_text.config(state="normal")
+        self.result_text.delete(1.0, tk.END)
+        self.result_text.insert(tk.END, result)
+        self.result_text.config(state="disabled")
 
     def on_closing(self):
         update_module_config(self.config, 'vdb_retriever', self.window)

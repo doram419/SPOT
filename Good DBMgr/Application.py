@@ -51,6 +51,12 @@ class Application:
         """
         self.open_module('api_key', ApiKey)
 
+    def open_vdb_merge(self):
+        """
+        vdb 병합툴을 여는 항목
+        """
+        self.open_module('vdb_merge', VdbMergeModule)
+
     def open_module(self, module_name, ModuleClass):
         if module_name not in self.modules or not self.modules[module_name].window.winfo_exists():
             self.modules[module_name] = ModuleClass(self.root, self.config)
@@ -131,6 +137,9 @@ class Application:
 
         self.retrieve_button = ttk.Button(self.button_frame, text="검색하기", command=self.open_vdb_retriever)
         self.retrieve_button.grid(row=0, column=2, padx=10, pady=10)
+
+        self.retrieve_button = ttk.Button(self.button_frame, text="병합하기", command=self.open_vdb_merge)
+        self.retrieve_button.grid(row=0, column=3, padx=10, pady=10)
         
         self.exit_button = ttk.Button(self.frame, text="종료", command=self.exit_application)
         self.exit_button.pack(pady=10)
