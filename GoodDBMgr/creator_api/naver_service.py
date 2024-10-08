@@ -1,6 +1,6 @@
+import re
 import requests
 from urllib import parse
-from typing import List
 from bs4 import BeautifulSoup
 from .datas.naver_data import NaverData
 from .api_key import get_key
@@ -70,7 +70,10 @@ class NaverService():
         # iframe이 가리키는 URL에 대해 별도로 요청
         if iframe_src != None:
             iframe_response_url = naver_blog_url + iframe_src
-            iframe_response = requests.get(iframe_response_url)
+            headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+            }
+            iframe_response = requests.get(iframe_response_url, headers=headers)
             iframe_soup = BeautifulSoup(iframe_response.text, 'html.parser')
             
             # class="se-main-container"를 가진 <div> 태그 찾기
@@ -83,14 +86,34 @@ class NaverService():
                 img_tags = div_container.find_all('img', class_ ='se-image-resource')
                 ocr_results = []
                 for img_tag in img_tags:
-                    img_url = img_tag.get('src') or img_tag.get('data-lazy-src')
-                    if img_url:
-                        # 이미지 URL을 이용해서 OCR 수행하기
+                    # data-lazy-src가 고화질을 가르키고 있음 우선적으로 사용 없으면 src 사용
+                    img_url = img_tag.get('data-lazy-src') or img_tag.get('src')
+                    if 'type=' in img_url:
+                         img_url = re.sub(r'type=[^&]*', 'type=w773', img_url)
+                    else:
+                        img_url = img_url
+
+                    print(f"최종 이미지 URL: {img_url}")
+
+                    # User-Agent 헤더를 포함하여 이미지 요청
+                    headers = {
+                        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+                        "Referer": blog_url  # Referer 추가
+                    }
+                    response = requests.get(img_url, headers=headers)
+
+                    if response.status_code == 200:
+                        print(f"이미지 크기: {len(response.content)} bytes")
+
+                         # 이미지 URL을 이용해서 OCR 수행하기
                         ocr_text = perform_ocr_from_url(img_url)
                         if ocr_text:
                             ocr_results.append(f"[OCR 결과 시작] {ocr_text} [OCR 결과 끝]")
                             # OCR 결과를 출력하여 확인
                             print(f"OCR 결과: {ocr_text}")
+
+                    else:
+                        print(f"이미지 다운로드 실패: {response.status_code}")
 
                 # OCR 결과를 추가하기
                 if ocr_results:
