@@ -1,10 +1,12 @@
-import re
+import os
 import requests
 from urllib import parse
 from bs4 import BeautifulSoup
 from .datas.naver_data import NaverData
 from .api_key import get_key
 from .ocr_service import perform_ocr_from_url
+
+os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
 
 class NaverService():
     def __init__(self) -> None:
@@ -82,58 +84,38 @@ class NaverService():
             if div_container:
                 refined_content = div_container.text.replace('\n', ' ')
 
-                # 이미지 태그 찾기
-                img_tags = div_container.find_all('img', class_ ='se-image-resource')
-                ocr_results = []
-                for img_tag in img_tags:
-                    # data-lazy-src가 고화질을 가르키고 있음 우선적으로 사용 없으면 src 사용
-                    img_url = img_tag.get('data-lazy-src') or img_tag.get('src')
-                    if 'type=' in img_url:
-                         img_url = re.sub(r'type=[^&]*', 'type=w773', img_url)
-                    else:
-                        img_url = img_url
-
-                    print(f"최종 이미지 URL: {img_url}")
-
-                    # User-Agent 헤더를 포함하여 이미지 요청
-                    headers = {
-                        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
-                        "Referer": blog_url  # Referer 추가
-                    }
-                    response = requests.get(img_url, headers=headers)
-
-                    if response.status_code == 200:
-                        print(f"이미지 크기: {len(response.content)} bytes")
-
-                         # 이미지 URL을 이용해서 OCR 수행하기
-                        ocr_text = perform_ocr_from_url(img_url)
-                        if ocr_text:
-                            ocr_results.append(f"[OCR 결과 시작] {ocr_text} [OCR 결과 끝]")
-                            # OCR 결과를 출력하여 확인
-                            print(f"OCR 결과: {ocr_text}")
-
-                    else:
-                        print(f"이미지 다운로드 실패: {response.status_code}")
-
-                # OCR 결과를 추가하기
+                # OCR 기능 추가
+                ocr_results = self.perform_ocr_on_images(div_container, blog_url)
                 if ocr_results:
                     refined_content += " " + " ".join(ocr_results)
-            
-            # 네이버 블로그에 내장된 지도에서 이름 가져오기
-            title = iframe_soup.find('strong', class_='se-map-title')
-            refined_title = str()
-            if title:
-                refined_title = title.text
-            
-            # 네이버 블로그에 내장된 지도에서 주소 가져오기
-            address = iframe_soup.find('p', class_='se-map-address')
-            refined_address = str()
-            if address:
-                refined_address = address.text
 
-            return NaverData(title=refined_title, address=refined_address, content=refined_content, link=blog_url)
+            data = NaverData(content=refined_content, link=blog_url)
+            return data
         
         return None
+    
+    def perform_ocr_on_images(self, div_container, blog_url):
+        ocr_results = []
+        img_tags = div_container.find_all('img', class_='se-image-resource')
+        
+        for img_tag in img_tags:
+            img_url = img_tag.get('data-lazy-src') or img_tag.get('src')
+            if img_url:
+                headers = {
+                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+                    "Referer": blog_url
+                }
+                response = requests.get(img_url, headers=headers)
+                
+                if response.status_code == 200:
+                    ocr_text = perform_ocr_from_url(img_url)
+                    if ocr_text:
+                        ocr_results.append(f"[OCR 결과] {ocr_text}")
+                        print(f"OCR 결과: {ocr_text}")
+                else:
+                    print(f"이미지 다운로드 실패: {response.status_code}")
+
+        return ocr_results
     
      # 여기에서 테스트용 블로그 URL로 데이터를 추출하는 함수를 추가
     def test_make_naver_data(self, blog_url: str):
@@ -142,9 +124,7 @@ class NaverService():
         """
         naver_data = self.make_naver_data(blog_url=blog_url)
         if naver_data:
-            print("블로그 제목:", naver_data.title)
-            print("블로그 주소:", naver_data.address)
-            print("블로그 내용:", naver_data.content)
+            print("블로그 내용:", naver_data.content[:200] + "...")
             print("=" * 40)
         else:
             print("데이터 추출 실패")
