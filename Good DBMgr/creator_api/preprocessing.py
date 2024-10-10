@@ -34,17 +34,16 @@ class PreprocessingModule:
         self.update_embedding_versions()
 
         # 요약 모델 선택
-        ttk.Label(self.main_frame, text="요약 모델:").grid(row=1, column=0, padx=(0,5), pady=5, sticky='e')
+        ttk.Label(self.main_frame, text="요약 모델 (미지원):").grid(row=1, column=0, padx=(0,5), pady=5, sticky='e')
         self.summary_model_type = tk.StringVar()
         self.summary_type_dropdown = ttk.Combobox(self.main_frame, textvariable=self.summary_model_type, 
-                                                  values=SUMMARY_MODEL_TYPES, state="readonly", width=15)
+                                                  values=SUMMARY_MODEL_TYPES, state="disabled", width=15)
         self.summary_type_dropdown.grid(row=1, column=1, padx=(0,5), pady=5, sticky='w')
         self.summary_type_dropdown.set(SUMMARY_MODEL_TYPES[0])
-        self.summary_type_dropdown.bind("<<ComboboxSelected>>", self.update_summary_versions)
 
         self.summary_model_version = tk.StringVar()
         self.summary_version_dropdown = ttk.Combobox(self.main_frame, textvariable=self.summary_model_version, 
-                                                     state="readonly", width=20)
+                                                     state="disabled", width=20)
         self.summary_version_dropdown.grid(row=1, column=2, padx=(0,15), pady=5, sticky='w')
         self.update_summary_versions()
 

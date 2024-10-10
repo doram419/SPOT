@@ -49,13 +49,13 @@
     },
     "application": {
         "width": 600,
-        "height": 765,
-        "x": 156,
-        "y": 156
+        "height": 357,
+        "x": 130,
+        "y": 130
     },
     "crawling": {
         "region": "강남역",
-        "keyword": "피자",
+        "keyword": "마라탕",
         "mode": "테스트 모드"
     }
 }

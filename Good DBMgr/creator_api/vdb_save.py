@@ -13,6 +13,8 @@ class VdbSaveModule:
         self.parent = parent
         self.status_module = status_module
         self.preprocessed_data = None
+        self.last_id = 0
+        self.id_file_path = "./Good DBMgr/vdb_data/last_id.json"
         self.create_widgets()
 
     def create_widgets(self):
@@ -40,6 +42,25 @@ class VdbSaveModule:
         self.preprocessed_data = data
         self.status_module.update_status("전처리된 데이터 수신 완료")
 
+    def load_last_id(self):
+        if os.path.exists(self.id_file_path):
+            with open(self.id_file_path, 'r') as f:
+                data = json.load(f)
+                self.last_id = data.get('last_id', 0)
+        else:
+            self.last_id = 0
+
+    def save_last_id(self):
+        """
+        vdb 데이터 아이디를 불러오는 함수
+        """
+        with open(self.id_file_path, 'w') as f:
+            json.dump({'last_id': self.last_id}, f)
+
+    def get_next_id(self):
+        self.last_id += 1
+        return self.last_id
+
     async def save_to_vdb(self):
         """
         vdb에 저장하는 파일
@@ -56,11 +77,17 @@ class VdbSaveModule:
         # 저장 경로가 존재하지 않으면 생성
         os.makedirs(save_path, exist_ok=True)
 
+        # 마지막 ID 로드
+        self.load_last_id()
+
         if vdb_type == "Faiss":
             success = await self.save_to_faiss(save_path)
         else:
             self.status_module.update_status(f"{vdb_type} VDB 저장은 아직 구현되지 않았습니다.")
             return False
+
+        # 마지막 ID 저장
+        self.save_last_id()
 
         if success:
             self.status_module.update_status(f"{vdb_type} VDB 저장 완료")
@@ -79,13 +106,14 @@ class VdbSaveModule:
                 metadata_file=os.path.join(save_path, "spot_metadata.pkl")
             )
 
-            for data_id, data in enumerate(self.preprocessed_data):
+            for data in self.preprocessed_data:
+                data_id = self.get_next_id()
                 base_meta = {
                     "data_id": data_id,
                     "name": data.name,
                     "address": data.address
                 }
-
+                
                 # Google 데이터 처리
                 for i, google_item in enumerate(data.vectorized_json):
                     vector_store.add_to_index(
