@@ -41,7 +41,6 @@ class VdbCreatorModule:
         self.main_frame.columnconfigure(0, weight=1)
         self.main_frame.rowconfigure(1, weight=1)
         self.main_frame.rowconfigure(2, weight=0)
-        self.main_frame.rowconfigure(3, weight=0)
 
         # 상단 프레임
         top_frame = ttk.Frame(self.main_frame)
@@ -55,13 +54,17 @@ class VdbCreatorModule:
         self.create_vdb_button = ttk.Button(top_frame, text="VDB 생성하기", command=self.start_vdb_creation)
         self.create_vdb_button.pack(side=tk.LEFT)
 
+        # PanedWindow 생성
+        self.paned_window = ttk.PanedWindow(self.main_frame, orient=tk.VERTICAL)
+        self.paned_window.grid(row=1, column=0, sticky='nsew')
+
         # 탭 컨트롤 생성
-        self.tab_control = ttk.Notebook(self.main_frame)
-        self.tab_control.grid(row=1, column=0, sticky='nsew')
+        self.tab_control = ttk.Notebook(self.paned_window)
+        self.paned_window.add(self.tab_control, weight=3)
         
         # 상태 모듈 추가
-        status_frame = ttk.Frame(self.main_frame)
-        status_frame.grid(row=2, column=0, pady=10, sticky='nsew')
+        status_frame = ttk.Frame(self.paned_window)
+        self.paned_window.add(status_frame, weight=1)
         self.status_module = StatusModule(status_frame)
 
         # 크롤링 탭

@@ -1,17 +1,17 @@
 {
     "width": 600,
-    "height": 576,
-    "x": 467,
-    "y": 98,
+    "height": 596,
+    "x": 104,
+    "y": 104,
     "font_family": "Verdana",
     "font_size": 10,
     "theme": "scidgrey",
     "button_style": "default",
     "vdb_creator": {
         "width": 600,
-        "height": 506,
-        "x": 876,
-        "y": 176
+        "height": 653,
+        "x": 730,
+        "y": 132
     },
     "vdb_selector": {
         "width": 400,

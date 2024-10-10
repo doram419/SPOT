@@ -11,7 +11,7 @@ from configuration import load_config, save_config, update_module_config
 class Application:
     def __init__(self, root):   
         self.root = root
-        self.root.title("Good DB Mgr (alpha ver1.01)")
+        self.root.title("Good DB Mgr (alpha ver1.02)")
 
         self.config = load_config()
         self.apply_settings(self.config)

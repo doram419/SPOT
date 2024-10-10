@@ -49,8 +49,6 @@ class CrawlingModule:
             total_results = len(results)
             
             for i, result in enumerate(results):
-                progress = int((i + 1) / total_results * 100)
-                
                 status_message = f"처리 중: {result.name} ({i+1}/{total_results})"
                 self.status_module.update_status(status_message)
 
