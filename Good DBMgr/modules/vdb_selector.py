@@ -10,7 +10,7 @@ class VdbSelectorModule:
         self.parent = parent
         self.config = config
         self.window = tk.Toplevel(parent)
-        self.window.title("VDB Selector")
+        self.window.title("VDB 출력하기")
         
         # 저장된 설정 적용
         window_config = config.get('vdb_selector', {})

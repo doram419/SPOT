@@ -131,7 +131,7 @@ class Application:
         self.create_button = ttk.Button(self.button_frame, text="생성하기", command=self.open_vdb_creator)
         self.create_button.grid(row=0, column=0, padx=10, pady=10)
 
-        self.select_button = ttk.Button(self.button_frame, text="조회하기", command=self.open_vdb_selector)
+        self.select_button = ttk.Button(self.button_frame, text="출력하기", command=self.open_vdb_selector)
         self.select_button.grid(row=0, column=1, padx=10, pady=10)
 
         self.retrieve_button = ttk.Button(self.button_frame, text="검색하기", command=self.open_vdb_retriever)
