@@ -1,8 +1,8 @@
 {
     "width": 600,
-    "height": 596,
-    "x": 104,
-    "y": 104,
+    "height": 366,
+    "x": 816,
+    "y": 215,
     "font_family": "Verdana",
     "font_size": 10,
     "theme": "scidgrey",
@@ -10,8 +10,8 @@
     "vdb_creator": {
         "width": 600,
         "height": 653,
-        "x": 730,
-        "y": 132
+        "x": 651,
+        "y": 46
     },
     "vdb_selector": {
         "width": 400,
@@ -42,5 +42,16 @@
         "height": 220,
         "x": 91,
         "y": 151
+    },
+    "application": {
+        "width": 600,
+        "height": 480,
+        "x": 104,
+        "y": 104
+    },
+    "crawling": {
+        "region": "강남역",
+        "keyword": "피자",
+        "mode": "테스트 모드"
     }
 }

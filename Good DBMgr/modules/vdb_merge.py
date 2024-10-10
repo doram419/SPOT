@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
-from configuration import update_module_config
+from configuration import save_module_config, load_module_config
 
 class VdbMergeModule:
     def __init__(self, parent, config):
@@ -10,7 +10,7 @@ class VdbMergeModule:
         self.window.title("VDB Merge")
         
         # 저장된 설정 적용
-        window_config = config.get('vdb_merge', {})
+        window_config = load_module_config('vdb_merge')
         self.window.geometry(f"{window_config.get('width', 600)}x{window_config.get('height', 500)}" \
                      f"+{window_config.get('x', 200)}+{window_config.get('y', 200)}")
 
@@ -35,5 +35,11 @@ class VdbMergeModule:
         self.close_button.pack(pady=10)
 
     def on_closing(self):
-        update_module_config(self.config, 'vdb_merge', self.window)
+        window_config = {
+            'width': self.window.winfo_width(),
+            'height': self.window.winfo_height(),
+            'x': self.window.winfo_x(),
+            'y': self.window.winfo_y()
+        }
+        save_module_config('vdb_merge', window_config)
         self.window.destroy()
