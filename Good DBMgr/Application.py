@@ -11,7 +11,7 @@ from configuration import load_config, save_config, update_module_config
 class Application:
     def __init__(self, root):   
         self.root = root
-        self.root.title("Good DB Mgr (alpha ver1.0)")
+        self.root.title("Good DB Mgr (alpha ver1.01)")
 
         self.config = load_config()
         self.apply_settings(self.config)
@@ -35,7 +35,7 @@ class Application:
 
     def open_vdb_selector(self):
         """
-        vdb 조회하는 창을 띄워주는 함수
+        vdb 메타 데이터를 출력하는 창을 띄워주는 함수
         """
         self.open_module('vdb_selector', VdbSelectorModule)
 
@@ -132,7 +132,7 @@ class Application:
         self.create_button = ttk.Button(self.button_frame, text="생성하기", command=self.open_vdb_creator)
         self.create_button.grid(row=0, column=0, padx=10, pady=10)
 
-        self.select_button = ttk.Button(self.button_frame, text="조회하기", command=self.open_vdb_selector)
+        self.select_button = ttk.Button(self.button_frame, text="출력하기", command=self.open_vdb_selector)
         self.select_button.grid(row=0, column=1, padx=10, pady=10)
 
         self.retrieve_button = ttk.Button(self.button_frame, text="검색하기", command=self.open_vdb_retriever)
