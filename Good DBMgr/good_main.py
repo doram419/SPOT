@@ -1,5 +1,5 @@
 """
-웹 크롤링을 통해서 Faiss DB를 만드는 프로그램
+웹 크롤링을 통해서 Faiss DB를 만드는 프로그램 
 """
 import tkinter as tk
 from ttkthemes import ThemedTk
