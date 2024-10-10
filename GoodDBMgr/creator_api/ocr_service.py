@@ -16,11 +16,13 @@ def preprocess_image(image: Image.Image) -> Optional[Image.Image]:
     """이미지 전처리 함수"""
     try:
         print("전처리 Step 1: 이미지 해상도 확대")
-        image = image.resize((image.width * 2, image.height * 1), Image.LANCZOS)
+        image = image.resize((image.width * 2, image.height * 2), Image.LANCZOS)
 
         print("전처리 Step 2: 대비 조정")
+        enhancer = ImageEnhance.Brightness(image)
+        image = enhancer.enhance(1.2)
         enhancer = ImageEnhance.Contrast(image)
-        image = enhancer.enhance(2)
+        image = enhancer.enhance(1.5)
 
         print("전처리 Step 3: 샤프닝 필터 적용")
         image = image.filter(ImageFilter.SHARPEN)
