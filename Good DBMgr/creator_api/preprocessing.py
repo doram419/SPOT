@@ -6,12 +6,14 @@ from langchain.schema import Document
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 import json
 from .embeddings import EmbeddingModule
+import asyncio
 
 class PreprocessingModule:
     def __init__(self, parent, status_module):
         self.parent = parent
         self.status_module = status_module
         self.create_widgets()
+        self.embedding = None
 
     def create_widgets(self):
         self.main_frame = ttk.Frame(self.parent, padding="10")
@@ -84,28 +86,42 @@ class PreprocessingModule:
 
         self.status_module.update_status("전처리 시작")
 
-        embedding = EmbeddingModule(model_name=embedding_type, version=embedding_version)
+        self.embedding = EmbeddingModule(model_name=embedding_type, version=embedding_version)
         
         processed_results = []
-        for i, google_data in enumerate(crawling_result):
-            processed_google_data = await self.process_google_data(google_data, embedding, chunk_size, overlap)
-            self.status_module.update_status(f"({i+1}/{len(crawling_result)}) Google 데이터 전처리 완료: {google_data.name}")
+        for google_data in crawling_result:
+            processed_google_data = await self.process_google_data(google_data, chunk_size, overlap)
             processed_results.append(processed_google_data)
         
         self.status_module.update_status("전처리 완료")
         return processed_results
 
-    async def process_google_data(self, google_data, embedding, chunk_size, overlap):
-        google_data.google_json = self.do_chucking(google_data.google_json, chunk_size, overlap) 
-        google_data.vectorized_json = [embedding.get_text_embedding(chunk) for chunk in google_data.google_json]
+    async def process_google_data(self,google_data, chunk_size, overlap):
+        # 텍스트 청크 분할
+        google_data.google_json = self.do_chucking(google_data.google_json, chunk_size, overlap)
         
+        # Google 데이터 임베딩 (배치 임베딩 사용)
+        google_data.vectorized_json = self.embedding.get_text_embeddings_batch(google_data.google_json)
+        
+        # Naver 블로그 데이터 임베딩 (비동기 처리)
+        tasks = []
         for naver_data in google_data.blog_datas:
             if naver_data.content is not None:
                 naver_data.content = self.do_chucking(naver_data.content, chunk_size, overlap)
-                naver_data.vectorized_content = [embedding.get_text_embedding(chunk) for chunk in naver_data.content]
+                tasks.append(self.embedding.get_text_embeddings_async(naver_data.content))
             else:
                 self.status_module.update_status(f"경고: Naver 데이터 '{google_data.name}'의 내용이 없습니다.")
-
+        
+        # 모든 Naver 데이터 임베딩 완료 대기
+        naver_results = await asyncio.gather(*tasks, return_exceptions=True)
+        for naver_data, vectorized_content in zip(google_data.blog_datas, naver_results):
+            if naver_data.content is not None:
+                if isinstance(vectorized_content, Exception):
+                    self.status_module.update_status(f"경고: Naver 데이터 '{google_data.name}' 임베딩 중 오류 발생: {vectorized_content}")
+                else:
+                    naver_data.vectorized_content = vectorized_content
+        
+        self.status_module.update_status(f"Google 데이터 처리 완료: {google_data.name}")
         return google_data
         
     def do_chucking(self, data, size, overlap) -> list:
