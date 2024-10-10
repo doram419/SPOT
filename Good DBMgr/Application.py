@@ -3,7 +3,7 @@ from tkinter import ttk, Menu
 from modules.settings import SettingsWindow
 from creator_api.vdb_creator import VdbCreatorModule
 from creator_api.api_key import ApiKey
-from creator_api.vdb_retriever import VdbRetrieverModule
+from modules.vdb_retriever import VdbRetrieverModule
 from modules.vdb_selector import VdbSelectorModule
 from modules.vdb_merge import VdbMergeModule
 from configuration import load_config, save_config, load_module_config, save_module_config
