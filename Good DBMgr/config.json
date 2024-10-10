@@ -21,12 +21,12 @@
     },
     "vdb_retriever": {
         "width": 833,
-        "height": 375,
-        "x": 915,
-        "y": 627
+        "height": 661,
+        "x": 422,
+        "y": 310
     },
     "vdb_merge": {
-        "width": 400,
+        "width": 713,
         "height": 300,
         "x": 250,
         "y": 250
@@ -42,5 +42,10 @@
         "height": 220,
         "x": 91,
         "y": 151
+    },
+    "crawling": {
+        "region": "강남역",
+        "keyword": "라멘",
+        "mode": "테스트 모드"
     }
 }

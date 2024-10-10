@@ -12,7 +12,7 @@ OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 openai.api_key = OPENAI_API_KEY
 
 # 프롬프트 생성 함수
-def generate_gpt_response(name: str, desc: str):
+def generate_gpt_response(name: str, summary: str):
     """
     OpenAI를 통해 요약된 정보를 반환하는 함수.
     중복된 정보 없이 새로운 정보를 생성하는 것을 목표로 함.
@@ -24,13 +24,13 @@ def generate_gpt_response(name: str, desc: str):
             messages=[
                 {"role": "system", "content": (
                     "당신은 한국의 맛집 전문가입니다. "
-                    "사용자가 입력한 검색어에 맞는 결과의 블로그를 요약합니다.  "
+                    "사용자가 입력한 쿼리를 바탕으로 핵심적인 요약을 제공하는 것이 목표입니다."
                     "요약은 사용자가 가게를 빠르게 이해할 수 있도록 간결하고 명확해야 합니다."
                     "존댓말을 써서 예의바르고 친절한 말투로 답변해주세요."
                 )},
                 {"role": "user", "content": f"""
                 가게 이름: {name}\n
-                가게 설명: {desc}\n
+                가게 설명: {summary}\n
                 아래 항목을 기준으로 요약을 작성하세요:\n
                 대표 메뉴: 가게의 인기 메뉴를 강조하세요.\n
                 위치: 가게의 위치를 짧게 요약하세요 (동네, 도시).\n
