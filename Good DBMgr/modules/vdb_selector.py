@@ -10,7 +10,7 @@ class VdbSelectorModule:
         self.parent = parent
         self.config = config
         self.window = tk.Toplevel(parent)
-        self.window.title("VDB Selector")
+        self.window.title("VDB 출력하기")
         
         # 저장된 설정 적용
         window_config = config.get('vdb_selector', {})
@@ -55,9 +55,9 @@ class VdbSelectorModule:
         self.format_frame.pack(fill=tk.X, pady=5)
         self.format_label = ttk.Label(self.format_frame, text="형식:")
         self.format_label.pack(side=tk.LEFT, padx=(0, 5))
-        self.format_combobox = ttk.Combobox(self.format_frame, values=["CSV", "JSON", "PKL"])
+        self.format_combobox = ttk.Combobox(self.format_frame, values=["CSV", "JSON", "TXT"])
         self.format_combobox.pack(side=tk.LEFT, expand=True, fill=tk.X)
-        self.format_combobox.set("PKL")  # 기본값 설정
+        self.format_combobox.set("CSV")  # 기본값 설정
 
         # 출력 버튼
         self.output_button = ttk.Button(self.main_frame, text="출력", command=self.output)
@@ -84,16 +84,19 @@ class VdbSelectorModule:
             full_path = os.path.join(path, file_name)
             
             if format == 'CSV':
-                with open(full_path, 'w', newline='') as f:
+                with open(full_path, 'w', newline='', encoding='utf-8') as f:
                     writer = csv.writer(f)
                     for i, d in enumerate(data):
                         writer.writerow([i, d])
             elif format == 'JSON':
-                with open(full_path, 'w') as f:
-                    json.dump(data, f, indent=2)
-            elif format == 'PKL':
-                with open(full_path, 'wb') as f:
-                    pickle.dump(data, f)
+                with open(full_path, 'w', encoding='utf-8') as f:
+                    json.dump(data, f, indent=2, ensure_ascii=False)
+            elif format == 'TXT':
+                with open(full_path, 'w', encoding='utf-8') as f:
+                    for i, d in enumerate(data):
+                        word = f"{i} : {d}\n"
+                        f.write(word)
+                print(f"메타데이터를 {full_path}로 저장했습니다")
             else:
                 raise ValueError(f"Unsupported format: {format}")
             

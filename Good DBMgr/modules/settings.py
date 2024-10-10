@@ -1,13 +1,12 @@
 import tkinter as tk
 from tkinter import ttk
-from configuration import update_module_config
-from ttkthemes import ThemedTk
+from configuration import save_module_config, load_module_config
 
 class SettingsWindow:
     def __init__(self, parent, config):
         self.parent = parent
         self.config = config
-        self.settings = config  
+        self.settings = load_module_config('settings')
 
         self.window = tk.Toplevel(parent)
         self.window.title("설정")
@@ -60,10 +59,18 @@ class SettingsWindow:
             "theme": self.theme_combo.get(),
             "button_style": self.button_style_combo.get()
         }
-        self.config.update(new_settings)
+        save_module_config('settings', new_settings) 
         self.parent.event_generate("<<SettingsChanged>>")  
         self.on_closing()
 
     def on_closing(self):
-        update_module_config(self.config, 'settings', self.window)
+        window_config = {
+            'width': self.window.winfo_width(),
+            'height': self.window.winfo_height(),
+            'x': self.window.winfo_x(),
+            'y': self.window.winfo_y()
+        }
+        current_settings = load_module_config('settings')
+        current_settings.update(window_config)
+        save_module_config('settings', current_settings)  # 변경된 부분
         self.window.destroy()

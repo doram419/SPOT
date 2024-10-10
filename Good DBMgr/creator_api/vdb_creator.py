@@ -5,7 +5,7 @@ from tkinter import ttk
 from creator_api.crawling import CrawlingModule
 from creator_api.preprocessing import PreprocessingModule
 from creator_api.vdb_save import VdbSaveModule
-from configuration import update_module_config
+from configuration import load_module_config, save_module_config
 from .status_module import StatusModule
 from .datas.constants import GATHER_MODE
 
@@ -17,7 +17,7 @@ class VdbCreatorModule:
         self.window.title("VDB Creator")
         
         # 저장된 설정 적용
-        window_config = config.get('vdb_creator', {})
+        window_config = load_module_config('vdb_creator')
         self.window.geometry(f"{window_config.get('width', 600)}x{window_config.get('height', 500)}" \
                      f"+{window_config.get('x', 150)}+{window_config.get('y', 150)}")
 
@@ -41,7 +41,6 @@ class VdbCreatorModule:
         self.main_frame.columnconfigure(0, weight=1)
         self.main_frame.rowconfigure(1, weight=1)
         self.main_frame.rowconfigure(2, weight=0)
-        self.main_frame.rowconfigure(3, weight=0)
 
         # 상단 프레임
         top_frame = ttk.Frame(self.main_frame)
@@ -55,13 +54,17 @@ class VdbCreatorModule:
         self.create_vdb_button = ttk.Button(top_frame, text="VDB 생성하기", command=self.start_vdb_creation)
         self.create_vdb_button.pack(side=tk.LEFT)
 
+        # PanedWindow 생성
+        self.paned_window = ttk.PanedWindow(self.main_frame, orient=tk.VERTICAL)
+        self.paned_window.grid(row=1, column=0, sticky='nsew')
+
         # 탭 컨트롤 생성
-        self.tab_control = ttk.Notebook(self.main_frame)
-        self.tab_control.grid(row=1, column=0, sticky='nsew')
+        self.tab_control = ttk.Notebook(self.paned_window)
+        self.paned_window.add(self.tab_control, weight=3)
         
         # 상태 모듈 추가
-        status_frame = ttk.Frame(self.main_frame)
-        status_frame.grid(row=2, column=0, pady=10, sticky='nsew')
+        status_frame = ttk.Frame(self.paned_window)
+        self.paned_window.add(status_frame, weight=1)
         self.status_module = StatusModule(status_frame)
 
         # 크롤링 탭
@@ -94,7 +97,7 @@ class VdbCreatorModule:
         # 종료 버튼 추가
         self.close_button = ttk.Button(self.main_frame, text="Close", command=self.on_closing)
         self.close_button.grid(row=3, column=0, pady=10, sticky='se')
-    
+
     def start_vdb_creation(self):
         self.window.after(0, lambda: self.create_vdb_button.config(state='disabled'))
         asyncio.run_coroutine_threadsafe(self.async_vdb_creation(), self.loop)
@@ -115,6 +118,14 @@ class VdbCreatorModule:
             keyword = self.crawling_module.keyword_entry.get()
             region = self.crawling_module.region_entry.get()
             mode = self.crawling_module.crawling_mode.get()
+
+            # 현재 크롤링 설정 저장
+            crawling_config = {
+                'keyword': keyword,
+                'region': region,
+                'mode': mode
+            }
+            save_module_config('crawling', crawling_config)
 
             if len(keyword) > 1 and len(region) > 1:
                 self.crawling_results = await self.crawling_module.start_crawling(keyword, region, mode)
@@ -145,7 +156,14 @@ class VdbCreatorModule:
             self.window.after(0, lambda: self.create_vdb_button.config(state='normal'))
 
     def on_closing(self):
-        update_module_config(self.config, 'vdb_creator', self.window)
+        # 현재 설정 저장
+        window_config = {
+            'width': self.window.winfo_width(),
+            'height': self.window.winfo_height(),
+            'x': self.window.winfo_x(),
+            'y': self.window.winfo_y()
+        }
+        save_module_config('vdb_creator', window_config)
         self.loop.call_soon_threadsafe(self.loop.stop)
         self.window.destroy()
 

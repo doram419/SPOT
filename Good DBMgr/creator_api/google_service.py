@@ -46,7 +46,6 @@ class GoogleService():
 
                 results.append(Data(name, address, google_json, blog_datas))
             
-            print(self.mode)
             if self.mode == TEST_MODE:
                 break  # TEST_MODE에서는 첫 페이지만 크롤링
 

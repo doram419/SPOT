@@ -13,3 +13,10 @@
 
 - vdb 초기화 방법
 삭제 : spot_index.bin, spot_metadata.pkl, vdbLog.txt, log_number.txt
+
+<Good DBMgr 실행법>
+- 실행 위치 바꾸기
+예) cd "C:/Users/201-17/Documents/GitHub/SPOT/Good DBMgr"
+
+- 실행 코드
+python -m good_main
