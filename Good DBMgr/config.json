@@ -40,7 +40,7 @@
     "settings": {
         "font_family": "Arial",
         "font_size": 12,
-        "theme": "yaru",
+        "theme": "scid",
         "button_style": "default",
         "width": 304,
         "height": 220,
@@ -49,13 +49,19 @@
     },
     "application": {
         "width": 600,
-        "height": 357,
-        "x": 130,
-        "y": 130
+        "height": 537,
+        "x": 156,
+        "y": 156
     },
     "crawling": {
         "region": "강남역",
-        "keyword": "마라탕",
-        "mode": "테스트 모드"
+        "keyword": "짜장면",
+        "mode": "테스트 모드",
+        "recent_regions": [
+            "강남역"
+        ],
+        "recent_keywords": [
+            "짜장면"
+        ]
     }
 }
