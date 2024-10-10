@@ -1,17 +1,17 @@
 {
     "width": 600,
-    "height": 576,
-    "x": 467,
-    "y": 98,
+    "height": 366,
+    "x": 816,
+    "y": 215,
     "font_family": "Verdana",
     "font_size": 10,
     "theme": "scidgrey",
     "button_style": "default",
     "vdb_creator": {
         "width": 600,
-        "height": 506,
-        "x": 876,
-        "y": 176
+        "height": 653,
+        "x": 651,
+        "y": 46
     },
     "vdb_selector": {
         "width": 400,
@@ -21,15 +21,15 @@
     },
     "vdb_retriever": {
         "width": 833,
-        "height": 396,
-        "x": 872,
-        "y": 460
+        "height": 567,
+        "x": 434,
+        "y": 291
     },
     "vdb_merge": {
-        "width": 400,
-        "height": 300,
-        "x": 250,
-        "y": 250
+        "width": 655,
+        "height": 365,
+        "x": 919,
+        "y": 202
     },
     "api_key": {
         "width": 464,
@@ -42,5 +42,16 @@
         "height": 220,
         "x": 91,
         "y": 151
+    },
+    "application": {
+        "width": 600,
+        "height": 405,
+        "x": 234,
+        "y": 234
+    },
+    "crawling": {
+        "region": "강남역",
+        "keyword": "피자",
+        "mode": "테스트 모드"
     }
 }

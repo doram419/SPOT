@@ -64,13 +64,18 @@ def load_config():
             return {**default_config, **json.load(f)}
     return default_config
 
-def update_module_config(config, module_name, window):
+def save_module_config(module_name, config):
     """
-    특정 모듈의 설정을 업데이트하는 함수
+    특정 모듈의 설정을 저장하는 함수
     """
-    config[module_name] = {
-        "width": window.winfo_width(),
-        "height": window.winfo_height(),
-        "x": window.winfo_x(),
-        "y": window.winfo_y()
-    }
+    full_config = load_config()
+    full_config[module_name] = config
+    with open(CONFIG_FILE, "w", encoding='utf-8') as f:
+        json.dump(full_config, f, ensure_ascii=False, indent=4)
+
+def load_module_config(module_name):
+    """
+    특정 모듈의 설정을 불러오는 함수
+    """
+    full_config = load_config()
+    return full_config.get(module_name, {})

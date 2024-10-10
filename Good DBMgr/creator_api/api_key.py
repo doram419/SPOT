@@ -3,7 +3,7 @@ import tkinter as tk
 from tkinter import ttk
 from pathlib import Path
 from dotenv import dotenv_values
-from configuration import update_module_config
+from configuration import save_module_config, load_module_config 
 
 env_path = Path('.') / '.env'
 
@@ -27,8 +27,8 @@ class ApiKey():
         self.window.title("API키 관리")
         self.window.resizable(False, False)
 
-        # 저장된 설정 적용
-        window_config = config.get('api_key', {})
+         # 저장된 설정 적용
+        window_config = load_module_config('api_key') 
         self.window.geometry(f"{window_config.get('width', 500)}x{window_config.get('height', 400)}" \
                      f"+{window_config.get('x', 300)}+{window_config.get('y', 300)}")
 
@@ -122,5 +122,11 @@ class ApiKey():
         # 예: 새 창을 열어 키 입력 받기, 파일에 저장하기 등
 
     def on_closing(self):
-        update_module_config(self.config, 'api_key', self.window)
+        window_config = {
+            'width': self.window.winfo_width(),
+            'height': self.window.winfo_height(),
+            'x': self.window.winfo_x(),
+            'y': self.window.winfo_y()
+        }
+        save_module_config('api_key', window_config)  # 변경된 부분
         self.window.destroy()

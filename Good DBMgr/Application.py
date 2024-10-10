@@ -3,16 +3,15 @@ from tkinter import ttk, Menu
 from modules.settings import SettingsWindow
 from creator_api.vdb_creator import VdbCreatorModule
 from creator_api.api_key import ApiKey
-from creator_api.vdb_retriever import VdbRetrieverModule
+from modules.vdb_retriever import VdbRetrieverModule
 from modules.vdb_selector import VdbSelectorModule
 from modules.vdb_merge import VdbMergeModule
-from configuration import load_config, save_config, update_module_config
+from configuration import load_config, save_config, load_module_config, save_module_config
 
 class Application:
     def __init__(self, root):   
         self.root = root
-        self.root.title("Good DB Mgr (alpha ver1.1)")
-
+        self.root.title("Good DB Mgr (alpha ver1.12)")
         self.config = load_config()
         self.apply_settings(self.config)
         self.create_widgets()
@@ -132,7 +131,7 @@ class Application:
         self.create_button = ttk.Button(self.button_frame, text="생성하기", command=self.open_vdb_creator)
         self.create_button.grid(row=0, column=0, padx=10, pady=10)
 
-        self.select_button = ttk.Button(self.button_frame, text="조회하기", command=self.open_vdb_selector)
+        self.select_button = ttk.Button(self.button_frame, text="출력하기", command=self.open_vdb_selector)
         self.select_button.grid(row=0, column=1, padx=10, pady=10)
 
         self.retrieve_button = ttk.Button(self.button_frame, text="검색하기", command=self.open_vdb_retriever)
@@ -148,14 +147,21 @@ class Application:
         # 열려 있는 모든 모듈의 설정 저장
         for module_name, module in list(self.modules.items()):
             if module.window.winfo_exists():
-                update_module_config(self.config, module_name, module.window)
+                module.on_closing()
                 module.window.destroy()
 
         # 모든 자식 위젯 파괴
         for widget in self.root.winfo_children():
             widget.destroy()
 
-        save_config(self.root, self.config)
+        # 메인 애플리케이션 창 설정 저장
+        app_config = {
+            'width': self.root.winfo_width(),
+            'height': self.root.winfo_height(),
+            'x': self.root.winfo_x(),
+            'y': self.root.winfo_y()
+        }
+        save_module_config('application', app_config)
         
         # 루트 창에 종료 이벤트 발생
         self.root.event_generate("<<ApplicationExit>>")
@@ -164,6 +170,7 @@ class Application:
         self.root.quit()
         
     def run(self):
-        self.root.geometry(f"{self.config['width']}x{self.config['height']}+{self.config['x']}+{self.config['y']}")
+        app_config = load_module_config('application')
+        self.root.geometry(f"{app_config.get('width', 600)}x{app_config.get('height', 400)}+{app_config.get('x', 100)}+{app_config.get('y', 100)}")
         self.root.protocol("WM_DELETE_WINDOW", self.exit_application)
         self.root.mainloop()
