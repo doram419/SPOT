@@ -133,16 +133,9 @@ class VdbRetrieverModule:
                     if data_id not in seen_data_ids:
                         seen_data_ids.add(data_id)
                         
-                        result_str = f"Distance: {distance:.4f}, "
-                        result_str += f"Name: {metadata.get('name', 'N/A')}, "
-                        result_str += f"Address: {metadata.get('address', 'N/A')}, "
-                        
-                        if 'link' in metadata:
-                            result_str += f"Link: {metadata['link']}"
-                        elif 'content_type' in metadata and metadata['content_type'] == 'google':
-                            result_str += "Source: Google"
-                        else:
-                            result_str += "Link: N/A"
+                        result_str = f"Distance: {distance:.4f}\n"
+                        for key, value in metadata.items():
+                            result_str += f"{key}: {value}\n"
                         
                         results.append(result_str)
                         
@@ -160,7 +153,7 @@ class VdbRetrieverModule:
             self.result_text.config(state="normal")
             self.result_text.delete(1.0, tk.END)
             for i, result in enumerate(results, 1):
-                self.result_text.insert(tk.END, f"{i}. {result}\n\n")
+                self.result_text.insert(tk.END, f"{i}.\n{result}\n\n")
             self.result_text.config(state="disabled")
 
         except Exception as e:
