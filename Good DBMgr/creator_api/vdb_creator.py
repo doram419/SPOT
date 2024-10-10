@@ -67,7 +67,7 @@ class VdbCreatorModule:
         self.paned_window.add(status_frame, weight=1)
         self.status_module = StatusModule(status_frame)
 
-       # 크롤링 탭
+        # 크롤링 탭
         crawling_tab = ttk.Frame(self.tab_control)
         self.tab_control.add(crawling_tab, text='크롤링')
         
@@ -82,7 +82,8 @@ class VdbCreatorModule:
         self.tab_control.add(data_processing_tab, text='데이터 전처리')
 
         # 전처리 모듈의 위젯 추가 
-        self.preprocessing_module = PreprocessingModule(data_processing_tab, self.status_module)
+        preprocessing_config = self.window_config.get('preprocessing', {})
+        self.preprocessing_module = PreprocessingModule(data_processing_tab, self.status_module, preprocessing_config)
         processing_widget = self.preprocessing_module.get_widget()
         processing_widget.pack(fill=tk.BOTH, expand=True)
 
@@ -151,7 +152,8 @@ class VdbCreatorModule:
             'height': self.window.winfo_height(),
             'x': self.window.winfo_x(),
             'y': self.window.winfo_y(),
-            'crawling': self.crawling_module.get_config()
+            'crawling': self.crawling_module.get_config(),
+            'preprocessing': self.preprocessing_module.get_config()
         })
         save_module_config('vdb_creator', self.window_config)
         self.window.destroy()

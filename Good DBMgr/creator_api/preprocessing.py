@@ -9,11 +9,13 @@ from .embeddings import EmbeddingModule
 import asyncio
 
 class PreprocessingModule:
-    def __init__(self, parent, status_module):
+    def __init__(self, parent, status_module, config=None):
         self.parent = parent
         self.status_module = status_module
-        self.create_widgets()
+        self.config = config or {}
         self.embedding = None
+        self.create_widgets()
+        self.load_config()
 
     def create_widgets(self):
         self.main_frame = ttk.Frame(self.parent, padding="10")
@@ -33,7 +35,7 @@ class PreprocessingModule:
         self.embedding_version_dropdown.grid(row=0, column=2, padx=(0,15), pady=5, sticky='w')
         self.update_embedding_versions()
 
-        # 요약 모델 선택
+        # 요약 모델 선택 (미지원)
         ttk.Label(self.main_frame, text="요약 모델 (미지원):").grid(row=1, column=0, padx=(0,5), pady=5, sticky='e')
         self.summary_model_type = tk.StringVar()
         self.summary_type_dropdown = ttk.Combobox(self.main_frame, textvariable=self.summary_model_type, 
@@ -58,6 +60,23 @@ class PreprocessingModule:
         self.overlap = tk.StringVar(value="100")
         self.overlap_entry = ttk.Entry(self.main_frame, textvariable=self.overlap, width=10)
         self.overlap_entry.grid(row=3, column=1, padx=(0,15), pady=5, sticky='w')
+
+    def load_config(self):
+        self.embedding_model_type.set(self.config.get('embedding_model_type', EMBEDDING_MODEL_TYPES[0]))
+        self.update_embedding_versions()
+        self.embedding_model_version.set(
+            self.config.get('embedding_model_version', self.embedding_version_dropdown['values'][0] 
+                            if self.embedding_version_dropdown['values'] else ''))
+        self.chunk_size.set(self.config.get('chunk_size', "200"))
+        self.overlap.set(self.config.get('overlap', "100"))
+
+    def get_config(self):
+        return {
+            'embedding_model_type': self.embedding_model_type.get(),
+            'embedding_model_version': self.embedding_model_version.get(),
+            'chunk_size': self.chunk_size.get(),
+            'overlap': self.overlap.get()
+        }
 
     def update_embedding_versions(self, event=None):
         selected_type = self.embedding_model_type.get()
@@ -95,7 +114,7 @@ class PreprocessingModule:
         self.status_module.update_status("전처리 완료")
         return processed_results
 
-    async def process_google_data(self,google_data, chunk_size, overlap):
+    async def process_google_data(self, google_data, chunk_size, overlap):
         # 텍스트 청크 분할
         google_data.google_json = self.do_chucking(google_data.google_json, chunk_size, overlap)
         
