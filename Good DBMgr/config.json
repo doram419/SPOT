@@ -26,10 +26,10 @@
         "y": 90
     },
     "vdb_merge": {
-        "width": 400,
-        "height": 300,
-        "x": 250,
-        "y": 250
+        "width": 655,
+        "height": 365,
+        "x": 919,
+        "y": 202
     },
     "api_key": {
         "width": 464,
@@ -45,9 +45,9 @@
     },
     "application": {
         "width": 600,
-        "height": 325,
-        "x": 26,
-        "y": 26
+        "height": 405,
+        "x": 234,
+        "y": 234
     },
     "crawling": {
         "region": "강남역",
