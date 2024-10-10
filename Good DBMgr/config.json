@@ -22,14 +22,14 @@
     "vdb_retriever": {
         "width": 833,
         "height": 567,
-        "x": 434,
-        "y": 291
+        "x": 786,
+        "y": 102
     },
     "vdb_merge": {
         "width": 655,
         "height": 365,
-        "x": 919,
-        "y": 202
+        "x": 806,
+        "y": 187
     },
     "api_key": {
         "width": 464,
@@ -45,9 +45,9 @@
     },
     "application": {
         "width": 600,
-        "height": 405,
-        "x": 234,
-        "y": 234
+        "height": 465,
+        "x": 208,
+        "y": 208
     },
     "crawling": {
         "region": "강남역",

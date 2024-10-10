@@ -178,7 +178,7 @@ class VdbRetrieverModule:
             self.embedding = EmbeddingModule(model_name=embedding_type, version=embedding_version)
 
         try:
-            query_vector = self.embedding.get_text_embedding(query)
+            query_vector = self.embedding.get_text_embedding_sync(query)
             distances, indices = self.vector_store.search(query_vector, k * 2)
             
             results = []
