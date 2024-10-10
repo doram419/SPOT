@@ -87,8 +87,9 @@ class PreprocessingModule:
         embedding = EmbeddingModule(model_name=embedding_type, version=embedding_version)
         
         processed_results = []
-        for google_data in crawling_result:
+        for i, google_data in enumerate(crawling_result):
             processed_google_data = await self.process_google_data(google_data, embedding, chunk_size, overlap)
+            self.status_module.update_status(f"({i+1}/{len(crawling_result)}) Google 데이터 전처리 완료: {google_data.name}")
             processed_results.append(processed_google_data)
         
         self.status_module.update_status("전처리 완료")
@@ -105,7 +106,6 @@ class PreprocessingModule:
             else:
                 self.status_module.update_status(f"경고: Naver 데이터 '{google_data.name}'의 내용이 없습니다.")
 
-        self.status_module.update_status(f"Google 데이터 처리 완료: {google_data.name}")
         return google_data
         
     def do_chucking(self, data, size, overlap) -> list:
