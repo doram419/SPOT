@@ -11,7 +11,19 @@
         "width": 600,
         "height": 653,
         "x": 1018,
-        "y": 127
+        "y": 127,
+        "crawling": {
+            "region": "강남역",
+            "keyword": "순대국",
+            "mode": "테스트 모드(20)",
+            "recent_regions": [
+                "강남역"
+            ],
+            "recent_keywords": [
+                "순대국",
+                "파스타"
+            ]
+        }
     },
     "vdb_selector": {
         "width": 400,
@@ -49,7 +61,7 @@
     },
     "application": {
         "width": 600,
-        "height": 537,
+        "height": 617,
         "x": 156,
         "y": 156
     },
