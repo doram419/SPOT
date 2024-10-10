@@ -1,25 +1,32 @@
+import os
+import openai
 from dotenv import load_dotenv
-from app.config import OPENAI_API_KEY
-from langchain.schema import Document  
-from openai import OpenAI
 
-# OpenAI 클라이언트 초기화
-client = OpenAI(api_key=OPENAI_API_KEY)
+# .env 파일에서 환경 변수 로드
+load_dotenv()
 
-# 프롬프트
-def summarize_desc(name: str, desc):
+# OpenAI API 키 로드
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+
+# OpenAI API 키 설정
+openai.api_key = OPENAI_API_KEY
+
+# 프롬프트 생성 함수
+def generate_gpt_response(name: str, desc: str):
     """
     가게 이름과 설명을 바탕으로 OpenAI를 통해 요약된 정보를 반환하는 함수.
     중복된 정보 없이 새로운 정보를 생성하는 것을 목표로 함.
     """
     try:
-        response = client.chat.completions.create(
-            model="gpt-4o-mini",
+        # OpenAI ChatCompletion 호출
+        response = openai.ChatCompletion.create(
+            model="gpt-4o-mini",  # 사용할 모델 (gpt-4로 변경 가능)
             messages=[
                 {"role": "system", "content": (
                     "당신은 한국의 맛집 전문가입니다. "
                     "사용자가 제공한 가게 정보를 바탕으로 핵심적인 요약을 제공하는 것이 목표입니다. "
                     "요약은 사용자가 가게를 빠르게 이해할 수 있도록 간결하고 명확해야 합니다."
+                    "존댓말을 써서 예의바르고 친절한 말투로 답변해주세요."
                 )},
                 {"role": "user", "content": f"""
                 가게 이름: {name}\n
@@ -40,24 +47,24 @@ def summarize_desc(name: str, desc):
             frequency_penalty=0.5,  # 중복된 내용에 대한 패널티
             presence_penalty=0.5    # 새로운 정보에 대한 장려
         )
-        
-        # API로부터 받은 응답
-        result = response.choices[0].message.content
 
+        # API로부터 받은 응답
+        result = response['choices'][0]['message']['content']
+        
         # 강조 표현을 없애고 각 항목을 새로운 줄로 이동시킴
         formatted_result = result.replace("**", "")  # 강조 표시 제거
         # HTML에서 줄바꿈을 반영하기 위해 '\n'을 '<br>'로 변환
         formatted_result = formatted_result.replace("\n", "<br>")
 
         # 항목을 줄바꿈 처리
-        formatted_result = formatted_result.replace("대표 메뉴:", "\n대표 메뉴:")\
-                                           .replace("위치:", "\n위치:")\
-                                           .replace("분위기:", "\n분위기:")\
-                                           .replace("차별점:", "\n차별점:")
+        formatted_result = formatted_result.replace("대표 메뉴:", "<br>대표 메뉴:")\
+                                           .replace("위치:", "<br>위치:")\
+                                           .replace("분위기:", "<br>분위기:")\
+                                           .replace("차별점:", "<br>차별점:")
 
         print("요약 결과:\n" + formatted_result)
         return formatted_result
 
     except Exception as e:
-        print(f"OpenAI API 오류 발생: {e}")
+        print(f"OpenAI API 오류 발생: {str(e)}")
         return "요약 생성 실패"

@@ -21,7 +21,7 @@
                 <div class="slider-item">
                     <div class="item-content">
                         <div class="item-header">
-                            <h2>{{ result.title }}</h2>
+                            <h2>{{ result.name }}</h2>
                             <div class="item-image">
                                 {% if result.image %}
                                 <img src="{{ result.image }}" alt="{{ result.title }}">
@@ -32,6 +32,7 @@
                         </div>
                         <div class="item-text">
                             <p class="summary">{{ result.summary | safe }}</p>
+                            <p class="address">{{ result.address}}</p>
                             <a href="{{ result.link }}" class="link-button" target="_blank">링크로 이동</a>
                             <a href="/" class="button">새로운 검색하기</a>
                         </div>
