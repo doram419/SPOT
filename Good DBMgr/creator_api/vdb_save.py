@@ -101,9 +101,12 @@ class VdbSaveModule:
         faiss Vector DB에 저장하는 코드
         """
         try:
+            temp_index_file = os.path.join(save_path, "temp_spot_index.bin")
+            temp_metadata_file = os.path.join(save_path, "temp_spot_metadata.pkl")
+            
             vector_store = FaissVectorStore(
-                index_file=os.path.join(save_path, "spot_index.bin"),
-                metadata_file=os.path.join(save_path, "spot_metadata.pkl")
+                index_file=temp_index_file,
+                metadata_file=temp_metadata_file
             )
 
             for data in self.preprocessed_data:
@@ -144,14 +147,22 @@ class VdbSaveModule:
                     else:
                         self.status_module.update_status(f"경고: 블로그 데이터 '{blog_data.title}'의 내용이 리스트 형식이 아닙니다.")
 
-            # 변경사항 저장
+            # 임시 파일에 변경사항 저장
             vector_store.save_index()
+            
+            # 임시 파일을 실제 파일로 이동
+            os.replace(temp_index_file, os.path.join(save_path, "spot_index.bin"))
+            os.replace(temp_metadata_file, os.path.join(save_path, "spot_metadata.pkl"))
             
             self.status_module.update_status("Faiss VDB에 데이터 저장 완료")
             return True
 
         except Exception as e:
             self.status_module.update_status(f"Faiss VDB 저장 중 오류 발생: {str(e)}")
+            # 오류 발생 시 임시 파일 삭제
+            for temp_file in [temp_index_file, temp_metadata_file]:
+                if os.path.exists(temp_file):
+                    os.remove(temp_file)
             return False
 
     def get_widget(self):
