@@ -10,8 +10,8 @@
     "vdb_creator": {
         "width": 600,
         "height": 506,
-        "x": 876,
-        "y": 176
+        "x": 1069,
+        "y": 190
     },
     "vdb_selector": {
         "width": 400,
@@ -45,7 +45,7 @@
     },
     "crawling": {
         "region": "강남역",
-        "keyword": "라멘",
+        "keyword": "피자",
         "mode": "테스트 모드"
     }
 }

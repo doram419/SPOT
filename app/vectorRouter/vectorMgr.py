@@ -1,6 +1,6 @@
 import re
 from dotenv import load_dotenv
-from langchain_openai import OpenAIEmbeddings 
+from langchain.embeddings.openai import OpenAIEmbeddings
 from rank_bm25 import BM25Okapi
 import os
 import numpy as np
@@ -19,7 +19,7 @@ load_dotenv()
 openai_api_key = os.getenv("OPENAI_API_KEY")
 
 # OpenAI 임베딩 객체 생성
-embeddings = OpenAIEmbeddings(openai_api_key=openai_api_key, model="text-embedding-3-small")
+embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
 
 # 벡터 저장소 인스턴스 생성
 vector_store = FaissVectorStore()
@@ -47,7 +47,7 @@ def preprocess_search_input(search_input: str):
     return keywords
 
 # RAG(검색 + 생성) 기반 검색 함수
-def search_with_rag(search_input: str, k: int = 5, bm25_weight: float = 0.5, faiss_weight: float = 0.5):
+def search_with_rag(search_input: str, k: int = 5, bm25_weight: float = 0.4, faiss_weight: float = 0.6):
     if not search_input:
         raise EmptySearchQueryException()
 
@@ -66,7 +66,7 @@ def search_with_rag(search_input: str, k: int = 5, bm25_weight: float = 0.5, fai
         bm25_scores = bm25_scores / np.max(bm25_scores)
 
     # 상위 BM25 인덱스 선택
-    top_bm25_indices = np.argsort(bm25_scores)[-200:]
+    top_bm25_indices = np.argsort(bm25_scores)[-50:]
     print(f"BM25 후보 개수: {len(top_bm25_indices)}")
 
     if len(top_bm25_indices) == 0:
@@ -78,8 +78,8 @@ def search_with_rag(search_input: str, k: int = 5, bm25_weight: float = 0.5, fai
     if vector_store.dim is None:
         raise EmptyVectorStoreException()
 
-    # 생성된 벡터를 사용해 FAISS 검색을 수행하여 상위 200개의 후보 문서를 검색합니다.
-    D, I = vector_store.search(embedding.reshape(1, -1), k=200)
+    # 생성된 벡터를 사용해 FAISS 검색을 수행하여 상위 50개의 후보 문서를 검색합니다.
+    D, I = vector_store.search(embedding.reshape(1, -1), k=50)
     print(f"FAISS 후보 개수: {len(I[0])}")
 
     # FAISS 유사도 정규화
@@ -106,18 +106,29 @@ def search_with_rag(search_input: str, k: int = 5, bm25_weight: float = 0.5, fai
     # 7. 결과 수집 및 같은 data_id를 가진 chunk 결합
     seen = set()
     combined_results = defaultdict(list)  # data_id를 기준으로 chunk_content 결합
+
     for idx in ranked_indices:
         if idx < len(vector_store.metadata):
             meta = vector_store.metadata[idx]
-            data_id = meta.get("data_id")  # data_id로 그룹화
-            
+            data_id = meta.get("data_id")
+
+            # 'link'가 없거나 유효하지 않은 경우 해당 항목을 건너뜁니다
+            link = meta.get("link", "")
+            if not link or link.lower() == "none":
+                print(f"데이터 ID {data_id}는 링크가 없으므로 건너뜁니다.")
+                continue
+
             # 이미 처리된 data_id는 건너뜁니다
             if data_id in seen:
                 continue
             seen.add(data_id)
-            
-            # 해당 data_id로 그룹화된 chunk_content를 결합
-            combined_results[data_id].append(meta.get("chunk_content", ""))
+
+            # 해당 data_id로 그룹화된 모든 유효한 chunk_content를 수집
+            for m in vector_store.metadata:
+                if m.get("data_id") == data_id:
+                    chunk_content = m.get("chunk_content", "")
+                    if chunk_content:  # chunk_content가 None이 아니고 빈 문자열이 아닌 경우
+                        combined_results[data_id].append(chunk_content)
 
             # 상위 k개의 결과만 선택합니다.
             if len(combined_results) >= k:
@@ -136,23 +147,23 @@ def search_with_rag(search_input: str, k: int = 5, bm25_weight: float = 0.5, fai
         meta = next(m for m in vector_store.metadata if m.get("data_id") == data_id)
         name = meta.get("name", "Unknown")
         address = meta.get("address", "Unknown")
+        link = meta.get("link", "")
 
-            # 요약 생성 전에 디버깅 출력
-        print(f"데이터 ID: {data_id}")
-        print(f"가게 이름: {name}")
-        print(f"주소: {address}")
-        print(f"full_content:\n{full_content}\n")
-        
+        # 요약 생성 전에 디버깅 출력
+        print(f"링크: {link}")
+
+
         # 요약 생성
         summary = generate_gpt_response(name, full_content)
         selected_results.append({
             "name": name,
             "summary": summary,
             "address": address,
-            "data_id": data_id  # data_id를 추가
+            "data_id": data_id,
+            "link": link
         })
-
+        print(f"선택된 결과 리스트: {selected_results}")
     return {
-        "generated_response": "검색 결과 요약 생성 완료",  # 결과 메세지
-        "search_results": selected_results  # 선택된 검색 결과
+        "generated_response": "검색 결과 요약 생성 완료",
+        "results": selected_results
     }

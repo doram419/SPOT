@@ -18,6 +18,8 @@ templates = Jinja2Templates(directory="app/templates")
 async def root(request: Request):
     return templates.TemplateResponse("search.html", {"request": request})
 
+
+
 # POST 요청을 통해 검색을 처리하는 엔드포인트에 하이브리드 검색 추가
 @router.post("/search/", response_class=HTMLResponse)
 async def search_restaurant(request: Request, search_input: str = Form(...)):
@@ -40,7 +42,7 @@ async def search_restaurant(request: Request, search_input: str = Form(...)):
     # 검색 결과 페이지 렌더링
     return templates.TemplateResponse("results.html", {
         "request": request,
-        "results": results["search_results"],
+        "results": results["results"],
         "generated_response": results["generated_response"],
         "search_input": search_input
     })
