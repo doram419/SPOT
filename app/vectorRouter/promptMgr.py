@@ -51,11 +51,10 @@ def generate_gpt_response(name: str, full_content: str):
 
         # 항목을 줄바꿈 처리
         formatted_result = formatted_result.replace("대표 메뉴:", "\n대표 메뉴:")\
-                                           .replace("위치:", "\n위치:")\
                                            .replace("분위기:", "\n분위기:")\
                                            .replace("차별점:", "\n차별점:")
 
-        print("요약 결과:\n" + formatted_result)
+
         return formatted_result
 
     except Exception as e:

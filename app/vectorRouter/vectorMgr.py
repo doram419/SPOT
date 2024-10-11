@@ -66,7 +66,7 @@ def search_with_rag(search_input: str, k: int = 5, bm25_weight: float = 0.4, fai
         bm25_scores = bm25_scores / np.max(bm25_scores)
 
     # 상위 BM25 인덱스 선택
-    top_bm25_indices = np.argsort(bm25_scores)[-50:]
+    top_bm25_indices = np.argsort(bm25_scores)[-200:]
     print(f"BM25 후보 개수: {len(top_bm25_indices)}")
 
     if len(top_bm25_indices) == 0:
@@ -78,8 +78,8 @@ def search_with_rag(search_input: str, k: int = 5, bm25_weight: float = 0.4, fai
     if vector_store.dim is None:
         raise EmptyVectorStoreException()
 
-    # 생성된 벡터를 사용해 FAISS 검색을 수행하여 상위 50개의 후보 문서를 검색합니다.
-    D, I = vector_store.search(embedding.reshape(1, -1), k=50)
+    # 생성된 벡터를 사용해 FAISS 검색을 수행하여 상위 200개의 후보 문서를 검색합니다.
+    D, I = vector_store.search(embedding.reshape(1, -1), k=200)
     print(f"FAISS 후보 개수: {len(I[0])}")
 
     # FAISS 유사도 정규화
@@ -136,6 +136,7 @@ def search_with_rag(search_input: str, k: int = 5, bm25_weight: float = 0.4, fai
 
     # 8. 결합된 내용으로 요약 생성
     selected_results = []
+    unique_names = set()
     for data_id, chunks in combined_results.items():
         full_content = " ".join(chunks)  # 같은 data_id의 chunk들을 하나로 결합
 
@@ -152,6 +153,11 @@ def search_with_rag(search_input: str, k: int = 5, bm25_weight: float = 0.4, fai
         name = meta.get("name", "Unknown")
         address = meta.get("address", "Unknown")
 
+        # 같은 이름이 있는 경우 중복 제거
+        if name in unique_names:
+            continue
+        unique_names.add(name)
+
         # 요약 생성 전에 디버깅 출력
 
         print(f"선택된 링크: {link}")
@@ -166,7 +172,7 @@ def search_with_rag(search_input: str, k: int = 5, bm25_weight: float = 0.4, fai
             "data_id": data_id,
             "link": link
         })
-        print(f"선택된 결과 리스트: {selected_results}")
+
     return {
         "generated_response": "검색 결과 요약 생성 완료",
         "results": selected_results

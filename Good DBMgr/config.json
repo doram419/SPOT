@@ -10,8 +10,29 @@
     "vdb_creator": {
         "width": 600,
         "height": 506,
-        "x": 1069,
-        "y": 190
+        "x": 583,
+        "y": 196,
+        "crawling": {
+            "region": "강남역",
+            "keyword": "파스타",
+            "mode": "테스트 모드(20)",
+            "recent_regions": [
+                "강남역"
+            ],
+            "recent_keywords": [
+                "파스타",
+                "햄버거",
+                "라멘",
+                "돈가스",
+                "순대국"
+            ]
+        },
+        "preprocessing": {
+            "embedding_model_type": "OpenAI",
+            "embedding_model_version": "text-embedding-3-small",
+            "chunk_size": "100",
+            "overlap": "20"
+        }
     },
     "vdb_selector": {
         "width": 400,
@@ -51,7 +72,7 @@
     "application": {
         "width": 600,
         "height": 420,
-        "x": 156,
-        "y": 156
+        "x": 525,
+        "y": 278
     }
 }
