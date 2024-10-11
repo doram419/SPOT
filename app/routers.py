@@ -1,8 +1,13 @@
 from fastapi import APIRouter, Request, Form, HTTPException
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
-from .vectorRouter.vectorMgr import search as vector_search
-from .vectorRouter.exceptions import VectorSearchException, EmptySearchQueryException, NoSearchResultsException, EmptyVectorStoreException
+from .vectorRouter.vectorMgr import search_with_rag as vector_search
+from .vectorRouter.exceptions import (
+    VectorSearchException,
+    EmptySearchQueryException,
+    NoSearchResultsException,
+    EmptyVectorStoreException,
+)
 
 # FastAPI의 APIRouter 인스턴스 생성
 router = APIRouter()
@@ -12,6 +17,8 @@ templates = Jinja2Templates(directory="app/templates")
 @router.get("/", response_class=HTMLResponse)
 async def root(request: Request):
     return templates.TemplateResponse("search.html", {"request": request})
+
+
 
 # POST 요청을 통해 검색을 처리하는 엔드포인트에 하이브리드 검색 추가
 @router.post("/search/", response_class=HTMLResponse)
@@ -27,11 +34,15 @@ async def search_restaurant(request: Request, search_input: str = Form(...)):
         raise HTTPException(status_code=500, detail=str(e))
     except VectorSearchException as e:
         raise HTTPException(status_code=500, detail=str(e))
+    except Exception as e:
+        print(f"예상치 못한 오류 발생: {str(e)}")
+        raise HTTPException(status_code=500, detail="서버 내부 오류가 발생했습니다.")
 
     print(f"검색 결과: {results}")
     # 검색 결과 페이지 렌더링
     return templates.TemplateResponse("results.html", {
         "request": request,
-        "results": results,
+        "results": results["results"],
+        "generated_response": results["generated_response"],
         "search_input": search_input
     })
