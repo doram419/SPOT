@@ -9,9 +9,9 @@
     "button_style": "default",
     "vdb_creator": {
         "width": 600,
-        "height": 500,
-        "x": 776,
-        "y": 125,
+        "height": 552,
+        "x": 72,
+        "y": 56,
         "crawling": {
             "region": "서초동",
             "keyword": "짜장면",
@@ -39,20 +39,20 @@
     "vdb_retriever": {
         "width": 552,
         "height": 300,
-        "x": 927,
-        "y": 136
+        "x": 193,
+        "y": 667
     },
     "vdb_merge": {
         "width": 656,
         "height": 401,
-        "x": 737,
-        "y": 127
+        "x": 1269,
+        "y": 55
     },
     "api_key": {
         "width": 500,
-        "height": 400,
-        "x": 300,
-        "y": 300
+        "height": 269,
+        "x": 736,
+        "y": 14
     },
     "settings": {
         "font_family": "Arial",
@@ -61,13 +61,13 @@
         "button_style": "default",
         "width": 282,
         "height": 227,
-        "x": 1212,
-        "y": 140
+        "x": 1405,
+        "y": 185
     },
     "application": {
         "width": 600,
-        "height": 597,
-        "x": 130,
-        "y": 130
+        "height": 296,
+        "x": 52,
+        "y": 52
     }
 }
