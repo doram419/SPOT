@@ -10,12 +10,12 @@
     "vdb_creator": {
         "width": 600,
         "height": 552,
-        "x": 1228,
-        "y": 39,
+        "x": 1188,
+        "y": 156,
         "crawling": {
             "region": "강남역",
             "keyword": "파스타",
-            "mode": "테스트 모드(10)",
+            "mode": "데이터 수집 모드(100)",
             "recent_regions": [
                 "강남역",
                 "서초동"
@@ -50,8 +50,8 @@
     "vdb_merge": {
         "width": 656,
         "height": 401,
-        "x": 1269,
-        "y": 55
+        "x": 1088,
+        "y": 164
     },
     "api_key": {
         "width": 500,
@@ -71,8 +71,8 @@
     },
     "application": {
         "width": 600,
-        "height": 536,
-        "x": 52,
-        "y": 52
+        "height": 576,
+        "x": 293,
+        "y": 141
     }
 }
