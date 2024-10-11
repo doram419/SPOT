@@ -125,6 +125,7 @@ class PreprocessingModule:
         tasks = []
         for naver_data in google_data.blog_datas:
             if naver_data.content is not None:
+                print(naver_data.link)
                 naver_data.content = self.do_chucking(naver_data.content, chunk_size, overlap)
                 tasks.append(self.embedding.get_text_embeddings_async(naver_data.content))
             else:
