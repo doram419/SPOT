@@ -37,10 +37,10 @@
         "y": 200
     },
     "vdb_retriever": {
-        "width": 552,
-        "height": 300,
-        "x": 927,
-        "y": 136
+        "width": 653,
+        "height": 836,
+        "x": 1223,
+        "y": 95
     },
     "vdb_merge": {
         "width": 656,
@@ -66,8 +66,8 @@
     },
     "application": {
         "width": 600,
-        "height": 480,
-        "x": 52,
-        "y": 52
+        "height": 500,
+        "x": 434,
+        "y": 50
     }
 }

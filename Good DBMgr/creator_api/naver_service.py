@@ -92,7 +92,16 @@ class NaverService():
                 if ocr_results:
                     refined_content += " " + " ".join(ocr_results)
 
-            data = NaverData(content=refined_content, link=blog_url)
+                # 지도 정보 추출
+                map_div = iframe_soup.find('div', class_='se-section se-section-placesMap se-section-align- se-l-default')
+                map_url = None
+                if map_div:
+                    # map_div에서 iframe을 찾고 그 src를 가져옴
+                    map_iframe = map_div.find('iframe')
+                    if map_iframe:
+                        map_url = map_iframe['src']
+
+            data = NaverData(content=refined_content, link=blog_url, map_url=map_url)
             return data
         
         return None
