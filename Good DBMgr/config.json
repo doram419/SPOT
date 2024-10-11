@@ -47,5 +47,11 @@
         "region": "강남역",
         "keyword": "피자",
         "mode": "테스트 모드"
+    },
+    "application": {
+        "width": 600,
+        "height": 420,
+        "x": 156,
+        "y": 156
     }
 }

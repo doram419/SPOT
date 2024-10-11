@@ -112,12 +112,6 @@ def search_with_rag(search_input: str, k: int = 5, bm25_weight: float = 0.4, fai
             meta = vector_store.metadata[idx]
             data_id = meta.get("data_id")
 
-            # 'link'가 없거나 유효하지 않은 경우 해당 항목을 건너뜁니다
-            link = meta.get("link", "")
-            if not link or link.lower() == "none":
-                print(f"데이터 ID {data_id}는 링크가 없으므로 건너뜁니다.")
-                continue
-
             # 이미 처리된 data_id는 건너뜁니다
             if data_id in seen:
                 continue
@@ -127,7 +121,7 @@ def search_with_rag(search_input: str, k: int = 5, bm25_weight: float = 0.4, fai
             for m in vector_store.metadata:
                 if m.get("data_id") == data_id:
                     chunk_content = m.get("chunk_content", "")
-                    if chunk_content:  # chunk_content가 None이 아니고 빈 문자열이 아닌 경우
+                    if chunk_content:
                         combined_results[data_id].append(chunk_content)
 
             # 상위 k개의 결과만 선택합니다.
@@ -144,14 +138,24 @@ def search_with_rag(search_input: str, k: int = 5, bm25_weight: float = 0.4, fai
     selected_results = []
     for data_id, chunks in combined_results.items():
         full_content = " ".join(chunks)  # 같은 data_id의 chunk들을 하나로 결합
+
+        # 해당 data_id의 메타데이터 중에서 link가 있는 것을 찾습니다
+        link = ""
+        for m in vector_store.metadata:
+            if m.get("data_id") == data_id:
+                temp_link = m.get("link", "")
+                if temp_link and temp_link.lower() != "none":
+                    link = temp_link
+                    break  # 링크를 찾았으므로 더 이상 찾지 않음
+
         meta = next(m for m in vector_store.metadata if m.get("data_id") == data_id)
         name = meta.get("name", "Unknown")
         address = meta.get("address", "Unknown")
-        link = meta.get("link", "")
 
         # 요약 생성 전에 디버깅 출력
-        print(f"링크: {link}")
 
+        print(f"선택된 링크: {link}")
+  
 
         # 요약 생성
         summary = generate_gpt_response(name, full_content)
