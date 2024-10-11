@@ -43,7 +43,10 @@ class NaverService():
             blogs = list()
             for item in items:
                 link = item.get('link')
-                blogs.append(self.make_naver_data(blog_url=link))
+                blog=self.make_naver_data(blog_url=link)
+
+                if blog is not None:
+                    blogs.append(blog)
             
             return blogs
 

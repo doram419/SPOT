@@ -1,162 +1,158 @@
-import asyncio
-import threading
+import os
+import json
+import faiss
+import pickle
+import numpy as np
 import tkinter as tk
 from tkinter import ttk
-from creator_api.crawling import CrawlingModule
-from creator_api.preprocessing import PreprocessingModule
-from creator_api.vdb_save import VdbSaveModule
-from configuration import load_module_config, save_module_config
-from .status_module import StatusModule
-from .datas.constants import TEST_MODE, GATHER_MODE
+from .datas.constants import VECTOR_DBS
+from .faissVectorStore import FaissVectorStore
 
-class VdbCreatorModule:
-    def __init__(self, parent, config):
+class VdbSaveModule:
+    def __init__(self, parent, status_module):
         self.parent = parent
-        self.config = config
-        self.window = tk.Toplevel(parent)
-        self.window.title("VDB Creator")
-        
-        # 저장된 설정 적용
-        self.window_config = load_module_config('vdb_creator')
-        self.window.geometry(f"{self.window_config.get('width', 600)}x{self.window_config.get('height', 500)}" \
-                     f"+{self.window_config.get('x', 150)}+{self.window_config.get('y', 150)}")
-
-        self.crawling_results = None
+        self.status_module = status_module
+        self.preprocessed_data = None
+        self.last_id = 0
+        self.id_file_path = "./Good DBMgr/vdb_data/last_id.json"
         self.create_widgets()
 
-        # 창 닫힐 때 설정 저장
-        self.window.protocol("WM_DELETE_WINDOW", self.on_closing)
-
-        # asyncio 이벤트 루프 생성
-        self.loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(self.loop)
-        self.thread = threading.Thread(target=self.run_async_loop, daemon=True)
-        self.thread.start()
-
     def create_widgets(self):
-        self.main_frame = ttk.Frame(self.window, padding="10")
-        self.main_frame.pack(fill=tk.BOTH, expand=True)
-
-        # grid 설정
-        self.main_frame.columnconfigure(0, weight=1)
-        self.main_frame.rowconfigure(1, weight=1)
-        self.main_frame.rowconfigure(2, weight=0)
-
-        # 상단 프레임
-        top_frame = ttk.Frame(self.main_frame)
-        top_frame.grid(row=0, column=0, pady=10, sticky='nw')
-
-        # 라벨
-        self.label = ttk.Label(top_frame, text="VDB Creator")
-        self.label.pack(side=tk.LEFT, padx=(0, 10))
-
-        # VDB 생성 버튼
-        self.create_vdb_button = ttk.Button(top_frame, text="VDB 생성하기", command=self.start_vdb_creation)
-        self.create_vdb_button.pack(side=tk.LEFT)
-
-        # PanedWindow 생성
-        self.paned_window = ttk.PanedWindow(self.main_frame, orient=tk.VERTICAL)
-        self.paned_window.grid(row=1, column=0, sticky='nsew')
-
-        # 탭 컨트롤 생성
-        self.tab_control = ttk.Notebook(self.paned_window)
-        self.paned_window.add(self.tab_control, weight=3)
+        self.main_frame = ttk.Frame(self.parent)
+        self.main_frame.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
         
-        # 상태 모듈 추가
-        status_frame = ttk.Frame(self.paned_window)
-        self.paned_window.add(status_frame, weight=1)
-        self.status_module = StatusModule(status_frame)
+        # VDB 타입 선택
+        vdb_type_frame = ttk.Frame(self.main_frame)
+        vdb_type_frame.pack(fill=tk.X, pady=5)
+        ttk.Label(vdb_type_frame, text="VDB 타입:").pack(side=tk.LEFT, padx=(0, 5))
+        self.vdb_type = tk.StringVar(value=VECTOR_DBS[0])
+        self.vdb_type_dropdown = ttk.Combobox(vdb_type_frame, textvariable=self.vdb_type, 
+                                              values=VECTOR_DBS, state="readonly", width=15)
+        self.vdb_type_dropdown.pack(side=tk.LEFT)
 
-        # 크롤링 탭
-        crawling_tab = ttk.Frame(self.tab_control)
-        self.tab_control.add(crawling_tab, text='크롤링')
-        
-        # 크롤링 모듈의 위젯 추가
-        crawling_config = self.window_config.get('crawling', {})
-        self.crawling_module = CrawlingModule(crawling_tab, self.status_module, crawling_config)
-        crawling_widget = self.crawling_module.get_widget()
-        crawling_widget.pack(fill=tk.BOTH, expand=True)
+        # 저장 경로 입력
+        save_path_frame = ttk.Frame(self.main_frame)
+        save_path_frame.pack(fill=tk.X, pady=5)
+        ttk.Label(save_path_frame, text="저장 경로:").pack(side=tk.LEFT, padx=(0, 5))
+        self.save_path = tk.StringVar(value="./vdb_data")
+        self.save_path_entry = ttk.Entry(save_path_frame, textvariable=self.save_path, width=30)
+        self.save_path_entry.pack(side=tk.LEFT, expand=True, fill=tk.X)
 
-        # 데이터 처리 탭
-        data_processing_tab = ttk.Frame(self.tab_control)
-        self.tab_control.add(data_processing_tab, text='데이터 전처리')
+    def set_preprocessed_data(self, data):
+        self.preprocessed_data = data
+        self.status_module.update_status("전처리된 데이터 수신 완료")
 
-        # 전처리 모듈의 위젯 추가 
-        preprocessing_config = self.window_config.get('preprocessing', {})
-        self.preprocessing_module = PreprocessingModule(data_processing_tab, self.status_module, preprocessing_config)
-        processing_widget = self.preprocessing_module.get_widget()
-        processing_widget.pack(fill=tk.BOTH, expand=True)
+    def load_last_id(self):
+        if os.path.exists(self.id_file_path):
+            with open(self.id_file_path, 'r') as f:
+                data = json.load(f)
+                self.last_id = data.get('last_id', 0)
+        else:
+            self.last_id = 0
 
-        # VDB 저장 탭
-        vdb_save_tab = ttk.Frame(self.tab_control)
-        self.tab_control.add(vdb_save_tab, text='VDB 저장')
+    def save_last_id(self):
+        """
+        vdb 데이터 아이디를 불러오는 함수
+        """
+        with open(self.id_file_path, 'w') as f:
+            json.dump({'last_id': self.last_id}, f)
 
-        # VdbSaveModule 인스턴스 생성 및 위젯 추가
-        self.vdb_save_module = VdbSaveModule(vdb_save_tab, self.status_module)
-        vdb_save_widget = self.vdb_save_module.get_widget()
-        vdb_save_widget.pack(fill=tk.BOTH, expand=True)
+    def get_next_id(self):
+        self.last_id += 1
+        return self.last_id
 
-        # 종료 버튼 추가
-        self.close_button = ttk.Button(self.main_frame, text="Close", command=self.on_closing)
-        self.close_button.grid(row=3, column=0, pady=10, sticky='se')
+    async def save_to_vdb(self):
+        """
+        vdb에 저장하는 파일
+        """
+        if self.preprocessed_data is None:
+            self.status_module.update_status("저장할 데이터가 없습니다.")
+            return False
 
-    def start_vdb_creation(self):
-        self.window.after(0, lambda: self.create_vdb_button.config(state='disabled'))
-        asyncio.run_coroutine_threadsafe(self.async_vdb_creation(), self.loop)
+        vdb_type = self.vdb_type.get()
+        save_path = self.save_path.get()
 
-    def run_async_loop(self):
-        asyncio.set_event_loop(self.loop)
-        self.loop.run_forever()
+        self.status_module.update_status(f"{vdb_type} VDB에 데이터 저장 시작...")
 
-    async def async_vdb_creation(self):
+        # 저장 경로가 존재하지 않으면 생성
+        os.makedirs(save_path, exist_ok=True)
+
+        # 마지막 ID 로드
+        self.load_last_id()
+
+        if vdb_type == "Faiss":
+            success = await self.save_to_faiss(save_path)
+        else:
+            self.status_module.update_status(f"{vdb_type} VDB 저장은 아직 구현되지 않았습니다.")
+            return False
+
+        # 마지막 ID 저장
+        self.save_last_id()
+
+        if success:
+            self.status_module.update_status(f"{vdb_type} VDB 저장 완료")
+        else:
+            self.status_module.update_status(f"{vdb_type} VDB 저장 실패")
+
+        return success
+
+    async def save_to_faiss(self, save_path):
+        """
+        faiss Vector DB에 저장하는 코드
+        """
         try:
-            self.status_module.update_status("VDB 생성 프로세스 시작...")
+            vector_store = FaissVectorStore(
+                index_file=os.path.join(save_path, "spot_index.bin"),
+                metadata_file=os.path.join(save_path, "spot_metadata.pkl")
+            )
 
-            # 크롤링 시작
-            self.status_module.update_status("크롤링 시작...")
-            keyword = self.crawling_module.keyword_entry.get()
-            region = self.crawling_module.region_entry.get()
-            mode = self.crawling_module.crawling_mode.get()
+            for data in self.preprocessed_data:
+                data_id = self.get_next_id()
+                base_meta = {
+                    "data_id": data_id,
+                    "name": data.name,
+                    "address": data.address
+                }
+                
+                # Google 데이터 처리
+                for i, google_item in enumerate(data.vectorized_json):
+                    vector_store.add_to_index(
+                        {f"google_{data_id}_{i}": google_item},
+                        {**base_meta, "content_type": "google", "content_index": i}
+                    )
 
-            if len(keyword) > 1 and len(region) > 1:
-                self.crawling_results = await self.crawling_module.start_crawling(keyword, region, mode)
-                if not self.crawling_results:
-                    raise Exception("크롤링 결과가 없습니다.")
-            else:
-                raise Exception("검색어 또는 지역이 누락되었습니다.")
+                # Naver 블로그 데이터 처리
+                for blog_index, blog_data in enumerate(data.blog_datas):
+                    blog_meta = {
+                        **base_meta,
+                        "content_type": "naver_blog",
+                        "blog_index": blog_index,
+                        "link": blog_data.link
+                    }
+                    
+                    if isinstance(blog_data.content, list):
+                        for chunk_index, (chunk_vector, chunk_content) in enumerate(zip(blog_data.vectorized_content, blog_data.content)):
+                            chunk_meta = {
+                                **blog_meta,
+                                "chunk_index": chunk_index,
+                                "chunk_content": chunk_content  # 각 청크의 원본 내용
+                            }
+                            vector_store.add_to_index(
+                                {f"naver_{data_id}_{blog_index}_{chunk_index}": chunk_vector},
+                                chunk_meta
+                            )
+                    else:
+                        self.status_module.update_status(f"경고: 블로그 데이터 '{blog_data.title}'의 내용이 리스트 형식이 아닙니다.")
 
-            # 전처리 시작
-            self.status_module.update_status("데이터 전처리 시작...")
-            processed_results = await self.preprocessing_module.start_preprocessing(self.crawling_results)
-            if not processed_results:
-                raise Exception("전처리 결과가 없습니다.")
-
-            # VDB 저장
-            self.status_module.update_status("VDB 저장 시작...")
-            self.vdb_save_module.set_preprocessed_data(processed_results)
-            success = await self.vdb_save_module.save_to_vdb()
-            if not success:
-                raise Exception("VDB 저장에 실패했습니다.")
-
-            self.status_module.update_status("VDB 생성 프로세스 완료")
+            # 변경사항 저장
+            vector_store.save_index()
+            
+            self.status_module.update_status("Faiss VDB에 데이터 저장 완료")
+            return True
 
         except Exception as e:
-            self.status_module.update_status(f"오류 발생: {str(e)}")
-        finally:
-            self.window.after(0, lambda: self.create_vdb_button.config(state='normal'))
+            self.status_module.update_status(f"Faiss VDB 저장 중 오류 발생: {str(e)}")
+            return False
 
-    def on_closing(self):
-        # 현재 설정 저장
-        self.window_config.update({
-            'width': self.window.winfo_width(),
-            'height': self.window.winfo_height(),
-            'x': self.window.winfo_x(),
-            'y': self.window.winfo_y(),
-            'crawling': self.crawling_module.get_config(),
-            'preprocessing': self.preprocessing_module.get_config()
-        })
-        save_module_config('vdb_creator', self.window_config)
-        self.window.destroy()
-
-    def run(self):
-        self.window.mainloop()
+    def get_widget(self):
+        return self.main_frame
