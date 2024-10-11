@@ -45,13 +45,13 @@ class NaverService():
                 if blog is not None:
                     blogs.append(blog)
             
-            return blogs[:3]
+            return blogs
 
         except requests.exceptions.RequestException as e:
             print(f"Naver API 요청 실패: {str(e)}")
             return "네이버 블로그 설명 오류"
         
-    def make_naver_data(self, blog_url : str) -> NaverData: 
+    def make_naver_data(self, blog_url : str) -> NaverData | None:
         """
         추출이 안되면 None 반환
         """
@@ -74,14 +74,28 @@ class NaverService():
             iframe_response_url = naver_blog_url + iframe_src
             iframe_response = requests.get(iframe_response_url)
             iframe_soup = BeautifulSoup(iframe_response.text, 'html.parser')
+
+            # 네이버 블로그에 내장된 지도에서 이름 가져오기
+            title = iframe_soup.find('strong', class_='se-map-title')
+            refined_name = str()
+            if title:
+                refined_name = title.text
+            else:
+                return None
+            
+            # 네이버 블로그에 내장된 지도에서 주소 가져오기
+            address = iframe_soup.find('p', class_='se-map-address')
+            refined_address = str()
+            if address:
+                refined_address = address.text
             
             # class="se-main-container"를 가진 <div> 태그 찾기
             div_container = iframe_soup.find('div', class_='se-main-container')
             refined_content = str()
-            if div_container:
+            if div_container:   
                 refined_content = div_container.text.replace('\n', ' ')
 
-            data = NaverData(content=refined_content, link=blog_url)
+            data = NaverData(name=refined_name, address=refined_address, content=refined_content, link=blog_url)
             return data
         
         return None
