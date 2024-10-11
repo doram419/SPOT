@@ -1,24 +1,24 @@
+import sys
 from tkinter import ttk, Menu
 from modules.settings import SettingsWindow
 from creator_api.vdb_creator import VdbCreatorModule
 from creator_api.api_key import ApiKey
+from creator_api.vdb_retriever import VdbRetrieverModule
 from modules.vdb_selector import VdbSelectorModule
-from modules.vdb_retriever import VdbRetrieverModule
+from modules.vdb_merge import VdbMergeModule
 from configuration import load_config, save_config, update_module_config
 
 class Application:
     def __init__(self, root):   
         self.root = root
-        self.root.title("Good DB Mgr (proto ver0.9)")
+        self.root.title("Good DB Mgr (alpha ver1.0)")
 
         self.config = load_config()
         self.apply_settings(self.config)
         self.create_widgets()
 
-        # 모듈 인스턴스 저장을 위한 딕셔너리
-        self.modules = {}
+        self.modules = {}   
 
-        # 설정 변경 이벤트 바인딩
         self.root.bind("<<SettingsChanged>>", self.on_settings_changed)
 
     def open_settings(self):
@@ -51,6 +51,12 @@ class Application:
         """
         self.open_module('api_key', ApiKey)
 
+    def open_vdb_merge(self):
+        """
+        vdb 병합툴을 여는 항목
+        """
+        self.open_module('vdb_merge', VdbMergeModule)
+
     def open_module(self, module_name, ModuleClass):
         if module_name not in self.modules or not self.modules[module_name].window.winfo_exists():
             self.modules[module_name] = ModuleClass(self.root, self.config)
@@ -73,15 +79,13 @@ class Application:
         self.config.update(new_settings)
         self.root.option_add("*Font", f"{self.config['font_family']} {self.config['font_size']}")
         
-        style = ttk.Style()
-        if self.config['theme'] == 'dark':
-            style.theme_use('clam')
-            style.configure(".", background="gray20", foreground="white")
-            style.configure("TSeparator", background="white")
+        if 'theme' in new_settings:
+            self.root.set_theme(new_settings['theme'])
         else:
-            style.theme_use('default')
-            style.configure("TSeparator", background="gray")
+            print(f"테마 설정에 실패하였습니다. 기본 테마(arc)를 사용합니다")
+            self.root.set_theme('arc')  # 기본 테마로 'arc' 사용
         
+        style = ttk.Style()
         if self.config['button_style'] == 'rounded':
             style.configure('TButton', relief='rounded', padding=6)
         elif self.config['button_style'] == 'flat':
@@ -133,6 +137,9 @@ class Application:
 
         self.retrieve_button = ttk.Button(self.button_frame, text="검색하기", command=self.open_vdb_retriever)
         self.retrieve_button.grid(row=0, column=2, padx=10, pady=10)
+
+        self.retrieve_button = ttk.Button(self.button_frame, text="병합하기", command=self.open_vdb_merge)
+        self.retrieve_button.grid(row=0, column=3, padx=10, pady=10)
         
         self.exit_button = ttk.Button(self.frame, text="종료", command=self.exit_application)
         self.exit_button.pack(pady=10)
@@ -144,9 +151,18 @@ class Application:
                 update_module_config(self.config, module_name, module.window)
                 module.window.destroy()
 
-        save_config(self.root, self.config)
-        self.root.destroy()
+        # 모든 자식 위젯 파괴
+        for widget in self.root.winfo_children():
+            widget.destroy()
 
+        save_config(self.root, self.config)
+        
+        # 루트 창에 종료 이벤트 발생
+        self.root.event_generate("<<ApplicationExit>>")
+        
+        # 루트 창 종료
+        self.root.quit()
+        
     def run(self):
         self.root.geometry(f"{self.config['width']}x{self.config['height']}+{self.config['x']}+{self.config['y']}")
         self.root.protocol("WM_DELETE_WINDOW", self.exit_application)

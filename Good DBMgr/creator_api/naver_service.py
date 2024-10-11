@@ -131,7 +131,7 @@ class NaverService():
             
 if __name__ == "__main__":
     naver_service = NaverService()
-    test_url = "https://blog.naver.com/95yulee/223288290394"
+    test_url = "https://blog.naver.com/inhea2327/223357628982"
     naver_service.test_make_naver_data(blog_url=test_url)
 
 
