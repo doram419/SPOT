@@ -1,6 +1,7 @@
 import tkinter as tk
-from tkinter import ttk, filedialog
+from tkinter import ttk, filedialog, messagebox
 from configuration import save_module_config, load_module_config
+from .merger import Merger
 import os
 
 class VdbMergeModule:
@@ -108,20 +109,37 @@ class VdbMergeModule:
             self.vdb2_frame.pack(fill=tk.X, pady=5, before=self.button_frame)
             self.next_button.config(state=tk.DISABLED)
             self.merge_button.config(state=tk.NORMAL)
-        
+
     def merge_vdbs(self):
         if not self.vdb2_index.get() or not self.vdb2_meta.get():
-            self.status_var.set("두번째 db의 인덱스와 메타 파일을 둘 다 선택해주세요")
+            self.status_var.set("두 DB의 인덱스와 메타 데이터를 모두 선택해주세요")
             return
         
-        # Here you would implement the actual merging logic
-        self.status_var.set("병합중... (This functionality is not yet implemented)")
+        try:
+            output_dir = filedialog.askdirectory(title="출력 디렉토리를 선택해주세요", initialdir=self.data_dir)
+            if not output_dir:
+                return  
+            
+            self.status_var.set("vdb 병합중입니다.")
+            self.window.update()  
+            
+            # 머지 시작
+            merged_index_path, merged_meta_path = Merger.merge_vdbs(
+                self.vdb1_index.get(), self.vdb1_meta.get(),
+                self.vdb2_index.get(), self.vdb2_meta.get(),
+                output_dir
+            )
+            
+            # 머지 적용
+            if Merger.verify_merge(merged_index_path, merged_meta_path):
+                self.status_var.set(f"VDBs successfully merged. Output saved to {output_dir}")
+                messagebox.showinfo("Merge Successful", f"VDBs have been successfully merged.\nMerged index: {merged_index_path}\nMerged metadata: {merged_meta_path}")
+            else:
+                self.status_var.set("Merge verification failed. Please check the output files.")
         
-        # For demonstration purposes, we'll just print the selected files
-        print("VDB1 Index:", self.vdb1_index.get())
-        print("VDB1 Metadata:", self.vdb1_meta.get())
-        print("VDB2 Index:", self.vdb2_index.get())
-        print("VDB2 Metadata:", self.vdb2_meta.get())
+        except Exception as e:
+            self.status_var.set(f"Error during merge: {str(e)}")
+            messagebox.showerror("Merge Error", str(e))
 
     def on_closing(self):
         window_config = {
