@@ -7,7 +7,7 @@ from creator_api.preprocessing import PreprocessingModule
 from creator_api.vdb_save import VdbSaveModule
 from configuration import load_module_config, save_module_config
 from .status_module import StatusModule
-from .datas.constants import GATHER_MODE
+from .datas.constants import TEST_MODE, GATHER_MODE
 
 class VdbCreatorModule:
     def __init__(self, parent, config):
@@ -17,9 +17,9 @@ class VdbCreatorModule:
         self.window.title("VDB Creator")
         
         # 저장된 설정 적용
-        window_config = load_module_config('vdb_creator')
-        self.window.geometry(f"{window_config.get('width', 600)}x{window_config.get('height', 500)}" \
-                     f"+{window_config.get('x', 150)}+{window_config.get('y', 150)}")
+        self.window_config = load_module_config('vdb_creator')
+        self.window.geometry(f"{self.window_config.get('width', 600)}x{self.window_config.get('height', 500)}" \
+                     f"+{self.window_config.get('x', 150)}+{self.window_config.get('y', 150)}")
 
         self.crawling_results = None
         self.create_widgets()
@@ -72,7 +72,8 @@ class VdbCreatorModule:
         self.tab_control.add(crawling_tab, text='크롤링')
         
         # 크롤링 모듈의 위젯 추가
-        self.crawling_module = CrawlingModule(crawling_tab, self.status_module)
+        crawling_config = self.window_config.get('crawling', {})
+        self.crawling_module = CrawlingModule(crawling_tab, self.status_module, crawling_config)
         crawling_widget = self.crawling_module.get_widget()
         crawling_widget.pack(fill=tk.BOTH, expand=True)
 
@@ -81,7 +82,8 @@ class VdbCreatorModule:
         self.tab_control.add(data_processing_tab, text='데이터 전처리')
 
         # 전처리 모듈의 위젯 추가 
-        self.preprocessing_module = PreprocessingModule(data_processing_tab, self.status_module)
+        preprocessing_config = self.window_config.get('preprocessing', {})
+        self.preprocessing_module = PreprocessingModule(data_processing_tab, self.status_module, preprocessing_config)
         processing_widget = self.preprocessing_module.get_widget()
         processing_widget.pack(fill=tk.BOTH, expand=True)
 
@@ -107,9 +109,6 @@ class VdbCreatorModule:
         self.loop.run_forever()
 
     async def async_vdb_creation(self):
-        """
-        VDB를 생성하는 함수
-        """
         try:
             self.status_module.update_status("VDB 생성 프로세스 시작...")
 
@@ -118,14 +117,6 @@ class VdbCreatorModule:
             keyword = self.crawling_module.keyword_entry.get()
             region = self.crawling_module.region_entry.get()
             mode = self.crawling_module.crawling_mode.get()
-
-            # 현재 크롤링 설정 저장
-            crawling_config = {
-                'keyword': keyword,
-                'region': region,
-                'mode': mode
-            }
-            save_module_config('crawling', crawling_config)
 
             if len(keyword) > 1 and len(region) > 1:
                 self.crawling_results = await self.crawling_module.start_crawling(keyword, region, mode)
@@ -152,19 +143,19 @@ class VdbCreatorModule:
         except Exception as e:
             self.status_module.update_status(f"오류 발생: {str(e)}")
         finally:
-            # GUI 업데이트는 메인 스레드에서 수행해야 함
             self.window.after(0, lambda: self.create_vdb_button.config(state='normal'))
 
     def on_closing(self):
         # 현재 설정 저장
-        window_config = {
+        self.window_config.update({
             'width': self.window.winfo_width(),
             'height': self.window.winfo_height(),
             'x': self.window.winfo_x(),
-            'y': self.window.winfo_y()
-        }
-        save_module_config('vdb_creator', window_config)
-        self.loop.call_soon_threadsafe(self.loop.stop)
+            'y': self.window.winfo_y(),
+            'crawling': self.crawling_module.get_config(),
+            'preprocessing': self.preprocessing_module.get_config()
+        })
+        save_module_config('vdb_creator', self.window_config)
         self.window.destroy()
 
     def run(self):
