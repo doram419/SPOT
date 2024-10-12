@@ -10,29 +10,29 @@
     "vdb_creator": {
         "width": 600,
         "height": 552,
-        "x": 886,
-        "y": 150,
+        "x": 916,
+        "y": 84,
         "crawling": {
             "region": "강남역",
-            "keyword": "횟집",
-            "mode": "테스트 모드(10)",
+            "keyword": "양식",
+            "mode": "데이터 수집 모드(100)",
             "recent_regions": [
                 "강남역",
                 "서초동"
             ],
             "recent_keywords": [
-                "횟집",
-                "돈가스",
-                "파스타",
-                "햄버거",
-                "순대국"
+                "양식",
+                "양꼬치",
+                "스테이크",
+                "순대국",
+                "수제맥주"
             ]
         },
         "preprocessing": {
             "embedding_model_type": "OpenAI",
             "embedding_model_version": "text-embedding-3-small",
-            "chunk_size": "200",
-            "overlap": "40"
+            "chunk_size": "150",
+            "overlap": "30"
         }
     },
     "vdb_selector": {
@@ -71,8 +71,8 @@
     },
     "application": {
         "width": 600,
-        "height": 308,
-        "x": 257,
-        "y": 159
+        "height": 347,
+        "x": 945,
+        "y": 236
     }
 }

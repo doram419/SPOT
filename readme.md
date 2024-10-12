@@ -21,3 +21,8 @@
 
 - 실행 코드
 python -m good_main
+
+< 모바일 실행 환경법 >
+1. 와이파이 연결 
+2. 유비콘 실행시 uvicorn app.main:app --reload --host=0.0.0.0 하면 모바일에서 열수있음
+3. 모바일주소 = > 터미널에서 ipconfig 입력해서 IPv4 Address에있는 숫자들 입력 후 :8000 
