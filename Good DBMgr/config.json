@@ -10,22 +10,22 @@
     "vdb_creator": {
         "width": 600,
         "height": 552,
-        "x": 1188,
-        "y": 156,
+        "x": 886,
+        "y": 150,
         "crawling": {
             "region": "강남역",
-            "keyword": "파스타",
-            "mode": "데이터 수집 모드(100)",
+            "keyword": "횟집",
+            "mode": "테스트 모드(10)",
             "recent_regions": [
                 "강남역",
                 "서초동"
             ],
             "recent_keywords": [
+                "횟집",
+                "돈가스",
                 "파스타",
                 "햄버거",
-                "순대국",
-                "라멘",
-                "돈가스"
+                "순대국"
             ]
         },
         "preprocessing": {
@@ -71,8 +71,8 @@
     },
     "application": {
         "width": 600,
-        "height": 576,
-        "x": 293,
-        "y": 141
+        "height": 308,
+        "x": 257,
+        "y": 159
     }
 }
