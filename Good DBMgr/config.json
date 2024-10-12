@@ -1,78 +1,78 @@
 {
     "width": 600,
-    "height": 400,
-    "x": 100,
-    "y": 100,
-    "font_family": "Arial",
+    "height": 496,
+    "x": 78,
+    "y": 78,
+    "font_family": "Verdana",
     "font_size": 10,
-    "theme": "arc",
+    "theme": "scidgrey",
     "button_style": "default",
     "vdb_creator": {
         "width": 600,
-        "height": 552,
-        "x": 1228,
-        "y": 39,
+        "height": 506,
+        "x": 583,
+        "y": 196,
         "crawling": {
             "region": "강남역",
             "keyword": "파스타",
-            "mode": "테스트 모드(10)",
+            "mode": "테스트 모드(20)",
             "recent_regions": [
-                "강남역",
-                "서초동"
+                "강남역"
             ],
             "recent_keywords": [
                 "파스타",
                 "햄버거",
-                "순대국",
                 "라멘",
-                "돈가스"
+                "돈가스",
+                "순대국"
             ]
         },
         "preprocessing": {
             "embedding_model_type": "OpenAI",
             "embedding_model_version": "text-embedding-3-small",
-            "chunk_size": "200",
-            "overlap": "40"
+            "chunk_size": "100",
+            "overlap": "20"
         }
     },
     "vdb_selector": {
         "width": 400,
         "height": 300,
-        "x": 200,
-        "y": 200
+        "x": 440,
+        "y": 699
     },
     "vdb_retriever": {
-        "width": 552,
-        "height": 576,
-        "x": 1261,
-        "y": 73
+        "width": 833,
+        "height": 661,
+        "x": 422,
+        "y": 310
     },
     "vdb_merge": {
-        "width": 656,
-        "height": 401,
-        "x": 1269,
-        "y": 55
+        "width": 713,
+        "height": 300,
+        "x": 250,
+        "y": 250
     },
     "api_key": {
-        "width": 500,
+        "width": 464,
         "height": 269,
-        "x": 736,
-        "y": 14
+        "x": 1408,
+        "y": 122
     },
     "settings": {
-        "font_family": "Arial",
-        "font_size": 12,
-        "theme": "scidblue",
-        "button_style": "default",
-        "width": 282,
-        "height": 227,
-        "x": 1405,
-        "y": 185
+        "width": 304,
+        "height": 220,
+        "x": 91,
+        "y": 151
+    },
+    "crawling": {
+        "region": "강남역",
+        "keyword": "피자",
+        "mode": "테스트 모드"
     },
     "application": {
         "width": 600,
-        "height": 536,
-        "x": 52,
-        "y": 52
+        "height": 420,
+        "x": 525,
+        "y": 278
     }
 }
