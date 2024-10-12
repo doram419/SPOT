@@ -1,4 +1,32 @@
 document.addEventListener("DOMContentLoaded", function() {
+    // 주소를 위도와 경도로 변환하는 함수
+    function getCoordinatesByAddress(address, callback) {
+        const clientId = 'cxvc9njj38'; // 네이버 지도 API 클라이언트 ID
+        const clientSecret = 'AzRlY5A6B7dvzfjJzLk1RcZDherPduz0Rh7kGGOl'; // 네이버 지도 API 클라이언트 시크릿
+        const encodedAddress = encodeURIComponent(address);
+        
+        fetch(`https://naveropenapi.apigw.ntruss.com/map-geocode/v2/geocode?query=${encodedAddress}`, {
+            headers: {
+                'X-NCP-APIGW-API-KEY-ID': clientId,
+                'X-NCP-APIGW-API-KEY': clientSecret
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.addresses && data.addresses.length > 0) {
+                const latitude = parseFloat(data.addresses[0].y);
+                const longitude = parseFloat(data.addresses[0].x);
+                callback(latitude, longitude); // 콜백을 사용해 위도와 경도 전달
+            } else {
+                console.error("주소를 찾을 수 없습니다.");
+                callback(NaN, NaN);
+            }
+        })
+        .catch(error => {
+            console.error("지오코딩 요청 중 오류 발생:", error);
+            callback(NaN, NaN);
+        });
+    }
     // 슬라이더 관련 DOM 요소
     const sliderWrapper = document.getElementById('sliderWrapper');
     const prevBtn = document.getElementById('prevBtn');
@@ -34,53 +62,83 @@ document.addEventListener("DOMContentLoaded", function() {
     // 지도 렌더링 함수
     function renderMap(index) {
 
-        console.log(`Attempting to render map for index: ${index}`);
+        console.log(`인덱스 ${index}에 대한 지도를 렌더링 시도 중`);
 
         const mapDivId = `map-${index}`;
         const mapElement = document.getElementById(mapDivId);
-        const sliderItem = document.querySelectorAll('.slider-item')[index];
+        const sliderItems = document.querySelectorAll('.slider-item');
 
-        if (!mapElement) {
-            console.error(`Map element with ID ${mapDivId} not found`);
-            return;
-        }
-        
-        if (mapElement.dataset.rendered !== "true") {
-            // 지도 이미 렌더링되었는지 확인 (중복 렌더링 방지)
-            mapElement.dataset.rendered = "true";
-
-            mapElement.classList.add('map');
-
-            // 슬라이드 아이템의 데이터 속성에서 위도와 경도 값 가져오기
-            const latitude = parseFloat(sliderItem.dataset.latitude);
-            const longitude = parseFloat(sliderItem.dataset.longitude);
-
-            console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
-
-            // 좌표 데이터 디버깅
-            if (isNaN(latitude) || isNaN(longitude)) {
-                console.error("Invalid latitude or longitude for the map, setting default location.");
-                return; // 또는 기본값을 설정하려면:
-                // const latitude = 37.5665; // 기본 서울 좌표
-                // const longitude = 126.9780;
+        if (index >= 0 && index < sliderItems.length) {
+            const sliderItem = sliderItems[index];
+            
+            if (!mapElement) {
+                console.error(`ID가 ${mapDivId}인 지도 요소를 찾을 수 없음`);
+                return;
             }
+        
+            if (mapElement.dataset.rendered !== "true") {
+                // 지도 이미 렌더링되었는지 확인 (중복 렌더링 방지)
+                mapElement.dataset.rendered = "true";
+                mapElement.style.width = '100%';
+                mapElement.style.height = '300px';
 
-            // 지도 API를 사용해 지도 생성
-            const mapOptions = {
-                center: new naver.maps.LatLng(latitude, longitude),
-                zoom: 14
-            };
-            const map = new naver.maps.Map(mapDivId, mapOptions);
+                const address = sliderItem.dataset.address;
+                console.log(`슬라이더 아이템 주소: ${address}`);
 
-            // 마커 추가
-            const marker = new naver.maps.Marker({
-                position: new naver.maps.LatLng(latitude, longitude),
-                map: map
-            });
+                if (!address) {
+                    console.error("주소 정보가 없습니다.");
+                    return;
+                }
+                // 지오코딩을 통해 주소로부터 위도와 경도를 가져와 지도 렌더링
+                getCoordinatesByAddress(address, (latitude, longitude) => {
+                    if (!isNaN(latitude) && !isNaN(longitude)) {
+                        console.log(`위도: ${latitude}, 경도: ${longitude}`);
+                    
+                        // 지도 API를 사용해 지도 생성
+                        const mapOptions = {
+                            center: new naver.maps.LatLng(latitude, longitude),
+                            zoom: 14
+                        };
+                        const map = new naver.maps.Map(mapElement, mapOptions);
+
+                        // 마커 추가
+                        const marker = new naver.maps.Marker({
+                            position: new naver.maps.LatLng(latitude, longitude),
+                            map: map
+                        });
+                    } else {
+                        console.error("올바른 좌표를 얻지 못했습니다. 기본 위치를 사용합니다.");
+                        latitude = 37.4979; // 강남역의 위도
+                        longitude = 127.0276; // 강남역의 경도
+                    }
+                });
+            }
+        } else {
+            console.error(`잘못된 인덱스: ${index}`);
         }
     }
 
-    // 초기 슬라이드에 해당하는 지도 렌더링
-    console.log("Rendering initial map for index:", currentIndex);
-    renderMap(currentIndex);
+    function initMap() {
+        if (typeof naver !== 'undefined' && naver.maps) {
+            console.log("네이버 지도 API가 로드됨");
+            console.log("초기 지도 렌더링 중, 인덱스:", currentIndex);
+            renderMap(currentIndex);
+        } else {
+            console.error("네이버 지도 API가 로드되지 않음");
+            // API가 로드되지 않았을 때의 처리를 여기에 추가할 수 있습니다.
+            // 예: 사용자에게 오류 메시지를 표시하거나, 일정 시간 후 다시 시도하는 등
+        }
+    }
+
+    // 네이버 지도 API 로드 확인 및 초기화
+    function checkNaverMapsAPI() {
+        if (typeof naver !== 'undefined' && naver.maps) {
+            initMap();
+        } else {
+            setTimeout(checkNaverMapsAPI, 100);  // 100ms 후에 다시 확인
+        }
+    }
+
+    // API 로드 확인 시작
+    checkNaverMapsAPI();
 });
