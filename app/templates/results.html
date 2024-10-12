@@ -22,10 +22,10 @@
                 <div class="slider-item" data-latitude="{{ result.latitude }}" data-longitude="{{ result.longitude }}">
                     <div class="item-content">
                         <div class="item-header">
-                            <h2>{{ result.title }}</h2>
+                            <h2>{{ result.name }}</h2>
                             <div class="item-image">
                                 {% if result.image %}
-                                <img src="{{ result.image }}" alt="{{ result.title }}">
+                                <img src="{{ result.image }}" alt="{{ result.name }}">
                                 {% else %}
                                 <img src="/static/default-image.png" alt="기본 이미지">
                                 {% endif %}
@@ -33,6 +33,7 @@
                         </div>
                         <div class="item-text">
                             <p class="summary">{{ result.summary | safe }}</p>
+                            <p class="address">주소: {{ result.address }}</p>
                             <a href="{{ result.link }}" class="link-button" target="_blank">링크로 이동</a>
                             <a href="/" class="button">새로운 검색하기</a>
                         </div>
