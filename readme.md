@@ -13,6 +13,7 @@
 
 - vdb 초기화 방법
 삭제 : spot_index.bin, spot_metadata.pkl, vdbLog.txt, log_number.txt
+- 새로 크롤링 하실 때, vdb_data의 last_id.json 날려주세요
 
 <Good DBMgr 실행법>
 - 실행 위치 바꾸기
