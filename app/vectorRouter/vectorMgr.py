@@ -1,6 +1,6 @@
 import re
 from dotenv import load_dotenv
-from langchain.embeddings.openai import OpenAIEmbeddings
+from langchain_community.embeddings import OpenAIEmbeddings
 from rank_bm25 import BM25Okapi
 import os
 import numpy as np
