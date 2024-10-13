@@ -24,17 +24,18 @@ header {
     margin-bottom: 10px;
 }
 
-/* 지도 요소 */
-.map {
-    width: 100%;       /* 지도의 너비를 슬라이더 아이템 너비에 맞춤 */
-    height: 300px;     /* 지도의 높이를 설정 */
-    border: 1px solid #b3e5fc; /* 테두리를 추가해 지도의 영역을 시각적으로 구분 */
-    margin: 20px auto;
-}
+
+
+
+
 
 /* 슬라이드 컨테이너 */
 .slider-container {
+    width: 100%;
+    max-width: 900px; /* 가로 폭 확대 */
     overflow: hidden;
+    position: relative;
+    margin: 20px auto;
 }
 
 /* 슬라이드 목록 */
@@ -53,9 +54,15 @@ header {
     border-radius: 10px;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
     margin: 10px 0;
-    display: flex;      /* 슬라이드 아이템 안의 내용 정렬을 위해 flexbox 사용 */
-    flex-direction: column;
-    align-items: center;
+}
+
+/* 지도 요소 */
+.map {
+    width: 500px;
+    height: 300px; 
+    border: 1px solid #b3e5fc;
+    border-radius: 10px;
+    margin: 20px auto;
 }
 
 /* 슬라이드 내 버튼 */
@@ -95,7 +102,6 @@ header {
 .item-header h4 {
     margin: 10px 0;
     text-align: center;
-
     font-size: 1.8rem;
     color: #01579b;
 }
@@ -168,5 +174,11 @@ header {
 
     .item-text {
         max-width: 100%;
+    }
+
+    .map {
+        width: 100%; /* 모바일에서 지도의 너비를 가로 전체에 맞춤 */
+        max-width: none; /* 모바일에서 최대 너비 제한을 없앰 */
+        height: 200px; /* 모바일에서 지도의 높이 축소 */
     }
 }

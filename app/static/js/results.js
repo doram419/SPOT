@@ -70,8 +70,6 @@ document.addEventListener("DOMContentLoaded", function() {
             if (mapElement.dataset.rendered !== "true") {
                 // 지도 이미 렌더링되었는지 확인 (중복 렌더링 방지)
                 mapElement.dataset.rendered = "true";
-                mapElement.style.width = '100%';
-                mapElement.style.height = '300px';
 
                 const address = sliderItem.dataset.address;
                 console.log(`슬라이더 아이템 주소: ${address}`);
