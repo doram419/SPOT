@@ -1,12 +1,9 @@
-import os
 import requests
 from urllib import parse
+from typing import List
 from bs4 import BeautifulSoup
 from .datas.naver_data import NaverData
 from .api_key import get_key
-from .ocr_service import perform_ocr_from_url
-
-os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
 
 class NaverService():
     def __init__(self) -> None:
@@ -75,10 +72,7 @@ class NaverService():
         # iframe이 가리키는 URL에 대해 별도로 요청
         if iframe_src != None:
             iframe_response_url = naver_blog_url + iframe_src
-            headers = {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
-            }
-            iframe_response = requests.get(iframe_response_url, headers=headers)
+            iframe_response = requests.get(iframe_response_url)
             iframe_soup = BeautifulSoup(iframe_response.text, 'html.parser')
 
             # 네이버 블로그에 내장된 지도에서 이름 가져오기
@@ -101,67 +95,10 @@ class NaverService():
             if div_container:   
                 refined_content = div_container.text.replace('\n', ' ')
 
-
-                # OCR 기능 추가
-                ocr_results = self.perform_ocr_on_images(div_container, blog_url)
-                if ocr_results:
-                    refined_content += " " + " ".join(ocr_results)
-
-                # 지도 정보 추출
-                map_div = iframe_soup.find('div', class_='se-section se-section-placesMap se-section-align- se-l-default')
-                map_url = None
-                if map_div:
-                    # map_div에서 iframe을 찾고 그 src를 가져옴
-                    map_iframe = map_div.find('iframe')
-                    if map_iframe:
-                        map_url = map_iframe['src']
-
-            data = NaverData(content=refined_content, link=blog_url, map_url=map_url)
+            data = NaverData(name=refined_name, address=refined_address, content=refined_content, link=blog_url)
             return data
         
         return None
-    
-    def perform_ocr_on_images(self, div_container, blog_url):
-        ocr_results = []
-        img_tags = div_container.find_all('img', class_='se-image-resource')
-        
-        for img_tag in img_tags:
-            img_url = img_tag.get('data-lazy-src') or img_tag.get('src')
-            if img_url:
-                headers = {
-                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
-                    "Referer": blog_url
-                }
-                response = requests.get(img_url, headers=headers)
-                
-                if response.status_code == 200:
-                    ocr_text = perform_ocr_from_url(img_url)
-                    if ocr_text:
-                        ocr_results.append(f"[OCR 결과] {ocr_text}")
-                        print(f"OCR 결과: {ocr_text}")
-                else:
-                    print(f"이미지 다운로드 실패: {response.status_code}")
-
-        return ocr_results
-    
-     # 여기에서 테스트용 블로그 URL로 데이터를 추출하는 함수를 추가
-    def test_make_naver_data(self, blog_url: str):
-        """
-        특정 블로그 URL로부터 데이터를 추출하는 테스트 함수
-        """
-        naver_data = self.make_naver_data(blog_url=blog_url)
-        if naver_data:
-            print("블로그 내용:", naver_data.content[:200] + "...")
-            print("=" * 40)
-        else:
-            print("데이터 추출 실패")
-            
-if __name__ == "__main__":
-    naver_service = NaverService()
-    test_url = "https://blog.naver.com/inhea2327/223357628982"
-    naver_service.test_make_naver_data(blog_url=test_url)
-
-
 
 
     
