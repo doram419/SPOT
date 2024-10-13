@@ -1,31 +1,22 @@
 document.addEventListener("DOMContentLoaded", function() {
     // 주소를 위도와 경도로 변환하는 함수
     function getCoordinatesByAddress(address, callback) {
-        const clientId = 'cxvc9njj38'; // 네이버 지도 API 클라이언트 ID
-        const clientSecret = 'AzRlY5A6B7dvzfjJzLk1RcZDherPduz0Rh7kGGOl'; // 네이버 지도 API 클라이언트 시크릿
-        const encodedAddress = encodeURIComponent(address);
-        
-        fetch(`https://naveropenapi.apigw.ntruss.com/map-geocode/v2/geocode?query=${encodedAddress}`, {
-            headers: {
-                'X-NCP-APIGW-API-KEY-ID': clientId,
-                'X-NCP-APIGW-API-KEY': clientSecret
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.addresses && data.addresses.length > 0) {
-                const latitude = parseFloat(data.addresses[0].y);
-                const longitude = parseFloat(data.addresses[0].x);
-                callback(latitude, longitude); // 콜백을 사용해 위도와 경도 전달
-            } else {
-                console.error("주소를 찾을 수 없습니다.");
+        fetch(`http://127.0.0.1:8000/geocode?address=${encodeURIComponent(address)}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.addresses && data.addresses.length > 0) {
+                    const latitude = parseFloat(data.addresses[0].y);
+                    const longitude = parseFloat(data.addresses[0].x);
+                    callback(latitude, longitude); // 콜백을 사용해 위도와 경도 전달
+                } else {
+                    console.error("주소를 찾을 수 없습니다.");
+                    callback(NaN, NaN);
+                }
+            })
+            .catch(error => {
+                console.error("지오코딩 요청 중 오류 발생:", error);
                 callback(NaN, NaN);
-            }
-        })
-        .catch(error => {
-            console.error("지오코딩 요청 중 오류 발생:", error);
-            callback(NaN, NaN);
-        });
+            });
     }
     // 슬라이더 관련 DOM 요소
     const sliderWrapper = document.getElementById('sliderWrapper');
