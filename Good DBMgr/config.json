@@ -9,30 +9,30 @@
     "button_style": "default",
     "vdb_creator": {
         "width": 600,
-        "height": 552,
-        "x": 432,
-        "y": 108,
+        "height": 549,
+        "x": 47,
+        "y": 73,
         "crawling": {
             "region": "강남역",
-            "keyword": "양식",
-            "mode": "테스트 모드(10)",
+            "keyword": "단체회식",
+            "mode": "데이터 수집 모드(100)",
             "recent_regions": [
                 "강남역",
                 "서초동"
             ],
             "recent_keywords": [
-                "양식",
-                "양꼬치",
-                "스테이크",
-                "순대국",
-                "수제맥주"
+                "단체회식",
+                "김치찌개",
+                "김밥",
+                "곱창",
+                "양식"
             ]
         },
         "preprocessing": {
             "embedding_model_type": "OpenAI",
             "embedding_model_version": "text-embedding-3-small",
             "chunk_size": "150",
-            "overlap": "30"
+            "overlap": "60"
         }
     },
     "vdb_selector": {
@@ -71,8 +71,8 @@
     },
     "application": {
         "width": 600,
-        "height": 447,
-        "x": 52,
-        "y": 52
+        "height": 467,
+        "x": 518,
+        "y": 155
     }
 }

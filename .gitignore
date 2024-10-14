@@ -9,3 +9,9 @@ build/good_main/good_main.pkg
 *.pyc
 *.pyc
 app/__pycache__/routers.cpython-310.pyc
+app/vectorRouter/__pycache__/vectorMgr.cpython-310.pyc
+app/__pycache__/routers.cpython-310.pyc
+app/vectorRouter/__pycache__/vectorMgr.cpython-310.pyc
+app/vectorRouter/__pycache__/FaissVectorStore.cpython-310.pyc
+Good DBMgr/vdb_data/shard_0.index
+Good DBMgr/vdb_data/metadata_0.pkl
