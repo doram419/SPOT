@@ -88,7 +88,7 @@ document.addEventListener("DOMContentLoaded", function() {
                         // 지도 API를 사용해 지도 생성
                         const mapOptions = {
                             center: new naver.maps.LatLng(latitude, longitude),
-                            zoom: 14
+                            zoom: 15
                         };
                         const map = new naver.maps.Map(mapElement, mapOptions);
 
