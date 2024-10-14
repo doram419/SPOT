@@ -19,12 +19,8 @@ app.mount("/static", StaticFiles(directory="app/static"), name="static")
 # CORS 설정 - 모든 도메인에서 접근 허용
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["*"],  # 모든 도메인에서 접근 허용
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["*"],  # 모든 HTTP 메서드 허용
+    allow_headers=["*"],  # 모든 헤더 허용
 )
-
-# 라우터 등록
-app.include_router(router)
-
