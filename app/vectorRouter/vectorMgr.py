@@ -27,11 +27,11 @@ embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
 vector_store = FaissVectorStore()
 
 # 코퍼스 생성
-corpus = [meta.get("summary", " ") for meta in vector_store.metadata]
+corpus = [meta.get("chunk_content", " ") for meta in vector_store.metadata]
 
 # 코퍼스가 비어 있는 경우 예외 발생
 if not corpus:
-    raise EmptyVectorStoreException("메타 데이터 안에 summary가 없습니다.")
+    raise EmptyVectorStoreException("메타 데이터 안에 chunk_content 없습니다.")
 
 # BM25 모델 초기화
 tokenized_corpus = [doc.split(" ") for doc in corpus]
@@ -198,3 +198,25 @@ async def search_with_rag(search_input: str, k: int = 5, bm25_weight: float = 0.
         logging.error(f"검색 중 오류 발생: {str(e)}")
         raise
 
+<<<<<<< HEAD
+=======
+        # 요약 생성 전에 디버깅 출력
+
+        print(f"선택된 링크: {link}")
+  
+
+        # 요약 생성
+        summary = generate_gpt_response(name, full_content)
+        selected_results.append({
+            "name": name,
+            "summary": summary,
+            "address": address,
+            "data_id": data_id,
+            "link": link
+        })
+
+    return {
+        "generated_response": "검색 결과 요약 생성 완료",
+        "results": selected_results
+    }
+>>>>>>> develop
