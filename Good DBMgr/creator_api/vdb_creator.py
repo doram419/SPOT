@@ -148,13 +148,14 @@ class VdbCreatorModule:
             embedding_model = self.preprocessing_module.embedding_model_type.get()
             embedding_version = self.preprocessing_module.embedding_model_version.get()
             
-            self.logger.log_vdb_creation(keyword, region, mode, chunk_size, overlap, embedding_model, embedding_version)
+            await self.logger.log_vdb_creation(keyword, region, mode, chunk_size, overlap, embedding_model, embedding_version)
 
             self.status_module.update_status("VDB 생성 프로세스 완료")
-            self.logger.log_info("VDB 생성 프로세스 완료")
+            await self.logger.log_info("VDB 생성 프로세스 완료")
 
         except Exception as e:
             self.status_module.update_status(f"오류 발생: {str(e)}")
+            await self.logger.log_error(f"VDB 생성 중 오류: {str(e)}")
         finally:
             self.window.after(0, lambda: self.create_vdb_button.config(state='normal'))
 
@@ -169,6 +170,7 @@ class VdbCreatorModule:
             'preprocessing': self.preprocessing_module.get_config()
         })
         save_module_config('vdb_creator', self.window_config)
+        self.loop.call_soon_threadsafe(self.loop.stop)  # 안전하게 이벤트 루프 중지
         self.window.destroy()
 
     def run(self):

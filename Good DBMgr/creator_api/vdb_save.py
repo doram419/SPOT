@@ -1,9 +1,10 @@
 import os
 import json
+import aiofiles
 import tkinter as tk
 from tkinter import ttk
 from .datas.constants import VECTOR_DBS
-from .faissVectorStore import FaissVectorStore
+from .improved_faiss_vector_store import ImprovedFaissVectorStore
 
 class VdbSaveModule:
     def __init__(self, parent, status_module):
@@ -12,6 +13,7 @@ class VdbSaveModule:
         self.preprocessed_data = None
         self.last_id = 0
         self.id_file_path = "./Good DBMgr/vdb_data/last_id.json"
+        self.vector_store = None
         self.create_widgets()
 
     def create_widgets(self):
@@ -39,29 +41,23 @@ class VdbSaveModule:
         self.preprocessed_data = data
         self.status_module.update_status("전처리된 데이터 수신 완료")
 
-    def load_last_id(self):
+    async def load_last_id(self):
         if os.path.exists(self.id_file_path):
-            with open(self.id_file_path, 'r') as f:
-                data = json.load(f)
+            async with aiofiles.open(self.id_file_path, 'r') as f:
+                data = json.loads(await f.read())
                 self.last_id = data.get('last_id', 0)
         else:
             self.last_id = 0
 
-    def save_last_id(self):
-        """
-        vdb 데이터 아이디를 불러오는 함수
-        """
-        with open(self.id_file_path, 'w') as f:
-            json.dump({'last_id': self.last_id}, f)
+    async def save_last_id(self):
+        async with aiofiles.open(self.id_file_path, 'w') as f:
+            await f.write(json.dumps({'last_id': self.last_id}))
 
     def get_next_id(self):
         self.last_id += 1
         return self.last_id
 
     async def save_to_vdb(self):
-        """
-        vdb에 저장하는 파일
-        """
         if self.preprocessed_data is None:
             self.status_module.update_status("저장할 데이터가 없습니다.")
             return False
@@ -75,7 +71,7 @@ class VdbSaveModule:
         os.makedirs(save_path, exist_ok=True)
 
         # 마지막 ID 로드
-        self.load_last_id()
+        await self.load_last_id()
 
         if vdb_type == "Faiss":
             success = await self.save_to_faiss(save_path)
@@ -84,7 +80,7 @@ class VdbSaveModule:
             return False
 
         # 마지막 ID 저장
-        self.save_last_id()
+        await self.save_last_id()
 
         if success:
             self.status_module.update_status(f"{vdb_type} VDB 저장 완료")
@@ -95,17 +91,8 @@ class VdbSaveModule:
 
     async def save_to_faiss(self, save_path):
         try:
-            index_file = os.path.join(save_path, "spot_index.bin")
-            metadata_file = os.path.join(save_path, "spot_metadata.pkl")
-            
-            # 기존 인덱스가 있으면 로드, 없으면 새로 생성
-            if os.path.exists(index_file) and os.path.exists(metadata_file):
-                vector_store = FaissVectorStore(index_file=index_file, metadata_file=metadata_file)
-                vector_store.load_index()
-                self.status_module.update_status("기존 Faiss 인덱스를 로드했습니다.")
-            else:
-                vector_store = FaissVectorStore(index_file=index_file, metadata_file=metadata_file)
-                self.status_module.update_status("새로운 Faiss 인덱스를 생성했습니다.")
+            if self.vector_store is None:
+                self.vector_store = ImprovedFaissVectorStore(index_dir=save_path)
 
             for naver_data in self.preprocessed_data:
                 data_id = self.get_next_id()
@@ -123,15 +110,13 @@ class VdbSaveModule:
                             "chunk_index": chunk_index,
                             "chunk_content": chunk_content
                         }
-                        vector_store.add_to_index(
+                        await self.vector_store.add_to_index(
                             {f"naver_{data_id}_{chunk_index}": chunk_vector},
                             chunk_meta
                         )
                 else:
                     self.status_module.update_status(f"경고: Naver 데이터 '{naver_data.name}'의 내용이 리스트 형식이 아닙니다.")
 
-            vector_store.save_index()
-            
             self.status_module.update_status("Faiss VDB에 데이터 저장 완료")
             return True
 
