@@ -198,25 +198,4 @@ async def search_with_rag(search_input: str, k: int = 5, bm25_weight: float = 0.
         logging.error(f"검색 중 오류 발생: {str(e)}")
         raise
 
-<<<<<<< HEAD
-=======
-        # 요약 생성 전에 디버깅 출력
 
-        print(f"선택된 링크: {link}")
-  
-
-        # 요약 생성
-        summary = generate_gpt_response(name, full_content)
-        selected_results.append({
-            "name": name,
-            "summary": summary,
-            "address": address,
-            "data_id": data_id,
-            "link": link
-        })
-
-    return {
-        "generated_response": "검색 결과 요약 생성 완료",
-        "results": selected_results
-    }
->>>>>>> develop
