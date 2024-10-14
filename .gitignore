@@ -9,3 +9,5 @@ build/good_main/good_main.pkg
 *.pyc
 *.pyc
 app/__pycache__/routers.cpython-310.pyc
+spot_index.bin
+spot_metadata.pkl
