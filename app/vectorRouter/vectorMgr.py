@@ -1,6 +1,6 @@
 import re
 from dotenv import load_dotenv
-from langchain_community.embeddings import OpenAIEmbeddings
+from langchain.embeddings.openai import OpenAIEmbeddings
 from rank_bm25 import BM25Okapi
 import os
 import numpy as np
@@ -13,6 +13,7 @@ from .exceptions import (
     EmptyVectorStoreException,
     VectorSearchException,
 )
+from app.vectorRouter.promptMgr import generate_gpt_response
 
 # .env 파일에서 API 키 로드
 load_dotenv()
@@ -47,7 +48,7 @@ def preprocess_search_input(search_input: str):
     return keywords
 
 # RAG(검색 + 생성) 기반 검색 함수
-def search_with_rag(search_input: str, k: int = 5, bm25_weight: float = 0.6, faiss_weight: float = 0.4):
+def search_with_rag(search_input: str, k: int = 5, bm25_weight: float = 0.4, faiss_weight: float = 0.6):
     if not search_input:
         raise EmptySearchQueryException()
 
