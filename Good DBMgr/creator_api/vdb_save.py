@@ -1,6 +1,6 @@
 import os
 import json
-import asyncio
+import aiofiles
 import tkinter as tk
 from tkinter import ttk
 from .datas.constants import VECTOR_DBS

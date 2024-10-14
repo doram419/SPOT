@@ -10,12 +10,12 @@
     "vdb_creator": {
         "width": 600,
         "height": 552,
-        "x": 916,
-        "y": 84,
+        "x": 432,
+        "y": 108,
         "crawling": {
             "region": "강남역",
             "keyword": "양식",
-            "mode": "데이터 수집 모드(100)",
+            "mode": "테스트 모드(10)",
             "recent_regions": [
                 "강남역",
                 "서초동"
@@ -71,8 +71,8 @@
     },
     "application": {
         "width": 600,
-        "height": 347,
-        "x": 945,
-        "y": 236
+        "height": 447,
+        "x": 52,
+        "y": 52
     }
 }
