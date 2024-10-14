@@ -58,7 +58,8 @@ header {
 
 /* 지도 요소 */
 .map {
-    width: 500px;
+    width: 100%;
+    max-width: 500px; /* 최대 너비 제한 */
     height: 300px;
     border: 1px solid #b3e5fc;
     border-radius: 10px;
@@ -185,8 +186,10 @@ header {
     }
 
     .map {
-        width: 100%; /* 모바일에서 지도의 너비를 가로 전체에 맞춤 */
-        max-width: none; /* 모바일에서 최대 너비 제한을 없앰 */
+        width: 90%; /* 모바일에서 지도의 너비를 가로 전체에 맞춤 */
         height: 200px; /* 모바일에서 지도의 높이 축소 */
+    }
+    .store-info {
+        font-size: 0.9rem; /* 모바일 환경에서 가게 정보 크기 조정 */
     }
 }

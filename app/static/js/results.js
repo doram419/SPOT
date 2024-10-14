@@ -1,7 +1,12 @@
 document.addEventListener("DOMContentLoaded", function() {
     // 주소를 위도와 경도로 변환하는 함수
     function getCoordinatesByAddress(address, callback) {
-        fetch(`http://127.0.0.1:8000/geocode?address=${encodeURIComponent(address)}`)
+        // 현재 호스트 주소를 감지하여 로컬 또는 IP 기반으로 설정
+        const apiBaseUrl = (window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost') 
+                            ? 'http://127.0.0.1:8000' 
+                            : `http://${window.location.hostname}:8000`;
+
+        fetch(`${apiBaseUrl}/geocode?address=${encodeURIComponent(address)}`)
             .then(response => response.json())
             .then(data => {
                 if (data.addresses && data.addresses.length > 0) {
@@ -88,7 +93,7 @@ document.addEventListener("DOMContentLoaded", function() {
                         // 지도 API를 사용해 지도 생성
                         const mapOptions = {
                             center: new naver.maps.LatLng(latitude, longitude),
-                            zoom: 14
+                            zoom: 15
                         };
                         const map = new naver.maps.Map(mapElement, mapOptions);
 
@@ -97,6 +102,12 @@ document.addEventListener("DOMContentLoaded", function() {
                             position: new naver.maps.LatLng(latitude, longitude),
                             map: map
                         });
+
+                        // 지도 리사이즈 처리 (모바일에서 제대로 보이도록)
+                        setTimeout(() => {
+                            naver.maps.Event.addListener(map, 'resize');
+                            map.setCenter(new naver.maps.LatLng(latitude, longitude));
+                        },100);
 
                         // 가게 이름과 주소 표시 업데이트
                         const mapContainer = mapElement.parentElement;
