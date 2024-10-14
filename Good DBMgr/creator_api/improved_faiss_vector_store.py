@@ -6,7 +6,7 @@ import asyncio
 from concurrent.futures import ThreadPoolExecutor
 
 class ImprovedFaissVectorStore:
-    def __init__(self, index_dir="vdb_data", shard_size=1000000, num_shards=10):
+    def __init__(self, index_dir="app/vdb", shard_size=1000000, num_shards=10):
         """
         개선된 Faiss 벡터 저장소 초기화
         :param index_dir: 인덱스 파일을 저장할 디렉토리
@@ -26,31 +26,34 @@ class ImprovedFaissVectorStore:
 
     def load_shards(self):
         """기존 샤드 로드 또는 새 샤드 생성"""
-        for i in range(self.num_shards):
-            shard_file = os.path.join(self.index_dir, f"shard_{i}.index")
-            metadata_file = os.path.join(self.index_dir, f"metadata_{i}.pkl")
+        main_index_file = os.path.join(self.index_dir, "spot_index.bin")
+        main_metadata_file = os.path.join(self.index_dir, "spot_metadata.pkl")
+        
+        if os.path.exists(main_index_file) and os.path.exists(main_metadata_file):
+            # 메인 인덱스와 메타데이터 로드
+            self.shards.append(faiss.read_index(main_index_file))
+            with open(main_metadata_file, 'rb') as f:
+                self.metadata.append(pickle.load(f))
+            self.dim = self.shards[0].d
+        else:
+            print("메인 인덱스 파일이 없습니다. 새 인덱스를 생성합니다.")
+
+        # 추가 샤드 로드
+        for i in range(1, self.num_shards):
+            shard_file = os.path.join(self.index_dir, f"spot_index_shard_{i}.bin")
+            metadata_file = os.path.join(self.index_dir, f"spot_metadata_shard_{i}.pkl")
             
             if os.path.exists(shard_file) and os.path.exists(metadata_file):
-                # 기존 샤드와 메타데이터 로드
-                shard = faiss.read_index(shard_file, faiss.IO_FLAG_MMAP)
+                self.shards.append(faiss.read_index(shard_file))
                 with open(metadata_file, 'rb') as f:
-                    shard_metadata = pickle.load(f)
-                
-                self.shards.append(shard)
-                self.metadata.append(shard_metadata)
-                
-                if self.dim is None:
-                    self.dim = shard.d
+                    self.metadata.append(pickle.load(f))
             else:
-                # 새 샤드 생성 (필요한 경우)
-                if self.dim is None:
-                    # 첫 번째 샤드인 경우, 아직 차원을 모르므로 생성 연기
-                    self.shards.append(None)
-                    self.metadata.append([])
-                else:
-                    new_shard = faiss.IndexFlatL2(self.dim)
-                    self.shards.append(new_shard)
-                    self.metadata.append([])
+                break  # 연속된 샤드가 없으면 중단
+
+        if not self.shards:
+            print("로드된 샤드가 없습니다. 첫 번째 샤드를 초기화합니다.")
+            self.shards.append(None)
+            self.metadata.append([])
 
     async def add_to_index(self, vector_dict, metadata):
         """
@@ -62,7 +65,6 @@ class ImprovedFaissVectorStore:
 
         if self.dim is None:
             self.dim = combined_vectors.shape[1]
-            # 첫 번째 샤드 초기화
             self.shards[0] = faiss.IndexFlatL2(self.dim)
 
         # 여유 공간이 있는 샤드 찾기
@@ -81,15 +83,19 @@ class ImprovedFaissVectorStore:
         # 선택된 샤드에 추가
         shard = self.shards[shard_index]
         shard.add(combined_vectors)
-        self.metadata[shard_index].append(metadata)
+        self.metadata[shard_index].extend(metadata)
 
         # 업데이트된 샤드와 메타데이터를 비동기적으로 저장
         await self.save_shard(shard_index)
 
     async def save_shard(self, shard_index):
         """특정 샤드와 그 메타데이터를 비동기적으로 저장"""
-        shard_file = os.path.join(self.index_dir, f"shard_{shard_index}.index")
-        metadata_file = os.path.join(self.index_dir, f"metadata_{shard_index}.pkl")
+        if shard_index == 0:
+            shard_file = os.path.join(self.index_dir, "spot_index.bin")
+            metadata_file = os.path.join(self.index_dir, "spot_metadata.pkl")
+        else:
+            shard_file = os.path.join(self.index_dir, f"spot_index_shard_{shard_index}.bin")
+            metadata_file = os.path.join(self.index_dir, f"spot_metadata_shard_{shard_index}.pkl")
 
         # ThreadPoolExecutor를 사용하여 I/O 작업 수행
         await asyncio.get_event_loop().run_in_executor(
@@ -151,5 +157,6 @@ class ImprovedFaissVectorStore:
         for idx in indices:
             shard_idx = idx // self.shard_size
             local_idx = idx % self.shard_size
-            metadata.append(self.metadata[shard_idx][local_idx])
+            if shard_idx < len(self.metadata) and local_idx < len(self.metadata[shard_idx]):
+                metadata.append(self.metadata[shard_idx][local_idx])
         return metadata
