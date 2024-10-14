@@ -19,29 +19,14 @@ import torch
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 # .env 파일에서 API 키 로드
-print(".env 파일에서 API 키 로드 시도 중...")
 load_dotenv()
 openai_api_key = os.getenv("OPENAI_API_KEY")
-if openai_api_key:
-    print("API 키 로드 성공")
-else:
-    print("경고: API 키를 로드하지 못했습니다")
 
 # OpenAI 임베딩 객체 생성
-try:
-    print("OpenAI 임베딩 객체 생성 중...")
-    embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
-    print("OpenAI 임베딩 객체 생성 완료")
-except Exception as e:
-    print(f"임베딩 객체 생성 중 오류 발생: {e}")
+embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
 
 # 벡터 저장소 인스턴스 생성
-try:
-    print("벡터 저장소 인스턴스 생성 중...")
-    vector_store = FaissVectorStore()
-    print("벡터 저장소 인스턴스 생성 완료")
-except Exception as e:
-    print(f"벡터 저장소 생성 중 오류 발생: {e}")
+vector_store = FaissVectorStore()
 
 # 코퍼스 생성
 corpus = [meta.get("chunk_content", " ") for meta in vector_store.metadata]
@@ -51,7 +36,6 @@ if not corpus:
     raise EmptyVectorStoreException("메타 데이터 안에 chunk_content 없습니다.")
 
 # BM25 모델 초기화
-print("BM25 모델 초기화 중...")
 tokenized_corpus = [doc.split(" ") for doc in corpus]
 bm25 = BM25Okapi(tokenized_corpus)
 
@@ -66,9 +50,7 @@ ner_pipeline = pipeline("ner", model=ner_model, tokenizer=ner_tokenizer, framewo
 
 # OpenAI 임베딩을 생성하는 함수
 def get_openai_embedding(text: str):
-    print(f"OpenAI 임베딩 생성 중... 입력 텍스트: {text}")
     embedding = embeddings.embed_query(text)
-    print("OpenAI 임베딩 생성 완료")
     return np.array(embedding, dtype=np.float32)
 
 # 검색어를 전처리하고 NER 수행하는 함수
@@ -131,25 +113,21 @@ async def search_with_rag(search_input: str, k: int = 5, bm25_weight: float = 0.
         logging.info(f"FAISS 후보 개수: {len(I[0])}")
 
         # FAISS 유사도 정규화
-    print("FAISS 유사도 정규화 중...")
-        faiss_similarities = 1 - filtered_distances
+        faiss_similarities = 1 - D[0]
         if np.max(faiss_similarities) > 0:
             faiss_similarities = faiss_similarities / np.max(faiss_similarities)
-    print(f"FAISS 유사도 정규화 완료 (일부): {faiss_similarities[:5]}")
 
         # 5. BM25와 FAISS 점수 결합
-    print("BM25와 FAISS 점수 결합 시작")
         combined_scores = {}
 
-    # BM25 점수 결합
         for idx in top_bm25_indices:
             combined_scores[idx] = bm25_scores[idx] * bm25_weight
 
-    for idx, doc_id in enumerate(I[0]):
-        if doc_id in combined_scores:
-            combined_scores[doc_id] += faiss_similarities[idx] * faiss_weight
-        else:
-            combined_scores[doc_id] = faiss_similarities[idx] * faiss_weight
+        for idx, doc_id in enumerate(I[0]):
+            if doc_id in combined_scores:
+                combined_scores[doc_id] += faiss_similarities[idx] * faiss_weight
+            else:
+                combined_scores[doc_id] = faiss_similarities[idx] * faiss_weight
 
         # 6. 결합된 점수로 상위 문서 선택 및 정렬
         ranked_indices = sorted(combined_scores, key=combined_scores.get, reverse=True)
@@ -240,13 +218,3 @@ async def search_with_rag(search_input: str, k: int = 5, bm25_weight: float = 0.
     except Exception as e:
         logging.error(f"검색 중 오류 발생: {str(e)}")
         raise
-
-# main 블록 추가
-if __name__ == "__main__":
-    print("코드 실행 시작")
-    # 테스트 호출 - 검색어를 넣어 함수 호출 등
-    try:
-        result = search_with_rag("가족들이랑 국밥", k=5)
-        print("검색 결과:", result)
-    except Exception as e:
-        print(f"검색 실행 중 오류 발생: {e}")
