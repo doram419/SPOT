@@ -1,6 +1,6 @@
 import re
 from dotenv import load_dotenv
-from langchain.embeddings.openai import OpenAIEmbeddings
+from langchain_community.embeddings import OpenAIEmbeddings
 from rank_bm25 import BM25Okapi
 import os
 import numpy as np
@@ -13,7 +13,6 @@ from .exceptions import (
     EmptyVectorStoreException,
     VectorSearchException,
 )
-from app.vectorRouter.promptMgr import generate_gpt_response
 
 # .env 파일에서 API 키 로드
 load_dotenv()
@@ -26,11 +25,11 @@ embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
 vector_store = FaissVectorStore()
 
 # 코퍼스 생성
-corpus = [meta.get("summary", " ") for meta in vector_store.metadata]
+corpus = [meta.get("chunk_content", " ") for meta in vector_store.metadata]
 
 # 코퍼스가 비어 있는 경우 예외 발생
 if not corpus:
-    raise EmptyVectorStoreException("메타 데이터 안에 summary가 없습니다.")
+    raise EmptyVectorStoreException("메타 데이터 안에 chunk_content 없습니다.")
 
 # BM25 모델 초기화
 tokenized_corpus = [doc.split(" ") for doc in corpus]
@@ -48,7 +47,7 @@ def preprocess_search_input(search_input: str):
     return keywords
 
 # RAG(검색 + 생성) 기반 검색 함수
-def search_with_rag(search_input: str, k: int = 5, bm25_weight: float = 0.4, faiss_weight: float = 0.6):
+def search_with_rag(search_input: str, k: int = 5, bm25_weight: float = 0.6, faiss_weight: float = 0.4):
     if not search_input:
         raise EmptySearchQueryException()
 
