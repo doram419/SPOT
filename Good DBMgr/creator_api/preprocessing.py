@@ -114,7 +114,6 @@ class PreprocessingModule:
         tasks = []
         for naver_data in naver_data_list:
             if naver_data.content is not None:
-                print(naver_data.link)
                 naver_data.content = self.do_chucking(naver_data.content, chunk_size, overlap)
                 tasks.append(self.process_single_naver_data(naver_data))
             else:

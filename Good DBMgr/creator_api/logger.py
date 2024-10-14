@@ -1,6 +1,7 @@
 import logging
 import os
 from datetime import datetime
+import aiofiles
 
 class LoggingModule:
     def __init__(self, log_dir="./logs"):
@@ -10,19 +11,16 @@ class LoggingModule:
 
     def setup_logging(self):
         os.makedirs(self.log_dir, exist_ok=True)
-        log_file = os.path.join(self.log_dir, f"vdb_creation_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log")
+        self.log_file = os.path.join(self.log_dir, f"vdb_creation_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log")
         self.logger = logging.getLogger('VdbCreation')
         self.logger.setLevel(logging.INFO)
-        
-        file_handler = logging.FileHandler(log_file)
-        file_handler.setLevel(logging.INFO)
-        
-        formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-        file_handler.setFormatter(formatter)
-        
-        self.logger.addHandler(file_handler)
 
-    def log_vdb_creation(self, keyword, region, mode, chunk_size, overlap, embedding_model, embedding_version):
+    async def _write_log(self, message, level):
+        formatted_message = f"{datetime.now()} - VdbCreation - {level} - {message}\n"
+        async with aiofiles.open(self.log_file, mode='a') as file:
+            await file.write(formatted_message)
+
+    async def log_vdb_creation(self, keyword, region, mode, chunk_size, overlap, embedding_model, embedding_version):
         log_message = f"""
         VDB 생성 완료:
         - 키워드: {keyword}
@@ -33,10 +31,10 @@ class LoggingModule:
         - 임베딩 모델: {embedding_model}
         - 임베딩 버전: {embedding_version}
         """
-        self.logger.info(log_message)
+        await self._write_log(log_message, "INFO")
 
-    def log_error(self, error_message):
-        self.logger.error(f"VDB 생성 중 오류 발생: {error_message}")
+    async def log_error(self, error_message):
+        await self._write_log(f"VDB 생성 중 오류 발생: {error_message}", "ERROR")
 
-    def log_info(self, message):
-        self.logger.info(message)
+    async def log_info(self, message):
+        await self._write_log(message, "INFO")
