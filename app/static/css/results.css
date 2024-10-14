@@ -59,10 +59,18 @@ header {
 /* 지도 요소 */
 .map {
     width: 500px;
-    height: 300px; 
+    height: 300px;
     border: 1px solid #b3e5fc;
     border-radius: 10px;
     margin: 20px auto;
+}
+
+/* 가게 정보 스타일 */
+.store-info {
+    text-align: center;
+    margin-top: 10px;
+    font-size: 1rem;
+    color: #333;
 }
 
 /* 슬라이드 내 버튼 */
@@ -163,7 +171,7 @@ header {
         padding: 20px; /* 모바일에서 여백 축소 */
     }
 
-    .item-header h3 {
+    .item-header h4 {
         font-size: 1.5rem; /* 모바일에서 제목 크기 축소 */
     }
 

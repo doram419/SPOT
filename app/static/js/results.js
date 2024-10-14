@@ -58,11 +58,11 @@ document.addEventListener("DOMContentLoaded", function() {
         const mapDivId = `map-${index}`;
         const mapElement = document.getElementById(mapDivId);
         const sliderItems = document.querySelectorAll('.slider-item');
+        const sliderItem = sliderItems[index];
 
         if (index >= 0 && index < sliderItems.length) {
-            const sliderItem = sliderItems[index];
             
-            if (!mapElement) {
+            if (!mapElement || !sliderItem) {
                 console.error(`ID가 ${mapDivId}인 지도 요소를 찾을 수 없음`);
                 return;
             }
@@ -72,6 +72,8 @@ document.addEventListener("DOMContentLoaded", function() {
                 mapElement.dataset.rendered = "true";
 
                 const address = sliderItem.dataset.address;
+                const name = sliderItem.querySelector("h2").innerText;
+
                 console.log(`슬라이더 아이템 주소: ${address}`);
 
                 if (!address) {
@@ -95,10 +97,20 @@ document.addEventListener("DOMContentLoaded", function() {
                             position: new naver.maps.LatLng(latitude, longitude),
                             map: map
                         });
+
+                        // 가게 이름과 주소 표시 업데이트
+                        const mapContainer = mapElement.parentElement;
+                        let storeInfoElement = mapContainer.querySelector('.store-info');
+
+                        if(!storeInfoElement) {
+                            // 중복 방지를 위해 기존에 추가된 요소가 있는지 확인 후, 없을 때만 추가
+                            const mapInfoElement = document.createElement('div');
+                            mapInfoElement.classList.add('store-info');
+                            mapInfoElement.innerHTML = `<strong>${name}</strong><br>${address}`;
+                            mapElement.parentNode.insertBefore(mapInfoElement, mapElement.nextSibling);
+                        }
                     } else {
                         console.error("올바른 좌표를 얻지 못했습니다. 기본 위치를 사용합니다.");
-                        latitude = 37.4979; // 강남역의 위도
-                        longitude = 127.0276; // 강남역의 경도
                     }
                 });
             }
@@ -114,8 +126,6 @@ document.addEventListener("DOMContentLoaded", function() {
             renderMap(currentIndex);
         } else {
             console.error("네이버 지도 API가 로드되지 않음");
-            // API가 로드되지 않았을 때의 처리를 여기에 추가할 수 있습니다.
-            // 예: 사용자에게 오류 메시지를 표시하거나, 일정 시간 후 다시 시도하는 등
         }
     }
 
