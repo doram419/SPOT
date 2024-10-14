@@ -8,6 +8,8 @@ from .vectorRouter.exceptions import (
     NoSearchResultsException,
     EmptyVectorStoreException,
 )
+import requests
+from .config import NAVER_MAP_CLIENT_ID, NAVER_MAP_CLIENT_SECRET
 
 # FastAPI의 APIRouter 인스턴스 생성
 router = APIRouter()
@@ -45,4 +47,22 @@ async def search_restaurant(request: Request, search_input: str = Form(...)):
         "results": results["results"],
         "generated_response": results["generated_response"],
         "search_input": search_input
+
     })
+
+# 네이버 지오코딩을 처리하는 엔드포인트 추가
+@router.get("/geocode")
+async def geocode(address: str):
+    headers = {
+        "X-NCP-APIGW-API-KEY-ID": NAVER_MAP_CLIENT_ID,
+        "X-NCP-APIGW-API-KEY": NAVER_MAP_CLIENT_SECRET
+    }
+    try:
+        response = requests.get(
+            f"https://naveropenapi.apigw.ntruss.com/map-geocode/v2/geocode?query={address}",
+            headers=headers
+        )
+        response.raise_for_status()
+        return response.json()
+    except requests.exceptions.RequestException as e:
+        raise HTTPException(status_code=500, detail=str(e))
