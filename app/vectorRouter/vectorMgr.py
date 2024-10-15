@@ -1,6 +1,6 @@
 import re
 from dotenv import load_dotenv
-from langchain_community.embeddings import OpenAIEmbeddings
+from langchain_openai import OpenAIEmbeddings
 from app.vectorRouter.exceptions import EmptySearchQueryException, EmptyVectorStoreException, NoSearchResultsException
 from rank_bm25 import BM25Okapi
 import os
@@ -70,7 +70,7 @@ def preprocess_search_input(search_input: str):
     return keywords
 
 # RAG(검색 + 생성) 기반 검색 함수 (비동기)
-async def search_with_rag(search_input: str, k: int = 5, bm25_weight: float = 0.4, faiss_weight: float = 0.6):
+async def search_with_rag(search_input: str, k: int = 5, bm25_weight: float = 0.4, faiss_weight: float = 0.6, threshold: float = 0.7):
     if not search_input:
         raise EmptySearchQueryException()
 
@@ -95,13 +95,6 @@ async def search_with_rag(search_input: str, k: int = 5, bm25_weight: float = 0.
         if np.max(bm25_scores) > 0:
             bm25_scores = bm25_scores / np.max(bm25_scores)
 
-        # 상위 BM25 인덱스 선택
-        top_bm25_indices = np.argsort(bm25_scores)[-200:]
-        logging.info(f"BM25 후보 개수: {len(top_bm25_indices)}")
-
-        if len(top_bm25_indices) == 0:
-            raise NoSearchResultsException("BM25 검색에서 결과를 찾을 수 없습니다.")
-    
         # 3. FAISS 검색
         embedding = get_openai_embedding(search_input)
         
@@ -109,32 +102,40 @@ async def search_with_rag(search_input: str, k: int = 5, bm25_weight: float = 0.
             raise EmptyVectorStoreException("FAISS 벡터 저장소가 초기화되지 않았습니다.")
 
         # FAISS 검색 수행
-        D, I = vector_store.search(embedding.reshape(1, -1), k=200)
-        logging.info(f"FAISS 후보 개수: {len(I[0])}")
+        D, I = vector_store.search(embedding.reshape(1, -1), k=len(corpus))  # 모든 문서에 대해 검색
 
         # FAISS 유사도 정규화
         faiss_similarities = 1 - D[0]
         if np.max(faiss_similarities) > 0:
             faiss_similarities = faiss_similarities / np.max(faiss_similarities)
 
-        # 5. BM25와 FAISS 점수 결합
+        # 4. BM25와 FAISS 점수 결합
         combined_scores = {}
 
-        for idx in top_bm25_indices:
-            combined_scores[idx] = bm25_scores[idx] * bm25_weight
+        for idx in range(len(corpus)):
+            bm25_score = bm25_scores[idx] * bm25_weight
+            faiss_score = faiss_similarities[np.where(I[0] == idx)[0][0]] * faiss_weight if idx in I[0] else 0
+            combined_scores[idx] = bm25_score + faiss_score
 
-        for idx, doc_id in enumerate(I[0]):
-            if doc_id in combined_scores:
-                combined_scores[doc_id] += faiss_similarities[idx] * faiss_weight
-            else:
-                combined_scores[doc_id] = faiss_similarities[idx] * faiss_weight
+        # 5. 임계값 적용 및 정렬
+        # 동적으로 쓰레스홀드 조정
+        filtered_scores = {}
+        current_threshold = threshold
 
-        # 6. 결합된 점수로 상위 문서 선택 및 정렬
-        ranked_indices = sorted(combined_scores, key=combined_scores.get, reverse=True)
-        logging.info(f"결합된 후보 개수: {len(ranked_indices)}")
+        while len(filtered_scores) < k and current_threshold > 0:
+            # 5. 임계값 적용 및 정렬
+            filtered_scores = {idx: score for idx, score in combined_scores.items() if score >= current_threshold}
+            ranked_indices = sorted(filtered_scores, key=filtered_scores.get, reverse=True)
 
-        # 7. 미리 인덱싱한 메타데이터 사전 생성
-        metadata_index = defaultdict(dict)  # metadata_index 정의
+            # 임계값을 조정해서 더 많은 결과를 포함할 수 있도록 함 (0.05씩 줄이기)
+            if len(filtered_scores) < k:
+                current_threshold -= 0.05
+                logging.info(f"임계값을 낮춥니다: {current_threshold:.2f} (현재 후보 개수: {len(filtered_scores)})")
+
+        logging.info(f"최종 임계값 적용 후 후보 개수: {len(filtered_scores)}")
+
+        # 6. 미리 인덱싱한 메타데이터 사전 생성
+        metadata_index = defaultdict(dict)
         for meta in vector_store.metadata:
             data_id = meta.get("data_id")
             metadata_index[data_id]['link'] = meta.get("link", "")
@@ -143,7 +144,7 @@ async def search_with_rag(search_input: str, k: int = 5, bm25_weight: float = 0.
 
         # 결과 수집 및 같은 data_id를 가진 chunk 결합
         seen = set()
-        combined_results = defaultdict(list)  # data_id를 기준으로 chunk_content 결합
+        combined_results = defaultdict(list)
 
         for idx in ranked_indices:
             if idx < len(vector_store.metadata):
@@ -166,7 +167,7 @@ async def search_with_rag(search_input: str, k: int = 5, bm25_weight: float = 0.
 
         logging.info(f"선택된 결과 수: {len(combined_results)}")
 
-        # 8. 비동기 요약 생성
+        # 7. 비동기 요약 생성
         selected_results = []
         unique_names = set()
 
@@ -218,3 +219,15 @@ async def search_with_rag(search_input: str, k: int = 5, bm25_weight: float = 0.
     except Exception as e:
         logging.error(f"검색 중 오류 발생: {str(e)}")
         raise
+
+# main 블록 추가
+if __name__ == "__main__":
+    print("코드 실행 시작")
+
+    # asyncio 이벤트 루프를 통해 비동기 함수 실행
+    try:
+        search_input = "혼자서 조용히 책을 읽으며 브런치를 즐길 수 있는 카페를 추천해 주세요. 좌석이 넉넉하고 인테리어가 따뜻한 곳이면 좋겠어요."
+        result = asyncio.run(search_with_rag(search_input, k=5))
+        print("검색 결과:", result)
+    except Exception as e:
+        print(f"검색 실행 중 오류 발생: {e}")
