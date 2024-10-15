@@ -10,22 +10,22 @@
     "vdb_creator": {
         "width": 600,
         "height": 552,
-        "x": 432,
-        "y": 108,
+        "x": 1168,
+        "y": 58,
         "crawling": {
             "region": "강남역",
-            "keyword": "양식",
-            "mode": "테스트 모드(10)",
+            "keyword": "마라탕 내돈내산",
+            "mode": "데이터 수집 모드(100)",
             "recent_regions": [
                 "강남역",
                 "서초동"
             ],
             "recent_keywords": [
-                "양식",
-                "양꼬치",
-                "스테이크",
-                "순대국",
-                "수제맥주"
+                "마라탕 내돈내산",
+                "랍스터 내돈내산",
+                "라멘 내돈내산",
+                "떡볶이 내돈내산",
+                "떡국 내돈내산"
             ]
         },
         "preprocessing": {
@@ -42,37 +42,27 @@
         "y": 200
     },
     "vdb_retriever": {
-        "width": 552,
-        "height": 576,
-        "x": 1261,
-        "y": 73
+        "width": 400,
+        "height": 300,
+        "x": 250,
+        "y": 250
     },
     "vdb_merge": {
-        "width": 656,
-        "height": 401,
-        "x": 1088,
-        "y": 164
+        "width": 400,
+        "height": 300,
+        "x": 250,
+        "y": 250
     },
     "api_key": {
         "width": 500,
-        "height": 269,
-        "x": 736,
-        "y": 14
+        "height": 400,
+        "x": 300,
+        "y": 300
     },
     "settings": {
-        "font_family": "Arial",
-        "font_size": 12,
-        "theme": "scidblue",
-        "button_style": "default",
-        "width": 282,
-        "height": 227,
-        "x": 1405,
-        "y": 185
-    },
-    "application": {
-        "width": 600,
-        "height": 447,
-        "x": 52,
-        "y": 52
+        "width": 300,
+        "height": 250,
+        "x": 350,
+        "y": 350
     }
 }
