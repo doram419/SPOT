@@ -1,0 +1,72 @@
+{
+    "width": 600,
+    "height": 400,
+    "x": 100,
+    "y": 100,
+    "font_family": "Arial",
+    "font_size": 10,
+    "theme": "arc",
+    "button_style": "default",
+    "vdb_creator": {
+        "width": 600,
+        "height": 500,
+        "x": 1133,
+        "y": 167,
+        "crawling": {
+            "region": "강남역",
+            "keyword": "단체회식",
+            "mode": "데이터 수집 모드(100)",
+            "recent_regions": [
+                "강남역"
+            ],
+            "recent_keywords": [
+                "단체회식",
+                "김치찌개 내돈내산",
+                "김밥 내돈내산",
+                "곱창 내돈내산"
+            ]
+        },
+        "preprocessing": {
+            "embedding_model_type": "OpenAI",
+            "embedding_model_version": "text-embedding-3-small",
+            "chunk_size": "150",
+            "overlap": "30"
+        }
+    },
+    "vdb_selector": {
+        "width": 400,
+        "height": 300,
+        "x": 200,
+        "y": 200
+    },
+    "vdb_retriever": {
+        "width": 400,
+        "height": 300,
+        "x": 250,
+        "y": 250
+    },
+    "vdb_merge": {
+        "width": 400,
+        "height": 300,
+        "x": 250,
+        "y": 250
+    },
+    "api_key": {
+        "width": 500,
+        "height": 400,
+        "x": 300,
+        "y": 300
+    },
+    "settings": {
+        "width": 300,
+        "height": 250,
+        "x": 350,
+        "y": 350
+    },
+    "application": {
+        "width": 600,
+        "height": 420,
+        "x": 1038,
+        "y": 88
+    }
+}
