@@ -113,7 +113,8 @@ class VdbSaveModule:
                     "data_id": data_id,
                     "name": naver_data.name,
                     "address": naver_data.address,
-                    "link": naver_data.link
+                    "link": naver_data.link,
+                    "img": naver_data.img_src
                 }
                 
                 if isinstance(naver_data.content, list) and isinstance(naver_data.vectorized_content, list):
