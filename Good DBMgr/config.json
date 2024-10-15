@@ -9,23 +9,23 @@
     "button_style": "default",
     "vdb_creator": {
         "width": 600,
-        "height": 552,
-        "x": 432,
-        "y": 108,
+        "height": 549,
+        "x": 1052,
+        "y": 43,
         "crawling": {
             "region": "강남역",
-            "keyword": "양식",
-            "mode": "테스트 모드(10)",
+            "keyword": "샐러드 내돈내산",
+            "mode": "데이터 수집 모드(100)",
             "recent_regions": [
                 "강남역",
                 "서초동"
             ],
             "recent_keywords": [
-                "양식",
-                "양꼬치",
-                "스테이크",
-                "순대국",
-                "수제맥주"
+                "샐러드 내돈내산",
+                "삼겹살",
+                "샐러드",
+                "물회",
+                "문어숙회"
             ]
         },
         "preprocessing": {
@@ -70,9 +70,9 @@
         "y": 185
     },
     "application": {
-        "width": 600,
-        "height": 447,
-        "x": 52,
-        "y": 52
+        "width": 803,
+        "height": 493,
+        "x": 208,
+        "y": 208
     }
 }
