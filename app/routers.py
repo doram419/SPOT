@@ -39,7 +39,6 @@ async def search_restaurant(request: Request, search_input: str = Form(...)):
         print(f"예상치 못한 오류 발생: {str(e)}")
         raise HTTPException(status_code=500, detail="서버 내부 오류가 발생했습니다.")
 
-    print(f"검색 결과: {results}")
     # 검색 결과 페이지 렌더링
     return templates.TemplateResponse("results.html", {
         "request": request,
