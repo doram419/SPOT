@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from .routers import router
 
 # 로그 레벨 설정
-logging.basicConfig(level=logging.WARNING)
+logging.getLogger("uvicorn.access").setLevel(logging.WARNING)
 
 # FastAPI 애플리케이션 인스턴스 생성
 app = FastAPI(debug=True)
