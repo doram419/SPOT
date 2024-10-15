@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", function() {
     // 주소를 위도와 경도로 변환하는 함수
     function getCoordinatesByAddress(address, callback) {
-        fetch(`http://127.0.0.1:8000/geocode?address=${encodeURIComponent(address)}`)
+        fetch(`https://www.team-spotlights-spot.com/geocode?address=${encodeURIComponent(address)}`)
             .then(response => response.json())
             .then(data => {
                 if (data.addresses && data.addresses.length > 0) {

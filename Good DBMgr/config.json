@@ -10,29 +10,29 @@
     "vdb_creator": {
         "width": 600,
         "height": 549,
-        "x": 618,
-        "y": 73,
+        "x": 1052,
+        "y": 43,
         "crawling": {
             "region": "강남역",
-            "keyword": "곱창",
-            "mode": "데이터 수집 모드(100)",
+            "keyword": "백숙",
+            "mode": "테스트 모드(10)",
             "recent_regions": [
                 "강남역",
                 "서초동"
             ],
             "recent_keywords": [
-                "곱창",
-                "단체회식",
-                "김치찌개",
-                "김밥",
-                "양식"
+                "백숙",
+                "민물장어구이",
+                "물회",
+                "문어숙회",
+                "롱블랙"
             ]
         },
         "preprocessing": {
             "embedding_model_type": "OpenAI",
             "embedding_model_version": "text-embedding-3-small",
             "chunk_size": "150",
-            "overlap": "60"
+            "overlap": "30"
         }
     },
     "vdb_selector": {
@@ -71,8 +71,8 @@
     },
     "application": {
         "width": 600,
-        "height": 507,
-        "x": 52,
-        "y": 52
+        "height": 647,
+        "x": 424,
+        "y": 43
     }
 }
