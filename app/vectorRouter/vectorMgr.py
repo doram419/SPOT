@@ -138,8 +138,10 @@ async def search_with_rag(search_input: str, k: int = 5, bm25_weight: float = 0.
         metadata_index = defaultdict(dict)
         for meta in vector_store.metadata:
             data_id = meta.get("data_id")
+            print(meta)
             metadata_index[data_id]['link'] = meta.get("link", "")
             metadata_index[data_id]['name'] = meta.get("name", "Unknown")
+            metadata_index[data_id]['img'] = meta.get("img")    # 디폴트 값이 없어야 html에서 not found 이미지 출력
             metadata_index[data_id]['address'] = meta.get("address", "Unknown")
 
         # 결과 수집 및 같은 data_id를 가진 chunk 결합
@@ -182,6 +184,7 @@ async def search_with_rag(search_input: str, k: int = 5, bm25_weight: float = 0.
             link = meta_info.get('link', '')
             name = meta_info.get('name', 'Unknown')
             address = meta_info.get('address', 'Unknown')
+            img = meta_info.get('img')
 
             if name in unique_names:
                 continue
@@ -198,6 +201,7 @@ async def search_with_rag(search_input: str, k: int = 5, bm25_weight: float = 0.
                 "summary": "",  # 요약 생성 후 채워질 예정
                 "address": address,
                 "data_id": data_id,
+                "image": img,
                 "link": link
             })
 
