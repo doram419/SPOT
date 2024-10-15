@@ -55,6 +55,7 @@ async def geocode(address: str):
         "X-NCP-APIGW-API-KEY-ID": NAVER_MAP_CLIENT_ID,
         "X-NCP-APIGW-API-KEY": NAVER_MAP_CLIENT_SECRET
     }
+
     try:
         # aiohttp를 사용하여 비동기 HTTP 요청
         async with aiohttp.ClientSession() as session:

@@ -15,6 +15,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     callback(latitude, longitude); // 콜백을 사용해 위도와 경도 전달
                 } else {
                     console.error("주소를 찾을 수 없습니다.");
+                    data.address
                     callback(NaN, NaN);
                 }
             })

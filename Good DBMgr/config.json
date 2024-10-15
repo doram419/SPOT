@@ -9,23 +9,23 @@
     "button_style": "default",
     "vdb_creator": {
         "width": 600,
-        "height": 552,
-        "x": 432,
-        "y": 108,
+        "height": 549,
+        "x": 1052,
+        "y": 43,
         "crawling": {
             "region": "강남역",
-            "keyword": "양식",
+            "keyword": "물회",
             "mode": "테스트 모드(10)",
             "recent_regions": [
                 "강남역",
                 "서초동"
             ],
             "recent_keywords": [
-                "양식",
-                "양꼬치",
-                "스테이크",
-                "순대국",
-                "수제맥주"
+                "물회",
+                "문어숙회",
+                "민물장어구이",
+                "백숙",
+                "롱블랙"
             ]
         },
         "preprocessing": {
@@ -70,9 +70,9 @@
         "y": 185
     },
     "application": {
-        "width": 600,
-        "height": 467,
-        "x": 641,
-        "y": 82
+        "width": 803,
+        "height": 413,
+        "x": 52,
+        "y": 52
     }
 }
