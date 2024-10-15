@@ -103,11 +103,8 @@ document.addEventListener("DOMContentLoaded", function() {
                             map: map
                         });
 
-                        // 지도 리사이즈 처리 (모바일에서 제대로 보이도록)
-                        setTimeout(() => {
-                            naver.maps.Event.addListener(map, 'resize');
-                            map.setCenter(new naver.maps.LatLng(latitude, longitude));
-                        },100);
+                         // 지도 리사이즈 처리 (모바일에서 제대로 보이도록)
+                         window.addEventListener('resize', () => handleMapResize(map, latitude, longitude));
 
                         // 가게 이름과 주소 표시 업데이트
                         const mapContainer = mapElement.parentElement;
@@ -128,6 +125,12 @@ document.addEventListener("DOMContentLoaded", function() {
         } else {
             console.error(`잘못된 인덱스: ${index}`);
         }
+    }
+
+    // 지도 리사이즈 처리를 담당하는 함수
+    function handleMapResize(map, latitude, longitude) {
+        naver.maps.Event.trigger(map, 'resize');
+        map.setCenter(new naver.maps.LatLng(latitude, longitude));
     }
 
     function initMap() {
