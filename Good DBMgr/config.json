@@ -9,23 +9,23 @@
     "button_style": "default",
     "vdb_creator": {
         "width": 600,
-        "height": 552,
-        "x": 1168,
-        "y": 58,
+        "height": 549,
+        "x": 1052,
+        "y": 43,
         "crawling": {
             "region": "강남역",
-            "keyword": "마라탕 내돈내산",
-            "mode": "데이터 수집 모드(100)",
+            "keyword": "물회",
+            "mode": "테스트 모드(10)",
             "recent_regions": [
                 "강남역",
                 "서초동"
             ],
             "recent_keywords": [
-                "마라탕 내돈내산",
-                "랍스터 내돈내산",
-                "라멘 내돈내산",
-                "떡볶이 내돈내산",
-                "떡국 내돈내산"
+                "물회",
+                "문어숙회",
+                "민물장어구이",
+                "백숙",
+                "롱블랙"
             ]
         },
         "preprocessing": {
@@ -60,9 +60,19 @@
         "y": 300
     },
     "settings": {
-        "width": 300,
-        "height": 250,
-        "x": 350,
-        "y": 350
+        "font_family": "Arial",
+        "font_size": 12,
+        "theme": "scidblue",
+        "button_style": "default",
+        "width": 282,
+        "height": 227,
+        "x": 1405,
+        "y": 185
+    },
+    "application": {
+        "width": 803,
+        "height": 413,
+        "x": 52,
+        "y": 52
     }
 }
