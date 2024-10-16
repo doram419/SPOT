@@ -139,6 +139,7 @@ async def search_with_rag(search_input: str, k: int = 5, bm25_weight: float = 0.
         metadata_index = defaultdict(dict)  # metadata_index 정의
         for meta in vector_store.metadata:
             data_id = meta.get("data_id")
+
             metadata_index[data_id]['link'] = meta.get("link", "")
             metadata_index[data_id]['name'] = meta.get("name", "Unknown")
             metadata_index[data_id]['img'] = meta.get("img")    # 디폴트 값이 없어야 html에서 not found 이미지 출력
