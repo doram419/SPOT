@@ -132,13 +132,18 @@ document.addEventListener("DOMContentLoaded", function() {
                         });
 
                         mapInfo[index] = { map, storeMarker, latitude, longitude };
-
-                        // 지도 클릭 시 전체 화면으로 확대
+                        //이거 지도클릭시 네이버 지도 링크로 가는건데 현재 검색된 식당의 고유ID가 없어서 그 주변 위치기반으로 이동됨.
                         naver.maps.Event.addListener(map, 'click', function() {
-                            openFullscreenMap(index);
+                            const naverMapUrl = `https://map.naver.com/v5/?c=${longitude},${latitude},15,0,0,0,dh`;
+                            window.open(naverMapUrl, '_blank');
                         });
 
-                        updateUserLocationOnMap(index);
+                        // // 지도 클릭 시 전체 화면으로 확대
+                        // naver.maps.Event.addListener(map, 'click', function() {
+                        //     openFullscreenMap(index);
+                        // });
+
+                        // updateUserLocationOnMap(index);
 
                         // 지도 리사이즈 처리
                         window.addEventListener('resize', () => handleMapResize(map, latitude, longitude));
