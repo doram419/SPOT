@@ -13,14 +13,12 @@
 </head>
 <body>
     <header>
-        <!-- 실제 로고 이미지 경로로 변경하세요 -->
         <img src="/static/logo.png" alt="사이트 로고" width="80" height="80">
         <h1><img src="/static/foot.png" width="40" height="40">오늘 가고 싶은 SPOT은?</h1>
     </header>
 
     <!-- 검색 폼 -->
     <form id="searchForm" method="POST" action="/search/">
-<<<<<<< HEAD
         <input type="text" id="searchInput" name="search_input" placeholder="검색어와 지역을 입력하세요 (예: 서울 맛집)" required>
 
         <!-- 추천 슬라이더 추가 -->
@@ -36,28 +34,19 @@
         </div>
 
         <button type="submit">검색</button>
-=======
-        <input type="text" id="searchInput" name="search_input" placeholder="특별한 맛집을 문장으로 검색해보세요.">
-        <button type="submit">검색</button><br/>
->>>>>>> develop
         <button type="button" id="voiceSearchButton">🎤 음성 검색</button>
     </form>
-
-    <!-- 검색 중 지원하는 스피너 -->
-<<<<<<< HEAD
-    <div id="spinner">
-=======
-    <div id="spinner" style="display: none;">
-        <video id="spinnerVideo" autoplay loop muted playsinline>
-            <source src="/static/spiner_background.mp4" type="video/mp4">
-            배경을 지원하는 브라우저가 아닙니다 
-        </video>
->>>>>>> develop
-        <div class="spinner-container">
-            <div class="spinner"></div>
-            <p id="spinnerMessage">검색 중...</p>
-        </div>
+   <!-- 검색 중 지원하는 스피너 -->
+   <div id="spinner" style="display: none;">
+    <video id="spinnerVideo" autoplay loop muted playsinline>
+        <source src="/static/spiner_background.mp4" type="video/mp4">
+        배경을 지원하는 브라우저가 아닙니다 
+    </video>
+    <div class="spinner-container">
+        <div class="spinner"></div>
+        <p id="spinnerMessage">검색 중...</p>
     </div>
+</div>
 
     <!-- Swiper JS 추가 -->
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
