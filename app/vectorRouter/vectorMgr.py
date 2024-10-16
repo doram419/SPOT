@@ -72,7 +72,7 @@ def preprocess_search_input(search_input: str):
     return keywords
 
 # RAG(검색 + 생성) 기반 검색 함수 (비동기)
-async def search_with_rag(search_input: str, k: int = 5, bm25_weight: float = 0.4, faiss_weight: float = 0.6, threshold: float = 0.7):
+async def search_with_rag(search_input: str, k: int = 5, bm25_weight: float = 0.7, faiss_weight: float = 0.6, threshold: float = 0.7):
     if not search_input:
         raise EmptySearchQueryException()
 
@@ -129,10 +129,16 @@ async def search_with_rag(search_input: str, k: int = 5, bm25_weight: float = 0.
             filtered_scores = {idx: score for idx, score in combined_scores.items() if score >= current_threshold}
             ranked_indices = sorted(filtered_scores, key=filtered_scores.get, reverse=True)
 
-            # 임계값을 조정해서 더 많은 결과를 포함할 수 있도록 함 (0.05씩 줄이기)
+            # 임계값을 조정해서 더 많은 결과를 포함할 수 있도록 함 (0.01씩 줄이기)
             if len(filtered_scores) < k:
-                current_threshold -= 0.05
+                current_threshold -= 0.01
                 logging.info(f"임계값을 낮춥니다: {current_threshold:.2f} (현재 후보 개수: {len(filtered_scores)})")
+
+                # 임계값이 0.5 이하로 내려가지 않도록 제한
+                if current_threshold < 0.5:
+                    current_threshold = 0.5
+                    logging.info(f"임계값을 0.5로 고정합니다.")
+                    break  # 더 이상 임계값을 줄이지 않도록 루프 종료
 
         logging.info(f"최종 임계값 적용 후 후보 개수: {len(filtered_scores)}")
 
@@ -234,14 +240,14 @@ def image_url_to_base64(image_url):
         return f"data:image/png;base64,{image_base64}"
     else:
         raise Exception(f"Failed to retrieve image. Status code: {response.status_code}")
-
-# main 블록 추가
+    
+    # main 블록 추가
 if __name__ == "__main__":
     print("코드 실행 시작")
 
     # asyncio 이벤트 루프를 통해 비동기 함수 실행
     try:
-        search_input = "혼자서 조용히 책을 읽으며 브런치를 즐길 수 있는 카페를 추천해 주세요. 좌석이 넉넉하고 인테리어가 따뜻한 곳이면 좋겠어요."
+        search_input = "강남역 햄버거"
         result = asyncio.run(search_with_rag(search_input, k=5))
         print("검색 결과:", result)
     except Exception as e:
