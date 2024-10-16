@@ -56,8 +56,6 @@ document.addEventListener("DOMContentLoaded", function() {
     // 슬라이더 아이템 개수
     const totalItems = document.querySelectorAll('.slider-item').length;
 
-    // 슬라이드 간 간격 (CSS와 동일하게 설정)
-    const slideGap = 20; // px
 
     // 사용자 위치 저장 변수
     let userLatitude = NaN;
@@ -69,8 +67,7 @@ document.addEventListener("DOMContentLoaded", function() {
     // 슬라이드 이동 함수
     function moveSlider(index) {
         const slideWidth = sliderWrapper.querySelector('.slider-item').clientWidth;
-        const translateX = -(index * (slideWidth + slideGap));
-        sliderWrapper.style.transform = `translateX(${translateX}px)`;
+        sliderWrapper.style.transform = `translateX(${-index * slideWidth}px)`;
         renderMap(index);
     }
 
