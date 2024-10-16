@@ -26,7 +26,13 @@
                         <!-- 가게 이름과 이미지 -->
                         <div class="item-header">
                             <h2>{{ result.name }}</h2>
-                        
+                            <div class="item-image">
+                                {% if result.image %}
+                                <img src="{{ result.image }}" alt="{{ result.name }}">
+                                {% else %}
+                                <img src="/static/default-image.png" alt="기본 이미지">
+                                {% endif %}
+                            </div>
                         </div>
                         <!-- 텍스트 내용 -->
                         <div class="item-text">

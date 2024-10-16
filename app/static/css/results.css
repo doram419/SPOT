@@ -82,13 +82,15 @@
     width: 100%;
     max-width: 300px;
     margin-bottom: 20px;
+    
+
 }
 
 .item-image img {
     width: 100%;
     height: auto;
     object-fit: cover;
-    border-radius: 10px;
+    border-radius: 50%;
 }
 
 /* 텍스트 컨테이너 */

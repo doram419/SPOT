@@ -6,8 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="61b933e9-284a-493c-a226-0eb615b1c28a" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Good DBMgr/vdb_data/last_id.json" beforeDir="false" afterPath="$PROJECT_DIR$/Good DBMgr/vdb_data/last_id.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/templates/search.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/templates/search.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/static/css/results.css" beforeDir="false" afterPath="$PROJECT_DIR$/app/static/css/results.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/templates/results.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/templates/results.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -51,12 +51,13 @@
     "Python.main.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "hyohyohyohyo",
-    "last_opened_file_path": "C:/Users/201-18/Documents/GitHub/deeplearning/SPOT",
+    "last_opened_file_path": "C:/Users/shw26/Desktop/웤슾/SPOT/app",
     "settings.editor.selected.configurable": "preferences.fileTypes"
   }
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\shw26\Desktop\웤슾\SPOT\app" />
       <recent name="C:\Users\201-18\Documents\GitHub\deeplearning\SPOT" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
