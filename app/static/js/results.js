@@ -133,19 +133,19 @@ document.addEventListener("DOMContentLoaded", function() {
 
                         mapInfo[index] = { map, storeMarker, latitude, longitude };
                         //이거 지도클릭시 네이버 지도 링크로 가는건데 현재 검색된 식당의 고유ID가 없어서 그 주변 위치기반으로 이동됨.
-                        naver.maps.Event.addListener(map, 'click', function() {
-                            const naverMapUrl = `https://map.naver.com/v5/?c=${longitude},${latitude},15,0,0,0,dh`;
-                            window.open(naverMapUrl, '_blank');
-                        });
-
-                        // // 지도 클릭 시 전체 화면으로 확대
                         // naver.maps.Event.addListener(map, 'click', function() {
-                        //     openFullscreenMap(index);
+                        //     const naverMapUrl = `https://map.naver.com/v5/?c=${longitude},${latitude},15,0,0,0,dh`;
+                        //     window.open(naverMapUrl, '_blank');
                         // });
 
-                        // updateUserLocationOnMap(index);
+                        //지도 클릭 시 전체 화면으로 확대
+                        naver.maps.Event.addListener(map, 'click', function() {
+                            openFullscreenMap(index);
+                        });
 
-                        // 지도 리사이즈 처리
+                        updateUserLocationOnMap(index);
+
+                        //지도 리사이즈 처리
                         window.addEventListener('resize', () => handleMapResize(map, latitude, longitude));
 
                         // 가게 정보 표시 업데이트
@@ -178,12 +178,12 @@ document.addEventListener("DOMContentLoaded", function() {
         fullscreenContainer.style.height = '100%';
         fullscreenContainer.style.backgroundColor = 'white';
         fullscreenContainer.style.zIndex = '1000';
-
+    
         const mapDiv = document.createElement('div');
         mapDiv.style.width = '100%';
         mapDiv.style.height = '100%';
         fullscreenContainer.appendChild(mapDiv);
-
+    
         const closeButton = document.createElement('button');
         closeButton.textContent = '닫기';
         closeButton.style.position = 'absolute';
@@ -191,27 +191,31 @@ document.addEventListener("DOMContentLoaded", function() {
         closeButton.style.right = '10px';
         closeButton.style.zIndex = '1001';
         fullscreenContainer.appendChild(closeButton);
-
+    
         document.body.appendChild(fullscreenContainer);
-
+    
         const { map, storeMarker, latitude, longitude } = mapInfo[index];
         const fullscreenMap = new naver.maps.Map(mapDiv, {
             center: map.getCenter(),
             zoom: map.getZoom()
         });
-
+    
+        // 가게 위치 마커 추가
         new naver.maps.Marker({
             position: storeMarker.getPosition(),
             map: fullscreenMap,
             title: storeMarker.getTitle()
         });
-
+    
+        // 사용자 실시간 위치 업데이트
         updateUserLocationOnMap(index, fullscreenMap);
-
+    
+        // 닫기 버튼 클릭 시 전체 화면 닫기
         closeButton.addEventListener('click', () => {
             document.body.removeChild(fullscreenContainer);
         });
     }
+    
 
     // 지도 리사이즈 처리를 담당하는 함수
     function handleMapResize(map, latitude, longitude) {
