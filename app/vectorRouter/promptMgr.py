@@ -23,7 +23,6 @@ async def generate_gpt_response(name: str, full_content: str):
         data = {
             "model": "gpt-4o-mini",
             "messages": [
-                    "요약은 사용자가 가게를 빠르게 이해할 수 있도록 간결하고 명확해야 합니다. "
                     {
                         "role": "system",
                         "content": """
