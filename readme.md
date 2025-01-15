@@ -1,3 +1,6 @@
+## Spot
+spot은 맞춤형 뭐시라입니다
+
 ## How to use 
 내부적으로 naver API와 구글 API를 사용하고 있다
 .env 파일로 해당 키를 관리하고 있고 해당 파일은 .gitignroe로 git에는 올라가지 않으니
