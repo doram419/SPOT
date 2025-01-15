@@ -1,4 +1,4 @@
-## <img src="logo.PNG" alt="Spot Logo" width="100" /> Spot
+## <img src="logo.PNG" alt="Spot Logo" width="50" /> Spot
 
 Spot은 사용자의 질의를 분석하여, 
 자신의 db에 있는 정보 중 최적의 맛집을 찾아주는 사용자 맞춤형 맛집 추천 서비스입니다.
