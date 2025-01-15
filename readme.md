@@ -1,5 +1,7 @@
-## Spot
-spot은 맞춤형 뭐시라입니다
+## Spot ![Spot 로고](logo.PNG)
+
+Spot은 사용자의 질의를 분석하여, 
+자신의 db에 있는 정보 중 최적의 맛집을 찾아주는 사용자 맞춤형 맛집 추천 서비스입니다.
 
 ## How to use 
 내부적으로 naver API와 구글 API를 사용하고 있다
