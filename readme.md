@@ -3,18 +3,27 @@
 안녕하세요. 'Spot'은 사용자가 맛집을 찾으려고 하면,
 그 조건에 맞춰서 최적의 맛집을 찾아주는 사용자 맞춤형 맛집 추천 웹 서비스입니다.
 
-## 개발 스펙
-사용자 서비스용 Spot
+## <img src="python.PNG" alt="python image" width="50" /> 개발 스택
+사용자 서비스용 : <b> Spot </b>
 - 프론트 : JavaScript, CSS
 - 백엔드 : Python
 - 프레임워크 : FastAPI
 - 기타: OpenAI, NaverAPI, Google Map, Faiss Vector DB
 형상 관리 도구 : Git
 
-개발툴 Good DB Mgr
+데이터 수집 지원 툴 : <b>Good DB Mgr</b>
 - Python, tkinker, Faiss Vector DB
 
 ## 구동모습
+Spot
+
+Good DB Mgr
+설명 : Good DB Mgr는 Spot에 필요한 DB를 구축하고 데이터 수집을 도와주는 내부 개발자용 툴입니다.
+데이터 수집
+데이터 병합
+키 관리
+테마변경
+
 ## 프론트 기술
 ## 담당
 ## 백엔드 
