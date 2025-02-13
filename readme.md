@@ -5,14 +5,14 @@
 
 ## 개발 스펙
 사용자 서비스용 Spot
-프론트 : JavaScript, CSS
-백엔드 : Python
-프레임워크 : FastAPI
-기타: OpenAI, NaverAPI, Google Map
+- 프론트 : JavaScript, CSS
+- 백엔드 : Python
+- 프레임워크 : FastAPI
+- 기타: OpenAI, NaverAPI, Google Map, Faiss Vector DB
 형상 관리 도구 : Git
 
 개발툴 Good DB Mgr
-Python, tkinker
+- Python, tkinker, Faiss Vector DB
 
 ## 구동모습
 ## 프론트 기술
