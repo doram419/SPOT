@@ -1,4 +1,4 @@
-## <img src="logo.PNG" alt="Spot Logo" width="50" /> Spot
+## <img src="logo.PNG" alt="Spot Logo" width="50" /> 사용자 맞춤형 맛집 추천 웹 서비스 Spot
 
 안녕하세요. 'Spot'은 사용자가 맛집을 찾으려고 하면,
 그 조건에 맞춰서 최적의 맛집을 찾아주는 사용자 맞춤형 맛집 추천 웹 서비스입니다.
