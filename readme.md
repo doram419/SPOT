@@ -3,7 +3,7 @@
 안녕하세요. 'Spot'은 사용자가 맛집을 찾으려고 하면,
 그 조건에 맞춰서 최적의 맛집을 찾아주는 사용자 맞춤형 맛집 추천 웹 서비스입니다.
 
-## <img src="python.PNG" alt="python image" width="50" /> 개발 스택
+## <img src="readme source/python.PNG" alt="python image" width="50" /> 개발 스택
 사용자 서비스용 : <b> Spot </b>
 - 프론트 : JavaScript, CSS
 - 백엔드 : Python
