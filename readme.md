@@ -1,9 +1,25 @@
 ## <img src="logo.PNG" alt="Spot Logo" width="50" /> Spot
 
-Spot은 사용자의 질의를 분석하여, 
-자신의 db에 있는 정보 중 최적의 맛집을 찾아주는 사용자 맞춤형 맛집 추천 서비스입니다.
+안녕하세요. 'Spot'은 사용자가 맛집을 찾으려고 하면,
+그 조건에 맞춰서 최적의 맛집을 찾아주는 사용자 맞춤형 맛집 추천 웹 서비스입니다.
 
-## How to use 
+## 개발 스펙
+사용자 서비스용 Spot
+프론트 : JavaScript, CSS
+백엔드 : Python
+프레임워크 : FastAPI
+기타: OpenAI, NaverAPI, Google Map
+형상 관리 도구 : Git
+
+개발툴 Good DB Mgr
+Python, tkinker
+
+## 구동모습
+## 프론트 기술
+## 담당
+## 백엔드 
+
+## 백엔드 스펙
 내부적으로 naver API와 구글 API를 사용하고 있다
 .env 파일로 해당 키를 관리하고 있고 해당 파일은 .gitignroe로 git에는 올라가지 않으니
 하는 사람이 추가로 만들어서 할당해야 함
