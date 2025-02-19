@@ -11,9 +11,13 @@
 <img src="readme source/result.jpg" alt="검색된 결과가 보이는 이미지" width="800"/>   
 * 결과 사진의 모습. 추천이유와 차별점에 대해서 기술되어 있습니다.
 <br/>
+<br/>
+<br/>
    
 <img src="readme source/result.gif" alt="여러 개의 결과가 사용자의 입력에 맞춰 넘어가며 보인다" width="800"/>
 * 최적의 하나 말고 여러 결과를 찾아주어서 원하는 걸 볼 수 있게 했습니다.
+<br/>
+<br/>
 <br/>
     
 ## <img src="readme source/python.png" alt="파이썬 이미지" width="50" /> 개발 스택
