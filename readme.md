@@ -5,13 +5,13 @@
 
 ## 구동모습
 사용자가 예시 카드에 있는 "친구들과 청첩장 모임하기 좋은 레스토랑 찾아줘"라는 카드를 눌러서 검색해주는 모습
-<img src="readme source/search.gif" alt="사용자가 예시 카드에 있는 카드를 눌러서 검색해주는 모습이 보여지고 있음"/>  
+<img src="readme source/search.gif" alt="사용자가 예시 카드에 있는 카드를 눌러서 검색해주는 모습이 보여지고 있음" width="600"/>  
 
 결과 사진의 모습. 추천이유와 차별점에 대해서 기술됨
-<img src="readme source/result.jpg" alt="검색된 결과가 보이는 이미지"/>  
+<img src="readme source/result.jpg" alt="검색된 결과가 보이는 이미지" width="600"/>  
 
 최적의 하나 말고 여러 결과를 찾아주어서 원하는 걸 볼 수 있게 함
-<img src="readme source/result.gif" alt="여러 개의 결과가 사용자의 입력에 맞춰 넘어가며 보인다"/>  
+<img src="readme source/result.gif" alt="여러 개의 결과가 사용자의 입력에 맞춰 넘어가며 보인다" width="600"/>  
 
 Good DB Mgr
 설명 : Good DB Mgr는 Spot에 필요한 DB를 구축하고 데이터 수집을 도와주는 내부 개발자용 툴입니다.
