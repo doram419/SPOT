@@ -16,7 +16,7 @@
 
 ## 구동모습
 Spot
-
+<img src="readme source/search.gif" alt="python image" width="300" />
 Good DB Mgr
 설명 : Good DB Mgr는 Spot에 필요한 DB를 구축하고 데이터 수집을 도와주는 내부 개발자용 툴입니다.
 데이터 수집
