@@ -1,7 +1,7 @@
 ## <img src="logo.PNG" alt="Spot Logo" width="50" /> 사용자 맞춤형 맛집 추천 웹 서비스 Spot
 안녕하세요. "Spot"은 LLM(OpenAI)과 LangChain을 활용하여 사용자의 검색 문장을 자연어로 분석하고, 의도를 파악해 최적의 맛집을 추천하는 사용자 맞춤형 맛집 추천 웹 서비스입니다. 단순 키워드 검색이 아닌 의미 기반 검색을 통해 더욱 정교하고 개인화된 추천을 제공합니다.
 
-## 구동모습  
+## Spot 구동모습  
 <img src="readme source/search.gif" alt="사용자가 예시 카드에 있는 카드를 눌러서 검색해주는 모습이 보여지고 있음" width="800"/>
 * 사용자가 예시 카드에 있는 "친구들과 청첩장 모임하기 좋은 레스토랑 찾아줘"라는 카드를 눌러서 검색해주는 모습입니다.
 <br/>
@@ -19,15 +19,19 @@
 <br/>
 <br/>
 <br/>
-    
-## <img src="readme source/python.png" alt="파이썬 이미지" width="50" /> 개발 스택
 
-사용자 서비스용 : <b> Spot </b>
+## Good Mgr 구동모습
+"Good Mgr"는 "Spot"에 필요한 맛집 데이터를 수집해주는 내부 개발 툴입니다.  
+<img src="readme source/mgr.gif" alt="데이터 수집 툴 Good Mgr의 가동 모습" width="800"/>
+* 
+<br/>
+<br/>
+<br/>   
+
+## <img src="readme source/python.png" alt="파이썬 이미지" width="50" /> 개발 스택
 - 프론트 : JavaScript, CSS
 - 백엔드 : Python
 - 프레임워크 : FastAPI
 - 기타: OpenAI, NaverAPI, Google Map, Faiss Vector DB
 형상 관리 도구 : Git
 
-데이터 수집 지원 툴 : <b>Good DB Mgr</b>
-- Python, tkinker, Faiss Vector DB
